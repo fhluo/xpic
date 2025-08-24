@@ -1,5 +1,5 @@
 .idea/
-target/
-node_modules/
 
-dist/
+target/
+
+.DS_store

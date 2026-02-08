@@ -1,6 +1,6 @@
 [package]
 name = "xpic"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 description = "Save wallpapers from Windows Spotlight and Bing"
 categories = ["command-line-utilities"]
@@ -20,3 +20,6 @@ tokio = { version = "1.49", features = ["full"] }
 url = { version = "2.5", features = ["serde"] }
 clap = { version = "4.5", features = ["derive"] }
 serde_with = "3.16"
+
+[dev-dependencies]
+serde_urlencoded = "0.7"

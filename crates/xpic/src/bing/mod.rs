@@ -1,5 +1,7 @@
 mod query;
+mod format;
 
+pub use format::Format;
 use crate::bing::query::{query, ImageInfo, Query};
 use crate::util;
 use regex::Regex;

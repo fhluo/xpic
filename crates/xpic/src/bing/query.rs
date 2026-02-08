@@ -1,19 +1,8 @@
+use crate::bing::Format;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serde_with::{serde_as, skip_serializing_none, BoolFromInt};
 use std::{error::Error, fmt::Display};
-
-#[derive(Serialize, Deserialize)]
-pub enum Format {
-    #[serde(rename = "xml")]
-    XML,
-    #[serde(rename = "js")]
-    JSON,
-    #[serde(rename = "hp")]
-    HTML,
-    #[serde(rename = "rss")]
-    RSS,
-}
 
 #[allow(non_camel_case_types)]
 #[derive(Serialize, Deserialize)]

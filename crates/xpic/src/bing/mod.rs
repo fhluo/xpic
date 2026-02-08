@@ -1,7 +1,9 @@
 mod query;
 mod format;
+mod market;
 
 pub use format::Format;
+pub use market::Market;
 use crate::bing::query::{query, ImageInfo, Query};
 use crate::util;
 use regex::Regex;

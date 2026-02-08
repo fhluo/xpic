@@ -22,18 +22,19 @@ impl TryFrom<ImageInfo> for Image {
     type Error = Box<dyn Error>;
 
     fn try_from(info: ImageInfo) -> Result<Self, Self::Error> {
-        let re = Regex::new(r"(?x)
+        let re = Regex::new(
+            r"(?x)
 (?P<title>.*?)
 \s*\(
 (?P<copyright>.*?)
 \)
-")?;
+",
+        )?;
 
         let captures = re.captures(&info.copyright).ok_or("")?;
 
         let r = Self {
-            url: Url::parse("https://www.bing.com/")?
-                .join(&info.url)?,
+            url: Url::parse("https://www.bing.com/")?.join(&info.url)?,
             date: info.start_date,
             title: captures["title"].to_string(),
             copyright: captures["copyright"].to_string(),
@@ -131,7 +132,6 @@ impl Image {
     }
 }
 
-
 pub async fn get_images() -> Result<Vec<Url>, Box<dyn Error>> {
     Ok(query(Query::default())
         .await?
@@ -142,7 +142,7 @@ pub async fn get_images() -> Result<Vec<Url>, Box<dyn Error>> {
 }
 
 /// Copies images to a specified directory.
-pub async fn copy_images_to<P: AsRef<Path>>(dst: P) -> Result<(), Box<dyn Error>> {
+pub async fn copy_images_to(dst: impl AsRef<Path>) -> Result<(), Box<dyn Error>> {
     let dst = dst.as_ref();
 
     fs::create_dir_all(dst)

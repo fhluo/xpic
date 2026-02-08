@@ -1,10 +1,110 @@
-use std::error::Error;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use serde_with::{serde_as, skip_serializing_none, BoolFromInt};
+use std::{error::Error, fmt::Display};
 
 #[derive(Serialize, Deserialize)]
+pub enum Format {
+    #[serde(rename = "xml")]
+    XML,
+    #[serde(rename = "js")]
+    JSON,
+    #[serde(rename = "hp")]
+    HTML,
+    #[serde(rename = "rss")]
+    RSS,
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize)]
+pub enum Market {
+    #[serde(rename = "de-DE")]
+    DE_DE,
+    #[serde(rename = "en-CA")]
+    EN_CA,
+    #[serde(rename = "en-GB")]
+    EN_GB,
+    #[serde(rename = "en-IN")]
+    EN_IN,
+    #[serde(rename = "en-US")]
+    EN_US,
+    #[serde(rename = "es-ES")]
+    ES_ES,
+    #[serde(rename = "fr-CA")]
+    FR_CA,
+    #[serde(rename = "fr-FR")]
+    FR_FR,
+    #[serde(rename = "it-IT")]
+    IT_IT,
+    #[serde(rename = "ja-JP")]
+    JA_JP,
+    #[serde(rename = "ko-KR")]
+    KO_KR,
+    #[serde(rename = "no-NO")]
+    NO_NO,
+    #[serde(rename = "pt-BR")]
+    PT_BR,
+    #[serde(rename = "zh-CN")]
+    ZH_CN,
+    /// Rest of the World
+    #[serde(rename = "ROW")]
+    ROW,
+}
+
+impl Market {
+    pub fn all() -> &'static [Market] {
+        &[
+            Market::DE_DE,
+            Market::EN_CA,
+            Market::EN_GB,
+            Market::EN_IN,
+            Market::EN_US,
+            Market::ES_ES,
+            Market::FR_CA,
+            Market::FR_FR,
+            Market::IT_IT,
+            Market::JA_JP,
+            Market::KO_KR,
+            Market::NO_NO,
+            Market::PT_BR,
+            Market::ZH_CN,
+            Market::ROW,
+        ]
+    }
+
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Market::DE_DE => "de-DE",
+            Market::EN_CA => "en-CA",
+            Market::EN_GB => "en-GB",
+            Market::EN_IN => "en-IN",
+            Market::EN_US => "en-US",
+            Market::ES_ES => "es-ES",
+            Market::FR_CA => "fr-CA",
+            Market::FR_FR => "fr-FR",
+            Market::IT_IT => "it-IT",
+            Market::JA_JP => "ja-JP",
+            Market::KO_KR => "ko-KR",
+            Market::NO_NO => "no-NO",
+            Market::PT_BR => "pt-BR",
+            Market::ZH_CN => "zh-CN",
+            Market::ROW => "ROW",
+        }
+    }
+}
+
+impl Display for Market {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.as_str())
+    }
+}
+
+#[skip_serializing_none]
+#[serde_as]
+#[derive(Serialize, Deserialize)]
 pub struct Query {
-    pub format: &'static str,
+    /// Response format
+    pub format: Option<Format>,
 
     #[serde(rename = "idx")]
     pub index: usize,
@@ -12,55 +112,15 @@ pub struct Query {
     #[serde(rename = "n")]
     pub number: usize,
 
-    #[serde(rename = "mkt", skip_serializing_if = "Option::is_none")]
-    pub market: Option<String>,
+    #[serde(rename = "mkt")]
+    pub market: Option<Market>,
 
-    #[serde(
-        serialize_with = "bool_to_int",
-        deserialize_with = "int_to_bool",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde_as(as = "Option<BoolFromInt>")]
     pub uhd: Option<bool>,
-
-    #[serde(rename = "uhdwidth", skip_serializing_if = "Option::is_none")]
-    pub uhd_width: Option<usize>,
-
-    #[serde(rename = "uhdheight", skip_serializing_if = "Option::is_none")]
-    pub uhd_height: Option<usize>,
-
-    #[serde(
-        rename = "ensearch",
-        serialize_with = "bool_to_int",
-        deserialize_with = "int_to_bool",
-        skip_serializing_if = "Option::is_none"
-    )]
-    pub en_search: Option<bool>,
-
-    #[serde(rename = "setmkt", skip_serializing_if = "Option::is_none")]
-    pub set_market: Option<String>,
-
-    #[serde(rename = "setlang", skip_serializing_if = "Option::is_none")]
-    pub set_lang: Option<String>,
-}
-
-fn bool_to_int<S>(b: &Option<bool>, s: S) -> Result<S::Ok, S::Error>
-where
-    S: serde::Serializer,
-{
-    s.serialize_i32(if b.unwrap_or(false) { 1 } else { 0 })
-}
-
-fn int_to_bool<'de, D>(d: D) -> Result<Option<bool>, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    let i: Option<i32> = Option::deserialize(d)?;
-
-    Ok(i.map(|i| i == 1))
 }
 
 impl Query {
-    pub fn new(format: &'static str, index: usize, number: usize) -> Self {
+    pub fn new(format: Option<Format>, index: usize, number: usize) -> Self {
         Self {
             format,
             index,
@@ -73,16 +133,11 @@ impl Query {
 impl Default for Query {
     fn default() -> Self {
         Self {
-            format: "js",
+            format: Some(Format::JSON),
             index: 0,
             number: 8,
-            market: None,
+            market: Some(Market::EN_US),
             uhd: Some(true),
-            uhd_width: Some(3840),
-            uhd_height: Some(2160),
-            en_search: Some(true),
-            set_market: Some("en-US".to_string()),
-            set_lang: Some("en-US".to_string()),
         }
     }
 }
@@ -119,15 +174,6 @@ pub struct ImageInfo {
     #[serde(rename = "hsh")]
     pub hash: String,
 
-    #[serde(rename = "drk")]
-    pub dark: isize,
-
-    #[serde(rename = "top")]
-    pub top: isize,
-
-    #[serde(rename = "bot")]
-    pub bottom: isize,
-
     #[serde(rename = "hs")]
     pub hotspots: Vec<Value>,
 }
@@ -139,7 +185,7 @@ struct ImagesResponse {
 
 pub async fn query(query: Query) -> Result<Vec<ImageInfo>, Box<dyn Error>> {
     let client = reqwest::Client::new();
-    
+
     // Home Page Image Archive
     let request = client
         .get("https://global.bing.com/HPImageArchive.aspx")
@@ -152,10 +198,7 @@ pub async fn query(query: Query) -> Result<Vec<ImageInfo>, Box<dyn Error>> {
         return Err(format!("failed to get images response: {}", resp.status()).into());
     }
 
-    let images = resp
-        .json::<ImagesResponse>()
-        .await?
-        .images;
+    let images = resp.json::<ImagesResponse>().await?.images;
 
     Ok(images)
 }

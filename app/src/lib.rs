@@ -1,17 +1,10 @@
 use image::{GenericImageView, ImageReader};
 use std::error::Error;
-use std::ffi::CString;
-use std::os::raw::c_void;
 use std::path::{Path, PathBuf};
 use std::{env, vec};
 use tauri::image::Image;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_clipboard_manager::ClipboardExt;
-use window_vibrancy::apply_mica;
-use windows::Win32::UI::WindowsAndMessaging::{
-    SystemParametersInfoA, SPIF_UPDATEINIFILE, SPI_SETDESKWALLPAPER,
-};
-
 use xpic::{bing, spotlight};
 
 fn get_cache_dir() -> PathBuf {
@@ -45,7 +38,7 @@ async fn cache_images() {
             })
         },
     ])
-        .await;
+    .await;
 }
 
 fn get_cached_images() -> Vec<PathBuf> {
@@ -71,13 +64,20 @@ async fn update_wallpapers() -> Vec<String> {
     get_wallpapers().await
 }
 
+#[cfg(target_os = "windows")]
 #[tauri::command]
 async fn set_as_desktop_wallpaper(path: String) {
+    use std::ffi::CString;
+    use std::os::raw::c_void;
+    use windows::Win32::UI::WindowsAndMessaging::{
+        SystemParametersInfoA, SPIF_UPDATEINIFILE, SPI_SETDESKWALLPAPER,
+    };
+
     let path_ = CString::new(path.clone()).unwrap();
 
     if let Err(err) = unsafe {
         // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow
-         SystemParametersInfoA(
+        SystemParametersInfoA(
             SPI_SETDESKWALLPAPER,
             0,
             Some(path_.as_ptr() as *mut c_void),
@@ -85,6 +85,22 @@ async fn set_as_desktop_wallpaper(path: String) {
         )
     } {
         eprintln!("failed to set {} as desktop wallpaper: {}", path, err);
+    }
+}
+
+#[cfg(target_os = "macos")]
+#[tauri::command]
+async fn set_as_desktop_wallpaper(path: String) {
+    use std::process::Command;
+
+    let script = format!(
+        "tell application \"System Events\" to set picture of every desktop to POSIX file \"{}\"",
+        path
+    );
+    match Command::new("osascript").arg("-e").arg(script).status() {
+        Ok(status) if status.success() => {}
+        Ok(status) => eprintln!("osascript exited with status: {}", status),
+        Err(err) => eprintln!("failed to run osascript: {}", err),
     }
 }
 
@@ -100,7 +116,10 @@ fn load_image(path: impl AsRef<Path>) -> Result<Image<'static>, Box<dyn Error>> 
     Ok(Image::new_owned(img.into_rgba8().into_raw(), width, height))
 }
 
-fn write_image_to_clipboard(app_handle: AppHandle, path: impl AsRef<Path>) -> Result<(), Box<dyn Error>> {
+fn write_image_to_clipboard(
+    app_handle: AppHandle,
+    path: impl AsRef<Path>,
+) -> Result<(), Box<dyn Error>> {
     app_handle.clipboard().write_image(&(load_image(path)?))?;
 
     Ok(())
@@ -123,6 +142,8 @@ pub fn run() {
 
             #[cfg(target_os = "windows")]
             {
+                use window_vibrancy::apply_mica;
+
                 apply_mica(&window, Some(true))?;
             }
 

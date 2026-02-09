@@ -1,9 +1,10 @@
+use crate::CLI::{List, Save};
+use anyhow::anyhow;
 use clap::Parser;
-use std::error::Error;
-use std::fs::File;
+use futures::StreamExt;
+use reqwest::IntoUrl;
 use std::path::{Path, PathBuf};
-use std::{fs, io};
-use url::Url;
+use tokio::io::AsyncWriteExt;
 use xpic::{list_images, Query};
 
 /// Bing wallpapers
@@ -23,79 +24,70 @@ enum CLI {
     },
 }
 
-impl CLI {
-    async fn run(self) {
-        match self {
-            CLI::List { number } => Self::list(number).await,
-            CLI::Save { dir } => Self::save(dir).await,
-        }
-    }
-
-    async fn list(number: Option<usize>) {
-        match list_images(&Query::new().number(number.unwrap_or(8))).await {
-            Ok(images) => {
-                for image in images {
-                    println!("{}: {}", image.title, image.url);
-                }
-            }
-            Err(err) => eprintln!("failed to get Bing wallpapers: {err}"),
-        }
-    }
-
-    async fn save(dir: impl AsRef<Path>) {
-        if let Err(err) = copy_images_to(&dir).await {
-            eprintln!(
-                "failed to copy Bing wallpapers to {}:{}",
-                dir.as_ref().display(),
-                err
-            );
-        }
-    }
-}
-
 #[tokio::main]
-async fn main() {
-    CLI::parse().run().await;
-}
+async fn main() -> Result<(), anyhow::Error> {
+    let cli = CLI::parse();
 
-/// Downloads file from url to dst.
-pub async fn download_file(url: &Url, dst: impl AsRef<Path>) -> Result<(), Box<dyn Error>> {
-    if dst.as_ref().exists() {
-        return Ok(());
+    match cli {
+        List { number } => {
+            let images = list_images(&Query::new().number(number.unwrap_or(8)))
+                .await
+                .map_err(|err| anyhow!("failed to list wallpapers: {err}"))?;
+
+            for image in images {
+                println!("{}: {}", image.title, image.url);
+            }
+        }
+        Save { dir } => {
+            save_wallpapers(&dir)
+                .await
+                .map_err(|err| anyhow!("failed to save wallpapers: {err}"))?;
+        }
     }
-
-    let resp = reqwest::get(url.as_ref()).await?;
-
-    if !resp.status().is_success() {
-        return Err(format!("failed to download file from {url}").into());
-    }
-
-    let mut file = File::create(dst)?;
-    let content = resp.bytes().await?;
-    io::copy(&mut content.as_ref(), &mut file)?;
 
     Ok(())
 }
 
-/// Copies images to a specified directory.
-pub async fn copy_images_to(dst: impl AsRef<Path>) -> Result<(), Box<dyn Error>> {
-    let dst = dst.as_ref();
+pub async fn download(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+    if path.as_ref().exists() {
+        return Ok(());
+    }
 
-    fs::create_dir_all(dst)
-        .map_err(|err| format!("failed to create {}: {}", dst.display(), err))?;
+    let resp = reqwest::get(url).await?.error_for_status()?;
+
+    let mut file = tokio::fs::File::create(path).await?;
+    let mut stream = resp.bytes_stream();
+
+    while let Some(chunk) = stream.next().await {
+        let chunk = chunk?;
+
+        file.write_all(&chunk).await?;
+    }
+
+    Ok(())
+}
+
+pub async fn save_wallpapers(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+    let dir = dir.as_ref();
+
+    tokio::fs::create_dir_all(dir).await?;
 
     let tasks = list_images(&Query::new())
         .await?
         .into_iter()
         .filter_map(|image| {
-            let dst = dst.join(image.id);
-            if dst.exists() {
+            let path = dir.join(image.id);
+            if path.exists() {
                 return None;
             }
 
             Some(tokio::spawn(async move {
-                if let Err(e) = download_file(&image.url, dst).await {
-                    eprintln!("failed to download {}: {}", image.url, e);
+                let result = download(image.url.clone(), path)
+                    .await
+                    .map_err(|err| anyhow!("download failed: {err}"));
+
+                if let Err(err) = result {
+                    eprintln!("{err}");
                 }
             }))
         });

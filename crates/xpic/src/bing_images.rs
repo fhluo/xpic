@@ -1,10 +1,10 @@
-use crate::bing::{list_images, Query};
-use crate::image::Image;
 use std::error::Error;
 use std::fs::File;
 use std::path::Path;
 use std::{fs, io};
 use url::Url;
+use xpic::bing::{list_images, Query};
+use xpic::Image;
 
 pub async fn get_images() -> Result<Vec<Url>, Box<dyn Error>> {
     Ok(list_images(&Query::new())

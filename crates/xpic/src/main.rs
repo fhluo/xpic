@@ -1,6 +1,7 @@
+mod bing_images;
+
 use clap::Parser;
 use std::path::{Path, PathBuf};
-use xpic::bing_images;
 
 /// Bing wallpapers
 #[derive(Parser)]

@@ -1,14 +1,13 @@
 use crate::bing::{Format, Market};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
-use serde_with::{serde_as, skip_serializing_none, BoolFromInt};
-use std::error::Error;
+use serde_with::BoolFromInt;
+use serde_with::{serde_as, skip_serializing_none};
 
 #[skip_serializing_none]
 #[serde_as]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Query {
-    /// Response format
+    /// Response format.
     pub format: Option<Format>,
 
     #[serde(rename = "idx")]
@@ -25,13 +24,38 @@ pub struct Query {
 }
 
 impl Query {
-    pub fn new(format: Option<Format>, index: usize, number: usize) -> Self {
-        Self {
-            format,
-            index,
-            number,
-            ..Self::default()
-        }
+    pub fn new() -> Self {
+        Query::default()
+    }
+
+    pub fn format(mut self, format: Format) -> Self {
+        self.format = Some(format);
+
+        self
+    }
+
+    pub fn index(mut self, index: usize) -> Self {
+        self.index = index;
+
+        self
+    }
+
+    pub fn number(mut self, number: usize) -> Self {
+        self.number = number;
+
+        self
+    }
+
+    pub fn market(mut self, market: Market) -> Self {
+        self.market = Some(market);
+
+        self
+    }
+
+    pub fn uhd(mut self, uhd: bool) -> Self {
+        self.uhd = Some(uhd);
+
+        self
     }
 }
 
@@ -47,63 +71,40 @@ impl Default for Query {
     }
 }
 
-#[derive(Deserialize)]
-pub struct ImageInfo {
-    #[serde(rename = "startdate")]
-    pub start_date: String,
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    #[serde(rename = "fullstartdate")]
-    pub full_start_date: String,
+    #[test]
+    fn test_format() {
+        assert_eq!(
+            serde_urlencoded::to_string(Query::new()).unwrap(),
+            "format=js&idx=0&n=8&mkt=en-US&uhd=1"
+        );
 
-    #[serde(rename = "enddate")]
-    pub end_date: String,
+        assert_eq!(
+            serde_urlencoded::to_string(
+                Query::new()
+                    .format(Format::HomePage)
+                    .index(1)
+                    .number(3)
+                    .market(Market::ZH_CN)
+                    .uhd(false)
+            )
+            .unwrap(),
+            "format=hp&idx=1&n=3&mkt=zh-CN&uhd=0"
+        );
 
-    pub url: String,
-
-    #[serde(rename = "urlbase")]
-    pub url_base: String,
-
-    pub copyright: String,
-
-    #[serde(rename = "copyrightlink")]
-    pub copyright_link: String,
-
-    pub title: String,
-
-    #[serde(rename = "quiz")]
-    pub quiz_link: String,
-
-    #[serde(rename = "wp")]
-    pub wallpaper: bool,
-
-    #[serde(rename = "hsh")]
-    pub hash: String,
-
-    #[serde(rename = "hs")]
-    pub hotspots: Vec<Value>,
-}
-
-#[derive(Deserialize)]
-struct ImagesResponse {
-    images: Vec<ImageInfo>,
-}
-
-pub async fn query(query: Query) -> Result<Vec<ImageInfo>, Box<dyn Error>> {
-    let client = reqwest::Client::new();
-
-    // Home Page Image Archive
-    let request = client
-        .get("https://global.bing.com/HPImageArchive.aspx")
-        .query(&query)
-        .build()?;
-
-    let resp = client.execute(request).await?;
-
-    if !resp.status().is_success() {
-        return Err(format!("failed to get images response: {}", resp.status()).into());
+        assert_eq!(
+            serde_urlencoded::to_string(Query {
+                format: None,
+                index: 1,
+                number: 3,
+                market: None,
+                uhd: None,
+            })
+            .unwrap(),
+            "idx=1&n=3"
+        );
     }
-
-    let images = resp.json::<ImagesResponse>().await?.images;
-
-    Ok(images)
 }

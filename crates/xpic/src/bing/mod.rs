@@ -1,11 +1,13 @@
-mod query;
+mod api;
 mod format;
 mod market;
+mod query;
 
+use crate::bing::api::{query, ImageInfo};
+use crate::util;
 pub use format::Format;
 pub use market::Market;
-use crate::bing::query::{query, ImageInfo, Query};
-use crate::util;
+pub use query::Query;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::error::Error;

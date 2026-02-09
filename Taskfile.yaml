@@ -10,6 +10,10 @@ includes:
     taskfile: crates/xpic/Taskfile.yaml
     dir: crates/xpic
 
+  spotlight:
+    taskfile: crates/spotlight/Taskfile.yaml
+    dir: crates/spotlight
+
   app:
     taskfile: app/Taskfile.yaml
     dir: app
@@ -32,5 +36,7 @@ tasks:
     cmds:
       - task: cli:build
       - nu -c "mkdir bin; mv target/release/xpic.exe bin/xpic-cli.exe"
+      - task: spotlight:build
+      - nu -c "mv target/release/spotlight.exe bin/spotlight.exe"
       - task: app:build
       - nu -c "mv target/release/Xpic.exe bin; mv target/release/bundle/msi/*.msi bin; mv target/release/bundle/nsis/*.exe bin;"

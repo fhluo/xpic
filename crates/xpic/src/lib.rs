@@ -1,7 +1,5 @@
 pub mod bing;
 pub mod bing_images;
-pub mod spotlight;
-pub mod util;
 
 #[cfg(test)]
 mod tests {

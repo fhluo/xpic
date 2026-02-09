@@ -1,11 +1,11 @@
 use crate::bing::{list_images, Image, Query};
-use crate::util;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
-use std::fs;
+use std::fs::File;
 use std::path::Path;
 use std::str::FromStr;
+use std::{fs, io};
 use url::Url;
 
 #[derive(Serialize, Deserialize)]
@@ -139,6 +139,25 @@ pub async fn get_images() -> Result<Vec<Url>, Box<dyn Error>> {
         .collect::<Vec<_>>())
 }
 
+/// Downloads file from url to dst.
+pub async fn download_file(url: &Url, dst: impl AsRef<Path>) -> Result<(), Box<dyn Error>> {
+    if dst.as_ref().exists() {
+        return Ok(());
+    }
+
+    let resp = reqwest::get(url.as_ref()).await?;
+
+    if !resp.status().is_success() {
+        return Err(format!("failed to download file from {url}").into());
+    }
+
+    let mut file = File::create(dst)?;
+    let content = resp.bytes().await?;
+    io::copy(&mut content.as_ref(), &mut file)?;
+
+    Ok(())
+}
+
 /// Copies images to a specified directory.
 pub async fn copy_images_to(dst: impl AsRef<Path>) -> Result<(), Box<dyn Error>> {
     let dst = dst.as_ref();
@@ -157,7 +176,7 @@ pub async fn copy_images_to(dst: impl AsRef<Path>) -> Result<(), Box<dyn Error>>
             }
 
             Some(tokio::spawn(async move {
-                if let Err(e) = util::download_file(&image.url, dst).await {
+                if let Err(e) = download_file(&image.url, dst).await {
                     eprintln!("failed to download {}: {}", image.url, e);
                 }
             }))

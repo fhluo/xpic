@@ -4440,6 +4440,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "spotlight"
+version = "0.3.0"
+dependencies = [
+ "clap",
+ "glob",
+ "image",
+]
+
+[[package]]
 name = "stable_deref_trait"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6523,7 +6532,6 @@ version = "0.3.0"
 dependencies = [
  "clap",
  "futures",
- "glob",
  "image",
  "regex",
  "reqwest 0.13.2",

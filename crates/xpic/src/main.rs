@@ -1,11 +1,14 @@
-use crate::CLI::{List, Save};
+use crate::CLI::{Export, List, Save};
 use anyhow::anyhow;
 use clap::Parser;
 use futures::StreamExt;
 use reqwest::IntoUrl;
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-use tokio::io::AsyncWriteExt;
-use xpic::{list_images, Query};
+use strum::IntoEnumIterator;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use xpic::bing::Market;
+use xpic::{list_images, Image, Query};
 
 /// Bing wallpapers
 #[derive(Parser)]
@@ -20,6 +23,9 @@ enum CLI {
     /// Save wallpapers to a directory
     Save {
         /// The directory where wallpapers are saved
+        dir: PathBuf,
+    },
+    Export {
         dir: PathBuf,
     },
 }
@@ -42,6 +48,9 @@ async fn main() -> Result<(), anyhow::Error> {
             save_wallpapers(&dir)
                 .await
                 .map_err(|err| anyhow!("failed to save wallpapers: {err}"))?;
+        }
+        Export { dir } => {
+            export_all(&dir).await?;
         }
     }
 
@@ -93,5 +102,59 @@ pub async fn save_wallpapers(dir: impl AsRef<Path>) -> Result<(), anyhow::Error>
         });
 
     futures::future::join_all(tasks).await;
+    Ok(())
+}
+
+pub async fn export(path: impl AsRef<Path>, mut images: Vec<Image>) -> Result<(), anyhow::Error> {
+    let path = path.as_ref();
+
+    if path.exists() {
+        let file = tokio::fs::File::open(path).await?;
+        let mut reader = tokio::io::BufReader::new(file);
+
+        let mut buffer = Vec::new();
+        reader.read_to_end(&mut buffer).await?;
+
+        images.extend(serde_json::from_slice::<Vec<Image>>(&buffer)?);
+    }
+
+    images.sort_by(|a, b| a.hash.cmp(&b.hash));
+    images.dedup_by(|a, b| a.hash == b.hash);
+
+    images.sort_by(|a, b| b.start_date.cmp(&a.start_date));
+
+    tokio::fs::write(path, serde_json::to_vec_pretty(&images)?).await?;
+
+    Ok(())
+}
+
+pub async fn export_all(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+    let dir = dir.as_ref();
+
+    tokio::fs::create_dir_all(dir).await?;
+
+    // ROW: Rest of the World
+    let mut market_images: HashMap<String, Vec<Image>> = HashMap::new();
+
+    for market in Market::iter() {
+        let images = list_images(&Query::new().market(market)).await?;
+
+        for image in images {
+            if let Some(id) = image.id_parsed.as_ref() {
+                market_images
+                    .entry(id.market.clone())
+                    .or_default()
+                    .push(image);
+            }
+        }
+    }
+
+    for (market, images) in market_images {
+        let mut path = dir.join(market);
+        path.set_extension("json");
+
+        export(path, images).await?;
+    }
+
     Ok(())
 }

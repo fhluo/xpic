@@ -1,10 +1,11 @@
+use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use strum::{EnumCount, EnumIter, VariantArray};
 
 /// Market and language codes.
 #[allow(non_camel_case_types)]
-#[derive(Debug, Serialize, Deserialize, Copy, Clone, EnumIter, EnumCount, VariantArray)]
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, EnumIter, EnumCount, VariantArray, ValueEnum)]
 pub enum Market {
     #[serde(rename = "da-DK")]
     DA_DK,

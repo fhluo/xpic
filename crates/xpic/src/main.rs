@@ -1,6 +1,6 @@
 use crate::CLI::{Download, Export, List};
 use anyhow::anyhow;
-use clap::Parser;
+use clap::{Args, Parser};
 use futures::StreamExt;
 use reqwest::IntoUrl;
 use std::collections::HashMap;
@@ -15,21 +15,58 @@ use xpic::{list_images, Image, Query};
 #[command(version, about, arg_required_else_help(true))]
 enum CLI {
     /// List Bing wallpapers
-    List {
-        /// The number of wallpapers to list
-        #[arg(short)]
-        number: Option<usize>,
-    },
+    List(QueryArgs),
+
     /// Download recent wallpapers to a directory
     Download {
-        /// The directory where wallpapers are saved
-        dir: PathBuf,
+        /// The output directory
+        #[arg(short, long, value_name = "DIR")]
+        output: PathBuf,
+
+        #[command(flatten)]
+        args: QueryArgs,
     },
+
     /// Export wallpaper metadata to JSON files
     Export {
-        /// The directory where metadata is saved
-        dir: PathBuf,
+        /// The output directory
+        #[arg(short, long, value_name = "DIR")]
+        output: PathBuf,
     },
+}
+
+#[derive(Args)]
+struct QueryArgs {
+    /// The number of wallpapers
+    #[arg(short, long, default_value_t = 8)]
+    number: usize,
+
+    /// Index (0 = today)
+    #[arg(short, long, default_value_t = 0)]
+    index: usize,
+
+    /// Market code
+    #[arg(short, long)]
+    market: Option<Market>,
+
+    /// Ultra High Definition
+    #[arg(short, long, default_value_t = true)]
+    uhd: bool,
+}
+
+impl From<QueryArgs> for Query {
+    fn from(args: QueryArgs) -> Self {
+        let mut query = Query::new()
+            .number(args.number)
+            .index(args.index)
+            .uhd(args.uhd);
+
+        if let Some(m) = args.market {
+            query = query.market(m);
+        }
+
+        query
+    }
 }
 
 #[tokio::main]
@@ -37,8 +74,8 @@ async fn main() -> Result<(), anyhow::Error> {
     let cli = CLI::parse();
 
     match cli {
-        List { number } => {
-            let images = list_images(&Query::new().number(number.unwrap_or(8)))
+        List(args) => {
+            let images = list_images(&Query::from(args))
                 .await
                 .map_err(|err| anyhow!("failed to list wallpapers: {err}"))?;
 
@@ -46,20 +83,22 @@ async fn main() -> Result<(), anyhow::Error> {
                 println!("{}: {}", image.title, image.url);
             }
         }
-        Download { dir } => {
-            download_wallpapers(&dir)
+        Download { output, args } => {
+            download_wallpapers(&output, &Query::from(args))
                 .await
                 .map_err(|err| anyhow!("failed to save wallpapers: {err}"))?;
         }
-        Export { dir } => {
-            export_metadata(&dir).await?;
+        Export { output } => {
+            export_metadata(&output)
+                .await
+                .map_err(|err| anyhow!("failed to export metadata: {err}"))?;
         }
     }
 
     Ok(())
 }
 
-pub async fn download_file(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+async fn download_file(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {
     if path.as_ref().exists() {
         return Ok(());
     }
@@ -78,36 +117,33 @@ pub async fn download_file(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<
     Ok(())
 }
 
-pub async fn download_wallpapers(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+async fn download_wallpapers(dir: impl AsRef<Path>, query: &Query) -> Result<(), anyhow::Error> {
     let dir = dir.as_ref();
 
     tokio::fs::create_dir_all(dir).await?;
 
-    let tasks = list_images(&Query::new())
-        .await?
-        .into_iter()
-        .filter_map(|image| {
-            let path = dir.join(image.id);
-            if path.exists() {
-                return None;
+    let tasks = list_images(query).await?.into_iter().filter_map(|image| {
+        let path = dir.join(image.id);
+        if path.exists() {
+            return None;
+        }
+
+        Some(tokio::spawn(async move {
+            let result = download_file(image.url.clone(), path)
+                .await
+                .map_err(|err| anyhow!("download failed: {err}"));
+
+            if let Err(err) = result {
+                eprintln!("{err}");
             }
-
-            Some(tokio::spawn(async move {
-                let result = download_file(image.url.clone(), path)
-                    .await
-                    .map_err(|err| anyhow!("download failed: {err}"));
-
-                if let Err(err) = result {
-                    eprintln!("{err}");
-                }
-            }))
-        });
+        }))
+    });
 
     futures::future::join_all(tasks).await;
     Ok(())
 }
 
-pub async fn update_metadata_file(
+async fn update_metadata_file(
     path: impl AsRef<Path>,
     mut images: Vec<Image>,
 ) -> Result<(), anyhow::Error> {
@@ -133,7 +169,7 @@ pub async fn update_metadata_file(
     Ok(())
 }
 
-pub async fn export_metadata(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+async fn export_metadata(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
     let dir = dir.as_ref();
 
     tokio::fs::create_dir_all(dir).await?;

@@ -1,14 +1,14 @@
-mod api;
 mod format;
 mod market;
 mod query;
+mod response;
 
-use crate::bing::api::{query, ImageInfo};
 use crate::util;
 pub use format::Format;
 pub use market::Market;
 pub use query::Query;
 use regex::Regex;
+pub use response::*;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fs;
@@ -17,17 +17,17 @@ use std::str::FromStr;
 use url::Url;
 
 #[derive(Serialize, Deserialize)]
-pub struct Image {
+pub struct ImageInfo {
     pub url: Url,
     pub date: String,
     pub title: String,
     pub copyright: String,
 }
 
-impl TryFrom<ImageInfo> for Image {
+impl TryFrom<Image> for ImageInfo {
     type Error = Box<dyn Error>;
 
-    fn try_from(info: ImageInfo) -> Result<Self, Self::Error> {
+    fn try_from(info: Image) -> Result<Self, Self::Error> {
         let re = Regex::new(
             r"(?x)
 (?P<title>.*?)
@@ -125,7 +125,7 @@ _
     }
 }
 
-impl Image {
+impl ImageInfo {
     pub fn id(&self) -> Option<String> {
         self.url
             .query_pairs()
@@ -138,11 +138,31 @@ impl Image {
     }
 }
 
+pub async fn query(query: Query) -> Result<Vec<Image>, Box<dyn Error>> {
+    let client = reqwest::Client::new();
+
+    // Home Page Image Archive
+    let request = client
+        .get("https://global.bing.com/HPImageArchive.aspx")
+        .query(&query)
+        .build()?;
+
+    let resp = client.execute(request).await?;
+
+    if !resp.status().is_success() {
+        return Err(format!("failed to get images response: {}", resp.status()).into());
+    }
+
+    let images = resp.json::<Response>().await?.images;
+
+    Ok(images)
+}
+
 pub async fn get_images() -> Result<Vec<Url>, Box<dyn Error>> {
     Ok(query(Query::default())
         .await?
         .into_iter()
-        .filter_map(|info| Image::try_from(info).ok())
+        .filter_map(|info| ImageInfo::try_from(info).ok())
         .map(|image| image.url)
         .collect::<Vec<_>>())
 }
@@ -158,7 +178,7 @@ pub async fn copy_images_to(dst: impl AsRef<Path>) -> Result<(), Box<dyn Error>>
         .await?
         .into_iter()
         .filter_map(|image| {
-            let image = Image::try_from(image).ok()?;
+            let image = ImageInfo::try_from(image).ok()?;
             let dst = dst.join(image.id()?);
             if dst.exists() {
                 return None;

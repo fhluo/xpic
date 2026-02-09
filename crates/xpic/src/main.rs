@@ -1,4 +1,4 @@
-use crate::CLI::{Export, List, Save};
+use crate::CLI::{Download, Export, List};
 use anyhow::anyhow;
 use clap::Parser;
 use futures::StreamExt;
@@ -20,12 +20,14 @@ enum CLI {
         #[arg(short)]
         number: Option<usize>,
     },
-    /// Save wallpapers to a directory
-    Save {
+    /// Download recent wallpapers to a directory
+    Download {
         /// The directory where wallpapers are saved
         dir: PathBuf,
     },
+    /// Export wallpaper metadata to JSON files
     Export {
+        /// The directory where metadata is saved
         dir: PathBuf,
     },
 }
@@ -44,20 +46,20 @@ async fn main() -> Result<(), anyhow::Error> {
                 println!("{}: {}", image.title, image.url);
             }
         }
-        Save { dir } => {
-            save_wallpapers(&dir)
+        Download { dir } => {
+            download_wallpapers(&dir)
                 .await
                 .map_err(|err| anyhow!("failed to save wallpapers: {err}"))?;
         }
         Export { dir } => {
-            export_all(&dir).await?;
+            export_metadata(&dir).await?;
         }
     }
 
     Ok(())
 }
 
-pub async fn download(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+pub async fn download_file(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {
     if path.as_ref().exists() {
         return Ok(());
     }
@@ -76,7 +78,7 @@ pub async fn download(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), a
     Ok(())
 }
 
-pub async fn save_wallpapers(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+pub async fn download_wallpapers(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
     let dir = dir.as_ref();
 
     tokio::fs::create_dir_all(dir).await?;
@@ -91,7 +93,7 @@ pub async fn save_wallpapers(dir: impl AsRef<Path>) -> Result<(), anyhow::Error>
             }
 
             Some(tokio::spawn(async move {
-                let result = download(image.url.clone(), path)
+                let result = download_file(image.url.clone(), path)
                     .await
                     .map_err(|err| anyhow!("download failed: {err}"));
 
@@ -105,7 +107,10 @@ pub async fn save_wallpapers(dir: impl AsRef<Path>) -> Result<(), anyhow::Error>
     Ok(())
 }
 
-pub async fn export(path: impl AsRef<Path>, mut images: Vec<Image>) -> Result<(), anyhow::Error> {
+pub async fn update_metadata_file(
+    path: impl AsRef<Path>,
+    mut images: Vec<Image>,
+) -> Result<(), anyhow::Error> {
     let path = path.as_ref();
 
     if path.exists() {
@@ -128,7 +133,7 @@ pub async fn export(path: impl AsRef<Path>, mut images: Vec<Image>) -> Result<()
     Ok(())
 }
 
-pub async fn export_all(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+pub async fn export_metadata(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
     let dir = dir.as_ref();
 
     tokio::fs::create_dir_all(dir).await?;
@@ -153,7 +158,7 @@ pub async fn export_all(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
         let mut path = dir.join(market);
         path.set_extension("json");
 
-        export(path, images).await?;
+        update_metadata_file(path, images).await?;
     }
 
     Ok(())

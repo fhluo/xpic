@@ -1,75 +1,158 @@
 use crate::bing;
+use anyhow::anyhow;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::error::Error;
-use std::str::FromStr;
+use serde_with::skip_serializing_none;
+use std::fmt::{Display, Formatter};
+use std::sync::LazyLock;
 use url::Url;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Image {
     pub url: Url,
-    pub date: String,
+
+    pub start_date: String,
+    pub full_start_date: String,
+    pub end_date: String,
+
+    pub id: String,
+    #[serde(skip)]
+    pub id_parsed: Option<ID>,
+
+    pub copyright: String,
+    #[serde(skip)]
+    pub copyright_parsed: Option<Copyright>,
+    pub copyright_link: String,
+
     pub title: String,
+    pub quiz_link: String,
+    pub wallpaper: bool,
+    pub hash: String,
+}
+
+impl Image {
+    pub fn parse(image: bing::Image) -> Result<Self, anyhow::Error> {
+        let bing::Image {
+            start_date,
+            full_start_date,
+            end_date,
+            url,
+            copyright,
+            copyright_link,
+            title,
+            quiz_link,
+            wallpaper,
+            hash,
+            ..
+        } = image;
+
+        let url = Url::parse("https://www.bing.com/")?.join(&url)?;
+
+        let id = url
+            .query_pairs()
+            .find_map(|(key, id)| {
+                if key == "id" {
+                    Some(id.into_owned())
+                } else {
+                    None
+                }
+            })
+            .ok_or_else(|| anyhow!("missing id"))?;
+
+        Ok(Image {
+            url,
+            start_date,
+            full_start_date,
+            end_date,
+            id_parsed: ID::parse(&id),
+            id,
+            copyright_parsed: Copyright::parse(&copyright),
+            copyright_link,
+            copyright,
+            title,
+            quiz_link,
+            wallpaper,
+            hash,
+        })
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct Copyright {
+    pub description: String,
     pub copyright: String,
 }
 
-impl TryFrom<bing::Image> for Image {
-    type Error = Box<dyn Error>;
-
-    fn try_from(info: bing::Image) -> Result<Self, Self::Error> {
-        let re = Regex::new(
-            r"(?x)
-(?P<title>.*?)
+static COPYRIGHT_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"(?x)
+(?P<description>.*?)
 \s*\(
 (?P<copyright>.*?)
 \)
 ",
-        )?;
+    )
+    .unwrap()
+});
 
-        let captures = re.captures(&info.copyright).ok_or("")?;
-
-        let r = Self {
-            url: Url::parse("https://www.bing.com/")?.join(&info.url)?,
-            date: info.start_date,
-            title: captures["title"].to_string(),
-            copyright: captures["copyright"].to_string(),
-        };
-
-        Ok(r)
-    }
-}
-
-#[derive(Debug, PartialEq)]
-pub struct ImageDetail {
-    pub name: String,
-    pub market: String,
-    pub number: usize,
-    pub uhd: bool,
-    pub width: usize,
-    pub height: usize,
-    pub extension: String,
-}
-
-impl Default for ImageDetail {
-    fn default() -> Self {
-        Self {
-            name: String::default(),
-            market: String::default(),
-            number: 0,
-            uhd: false,
-            width: 0,
-            height: 0,
-            extension: String::default(),
+impl Copyright {
+    pub fn parse(s: impl AsRef<str>) -> Option<Self> {
+        if let Some(captures) = COPYRIGHT_REGEX.captures(s.as_ref())
+            && let (Some(description), Some(copyright)) =
+                (captures.name("description"), captures.name("copyright"))
+        {
+            Some(Copyright {
+                description: description.as_str().to_owned(),
+                copyright: copyright.as_str().to_owned(),
+            })
+        } else {
+            None
         }
     }
 }
 
-impl FromStr for ImageDetail {
-    type Err = Box<dyn Error>;
+#[skip_serializing_none]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct ID {
+    pub name: String,
+    pub market: String,
+    pub number: usize,
+    pub uhd: bool,
+    pub width: Option<usize>,
+    pub height: Option<usize>,
+    pub extension: String,
+}
 
-    fn from_str(id: &str) -> Result<Self, Self::Err> {
-        let re = Regex::new(
-            r"(?x)
+impl Display for ID {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let ID {
+            name,
+            market,
+            number,
+            uhd,
+            width,
+            height,
+            extension,
+        } = self;
+
+        if *uhd {
+            return write!(f, "OHR.{name}_{market}{number}_UHD.{extension}");
+        }
+
+        if let (Some(width), Some(height)) = (width, height) {
+            write!(
+                f,
+                "OHR.{name}_{market}{number}_{width}x{height}.{extension}"
+            )
+        } else {
+            Err(std::fmt::Error)
+        }
+    }
+}
+
+static ID_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"(?x)
 ^OHR
 \.
 (?P<name>\w+)
@@ -84,46 +167,35 @@ _
 )
 \.
 (?P<extension>\w+)$",
-        )?;
+    )
+    .unwrap()
+});
 
-        let r = match re.captures(id) {
-            Some(captures) => {
-                let uhd = captures.name("uhd").is_some();
-                Self {
-                    name: String::from(&captures["name"]),
-                    market: String::from(&captures["market"]),
-                    number: captures["number"].parse::<usize>()?,
-                    uhd,
-                    width: if uhd {
-                        0
-                    } else {
-                        captures["width"].parse::<usize>()?
-                    },
-                    height: if uhd {
-                        0
-                    } else {
-                        captures["height"].parse::<usize>()?
-                    },
-                    extension: String::from(&captures["extension"]),
-                }
-            }
-            None => Default::default(),
+impl ID {
+    pub fn parse(id: impl AsRef<str>) -> Option<Self> {
+        let captures = ID_REGEX.captures(id.as_ref())?;
+
+        let uhd = captures.name("uhd").is_some();
+
+        let id = Self {
+            name: captures.name("name")?.as_str().to_owned(),
+            market: captures.name("market")?.as_str().to_owned(),
+            number: captures.name("number")?.as_str().parse::<usize>().ok()?,
+            uhd,
+            width: if uhd {
+                None
+            } else {
+                Some(captures.name("width")?.as_str().parse::<usize>().ok()?)
+            },
+            height: if uhd {
+                None
+            } else {
+                Some(captures.name("height")?.as_str().parse::<usize>().ok()?)
+            },
+            extension: captures.name("extension")?.as_str().to_owned(),
         };
 
-        Ok(r)
-    }
-}
-
-impl Image {
-    pub fn id(&self) -> Option<String> {
-        self.url
-            .query_pairs()
-            .find(|(key, _)| key == "id")
-            .map(|(_, id)| id.into_owned())
-    }
-
-    pub fn detail(&self) -> Result<ImageDetail, Box<dyn Error>> {
-        self.id().as_deref().unwrap_or("").parse()
+        Some(id)
     }
 }
 
@@ -132,23 +204,23 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_parsed_id() {
-        let cases = vec![
+    fn test_id() {
+        let test_cases = vec![
             (
                 "OHR.YosemiteFirefall_ROW8895162487_1920x1080.jpg",
-                ImageDetail {
+                ID {
                     name: "YosemiteFirefall".to_string(),
                     market: "ROW".to_string(),
                     number: 8895162487,
-                    width: 1920,
-                    height: 1080,
+                    width: Some(1920),
+                    height: Some(1080),
                     extension: "jpg".to_string(),
                     ..Default::default()
                 },
             ),
             (
                 "OHR.HalfDomeYosemite_EN-US4890007214_UHD.jpg",
-                ImageDetail {
+                ID {
                     name: "HalfDomeYosemite".to_string(),
                     market: "EN-US".to_string(),
                     number: 4890007214,
@@ -159,9 +231,10 @@ mod tests {
             ),
         ];
 
-        for (id, expected) in cases {
-            let image_detail: ImageDetail = id.parse().unwrap();
-            assert_eq!(image_detail, expected);
+        for (id, expected) in test_cases {
+            let parsed = ID::parse(id).expect("failed to parse id");
+            assert_eq!(parsed, expected);
+            assert_eq!(parsed.to_string(), id);
         }
     }
 }

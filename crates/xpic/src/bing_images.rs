@@ -10,7 +10,7 @@ pub async fn get_images() -> Result<Vec<Url>, Box<dyn Error>> {
     Ok(list_images(&Query::new())
         .await?
         .into_iter()
-        .filter_map(|info| Image::try_from(info).ok())
+        .filter_map(|info| Image::parse(info).ok())
         .map(|image| image.url)
         .collect::<Vec<_>>())
 }
@@ -45,8 +45,8 @@ pub async fn copy_images_to(dst: impl AsRef<Path>) -> Result<(), Box<dyn Error>>
         .await?
         .into_iter()
         .filter_map(|image| {
-            let image = Image::try_from(image).ok()?;
-            let dst = dst.join(image.id()?);
+            let image = Image::parse(image).ok()?;
+            let dst = dst.join(image.id);
             if dst.exists() {
                 return None;
             }

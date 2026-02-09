@@ -8,8 +8,9 @@ pub enum Format {
     XML,
     #[serde(rename = "rss")]
     RSS,
+    /// HTML format for Bing's home page.
     #[serde(rename = "hp")]
-    HTML,
+    HomePage,
 }
 
 #[cfg(test)]
@@ -40,7 +41,7 @@ mod tests {
             "format=rss"
         );
         assert_eq!(
-            serde_urlencoded::to_string(query(Format::HTML)).unwrap(),
+            serde_urlencoded::to_string(query(Format::HomePage)).unwrap(),
             "format=hp"
         );
     }

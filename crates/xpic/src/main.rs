@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use std::path::{Path, PathBuf};
-use xpic::{bing, spotlight};
+use xpic::{bing_images, spotlight};
 
 #[derive(Parser)]
 #[command(version, about, arg_required_else_help(true))]
@@ -58,7 +58,7 @@ impl Bing {
     }
 
     async fn list(number: Option<usize>) {
-        match bing::get_images().await {
+        match bing_images::get_images().await {
             Ok(images) => {
                 if let Some(number) = number {
                     for url in images.into_iter().take(number) {
@@ -75,7 +75,7 @@ impl Bing {
     }
 
     async fn save(dir: impl AsRef<Path>) {
-        if let Err(err) = bing::copy_images_to(&dir).await {
+        if let Err(err) = bing_images::copy_images_to(&dir).await {
             eprintln!(
                 "failed to copy Bing wallpapers to {}:{}",
                 dir.as_ref().display(),

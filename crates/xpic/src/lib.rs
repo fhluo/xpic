@@ -1,10 +1,11 @@
 pub mod bing;
+pub mod bing_images;
 pub mod spotlight;
 pub mod util;
 
 #[cfg(test)]
 mod tests {
-    use crate::bing::ImageDetail;
+    use crate::bing_images::ImageDetail;
 
     #[test]
     fn test_parsed_id() {

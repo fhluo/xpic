@@ -1,4 +1,4 @@
-name: Update
+name: Update Bing wallpaper metadata
 
 on:
   schedule:
@@ -22,7 +22,7 @@ jobs:
         run: cargo build --release -p xpic
 
       - name: Export metadata
-        run: ./target/release/xpic.exe export -o data
+        run: ./target/release/xpic export -o data
 
       - name: Commit changes
         run: |

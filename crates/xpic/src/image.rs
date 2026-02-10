@@ -22,10 +22,10 @@ pub struct Image {
     pub copyright: String,
     #[serde(skip)]
     pub copyright_parsed: Option<Copyright>,
-    pub copyright_link: String,
+    pub copyright_link: Url,
 
     pub title: String,
-    pub quiz_link: String,
+    pub quiz_link: Url,
     pub wallpaper: bool,
     pub hash: String,
 }
@@ -46,7 +46,9 @@ impl Image {
             ..
         } = image;
 
-        let url = Url::parse("https://www.bing.com/")?.join(&url)?;
+        let base = Url::parse("https://www.bing.com/")?;
+
+        let url = base.join(&url)?;
 
         let id = url
             .query_pairs()
@@ -67,10 +69,10 @@ impl Image {
             id_parsed: ID::parse(&id),
             id,
             copyright_parsed: Copyright::parse(&copyright),
-            copyright_link,
+            copyright_link: base.join(&copyright_link)?,
             copyright,
             title,
-            quiz_link,
+            quiz_link: base.join(&quiz_link)?,
             wallpaper,
             hash,
         })

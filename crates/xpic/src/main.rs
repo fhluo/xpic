@@ -200,23 +200,22 @@ async fn export_metadata(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
     tokio::fs::create_dir_all(dir).await?;
 
     // ROW: Rest of the World
-    let mut market_images: HashMap<String, Vec<Image>> = HashMap::new();
+    let mut market_images: HashMap<Market, Vec<Image>> = HashMap::new();
 
     for market in Market::iter() {
         let images = list_images(&Query::new().market(market)).await?;
 
         for image in images {
             if let Some(id) = image.id_parsed.as_ref() {
-                market_images
-                    .entry(id.market.clone())
-                    .or_default()
-                    .push(image);
+                if let Some(market) = id.market {
+                    market_images.entry(market).or_default().push(image);
+                }
             }
         }
     }
 
     for (market, images) in market_images {
-        let mut path = dir.join(market);
+        let mut path = dir.join(market.code());
         path.set_extension("json");
 
         update_metadata_file(path, images).await?;

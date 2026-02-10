@@ -1,4 +1,5 @@
 use crate::bing;
+use crate::bing::Market;
 use anyhow::anyhow;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -117,7 +118,7 @@ impl Copyright {
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ID {
     pub name: String,
-    pub market: String,
+    pub market: Option<Market>,
     pub number: usize,
     pub uhd: bool,
     pub width: Option<usize>,
@@ -136,6 +137,12 @@ impl Display for ID {
             height,
             extension,
         } = self;
+
+        let market = if let Some(market) = market {
+            market.code().to_ascii_uppercase()
+        } else {
+            "ROW".to_owned()
+        };
 
         if *uhd {
             return write!(f, "OHR.{name}_{market}{number}_UHD.{extension}");
@@ -181,7 +188,7 @@ impl ID {
 
         let id = Self {
             name: captures.name("name")?.as_str().to_owned(),
-            market: captures.name("market")?.as_str().to_owned(),
+            market: captures.name("market")?.as_str().parse::<Market>().ok(),
             number: captures.name("number")?.as_str().parse::<usize>().ok()?,
             uhd,
             width: if uhd {
@@ -204,6 +211,7 @@ impl ID {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::bing::Market;
 
     #[test]
     fn test_id() {
@@ -212,7 +220,7 @@ mod tests {
                 "OHR.YosemiteFirefall_ROW8895162487_1920x1080.jpg",
                 ID {
                     name: "YosemiteFirefall".to_string(),
-                    market: "ROW".to_string(),
+                    market: None,
                     number: 8895162487,
                     width: Some(1920),
                     height: Some(1080),
@@ -224,7 +232,7 @@ mod tests {
                 "OHR.HalfDomeYosemite_EN-US4890007214_UHD.jpg",
                 ID {
                     name: "HalfDomeYosemite".to_string(),
-                    market: "EN-US".to_string(),
+                    market: Some(Market::EN_US),
                     number: 4890007214,
                     uhd: true,
                     extension: "jpg".to_string(),

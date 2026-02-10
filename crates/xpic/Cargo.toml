@@ -10,7 +10,6 @@ exclude = ["Taskfile.yaml"]
 
 [dependencies]
 futures = "0.3"
-image = "0.25"
 regex = "1.12"
 reqwest = { version = "0.13", features = ["json", "query", "stream"] }
 serde = { version = "1.0", features = ["derive"] }
@@ -21,6 +20,7 @@ clap = { version = "4.5", features = ["derive"] }
 serde_with = "3.16"
 strum = { version = "0.27", features = ["derive"] }
 anyhow = "1.0"
+comfy-table = "7.2"
 
 [dev-dependencies]
 serde_urlencoded = "0.7"

@@ -1,6 +1,9 @@
 use crate::CLI::{Download, Export, List};
 use anyhow::anyhow;
 use clap::{Args, Parser};
+use comfy_table::modifiers::UTF8_ROUND_CORNERS;
+use comfy_table::presets::UTF8_BORDERS_ONLY;
+use comfy_table::{Attribute, Cell, Color, ContentArrangement, Table};
 use futures::StreamExt;
 use reqwest::IntoUrl;
 use std::collections::HashMap;
@@ -79,9 +82,7 @@ async fn main() -> Result<(), anyhow::Error> {
                 .await
                 .map_err(|err| anyhow!("failed to list wallpapers: {err}"))?;
 
-            for image in images {
-                println!("{}: {}", image.title, image.url);
-            }
+            print_images_table(images);
         }
         Download { output, args } => {
             download_wallpapers(&output, &Query::from(args))
@@ -96,6 +97,30 @@ async fn main() -> Result<(), anyhow::Error> {
     }
 
     Ok(())
+}
+
+fn print_images_table(images: Vec<Image>) {
+    let mut table = Table::new();
+
+    table
+        .load_preset(UTF8_BORDERS_ONLY)
+        .apply_modifier(UTF8_ROUND_CORNERS)
+        .set_content_arrangement(ContentArrangement::Dynamic)
+        .set_header(vec![
+            Cell::new("Date").add_attribute(Attribute::Bold),
+            Cell::new("Title").add_attribute(Attribute::Bold),
+            Cell::new("Link").add_attribute(Attribute::Bold),
+        ]);
+
+    for image in images {
+        table.add_row(vec![
+            Cell::new(image.start_date).fg(Color::DarkYellow),
+            Cell::new(image.title).fg(Color::DarkGreen),
+            Cell::new(image.url).fg(Color::DarkCyan),
+        ]);
+    }
+
+    println!("{table}");
 }
 
 async fn download_file(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {

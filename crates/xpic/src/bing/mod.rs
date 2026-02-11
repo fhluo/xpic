@@ -6,13 +6,14 @@ mod response;
 mod thumbnail_query;
 
 pub use client::Client;
-use const_format::concatc;
 pub use format::Format;
 pub use market::Market;
 pub use query::Query;
 pub use response::{Image, Response, Tooltips};
-use std::sync::LazyLock;
 pub use thumbnail_query::{CropMode, ThumbnailQuery};
+
+use const_format::concatc;
+use std::sync::LazyLock;
 
 pub const BASE_URL: &str = "https://www.bing.com/";
 

@@ -189,7 +189,9 @@ async fn update_metadata_file(
 
     images.sort_by(|a, b| b.start_date.cmp(&a.start_date));
 
-    tokio::fs::write(path, serde_json::to_vec_pretty(&images)?).await?;
+    let mut data = serde_json::to_vec_pretty(&images)?;
+    data.push(b'\n');
+    tokio::fs::write(path, data).await?;
 
     Ok(())
 }

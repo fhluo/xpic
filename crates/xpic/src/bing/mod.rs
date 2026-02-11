@@ -1,43 +1,32 @@
+mod client;
 mod format;
 mod market;
 mod query;
 mod response;
 mod thumbnail_query;
 
+pub use client::Client;
 use const_format::concatc;
 pub use format::Format;
 pub use market::Market;
 pub use query::Query;
-pub use response::*;
+pub use response::{Image, Response, Tooltips};
 use std::sync::LazyLock;
 pub use thumbnail_query::{CropMode, ThumbnailQuery};
 
 pub const BASE_URL: &str = "https://www.bing.com/";
 
-const HP_IMAGE_ARCHIVE_URL: &str = concatc!(BASE_URL, "HPImageArchive.aspx");
-const THUMBNAIL_URL: &str = concatc!(BASE_URL, "th");
+pub const HP_IMAGE_ARCHIVE_URL: &str = concatc!(BASE_URL, "HPImageArchive.aspx");
+pub const THUMBNAIL_URL: &str = concatc!(BASE_URL, "th");
 
-static CLIENT: LazyLock<reqwest::Client> = LazyLock::new(reqwest::Client::new);
+pub static DEFAULT_CLIENT: LazyLock<Client> = LazyLock::new(Client::default);
 
 pub async fn hp_image_archive(query: &Query) -> reqwest::Result<Vec<Image>> {
-    Ok(CLIENT
-        .get(HP_IMAGE_ARCHIVE_URL)
-        .query(query)
-        .send()
-        .await?
-        .error_for_status()?
-        .json::<Response>()
-        .await?
-        .images)
+    DEFAULT_CLIENT.hp_image_archive(query).await
 }
 
 pub async fn thumbnail(query: &ThumbnailQuery) -> reqwest::Result<reqwest::Response> {
-    CLIENT
-        .get(THUMBNAIL_URL)
-        .query(query)
-        .send()
-        .await?
-        .error_for_status()
+    DEFAULT_CLIENT.thumbnail(query).await
 }
 
 #[cfg(test)]
@@ -46,7 +35,7 @@ mod tests {
 
     #[tokio::test]
     #[ignore]
-    async fn test_list_images() {
+    async fn test_hp_image_archive() {
         let query = Query::new().number(3);
 
         println!("{:#?}", hp_image_archive(&query).await.unwrap())

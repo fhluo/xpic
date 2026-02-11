@@ -1,4 +1,4 @@
-use crate::bing::{Format, Market};
+use super::{Format, Market};
 use serde::{Deserialize, Serialize};
 use serde_with::BoolFromInt;
 use serde_with::{serde_as, skip_serializing_none};

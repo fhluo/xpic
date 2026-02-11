@@ -115,5 +115,31 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_FanetteIsland%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "3010eeb082b4e0f92ac7e84994a95a66"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.AlpineMarmots_DE-DE4432571270_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602012300",
+    "end_date": "20260202",
+    "id": "OHR.AlpineMarmots_DE-DE4432571270_UHD.jpg",
+    "copyright": "Alpenmurmeltiere, Nationalpark Hohe Tauern, Österreich (© Raimund Linke/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Alpenmurmeltiere&form=hpcapt&filters=HpDate%3a%2220260201_2300%22",
+    "title": "Neugieriges Gemurmel",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_AlpineMarmots%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "80399661977cfe8ec1c9c00622ebdade"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.Olinda_DE-DE3587898033_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260131",
+    "full_start_date": "202601312300",
+    "end_date": "20260201",
+    "id": "OHR.Olinda_DE-DE3587898033_UHD.jpg",
+    "copyright": "Buntes Haus in Olinda, Brasilien (© Robert Pekar/Alamy)",
+    "copyright_link": "https://www.bing.com/search?q=Olinda%2c+Brasilien&form=hpcapt&filters=HpDate%3a%2220260131_2300%22",
+    "title": "Wände voller Wunder",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260131_Olinda%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "3c5fc48b078beb1bfd664cce962cc497"
   }
 ]

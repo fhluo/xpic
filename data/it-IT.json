@@ -115,5 +115,31 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_FanetteIsland%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "88c762af49b7fae548e3caf6eb997281"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.AlpineMarmots_IT-IT4461801484_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602012300",
+    "end_date": "20260202",
+    "id": "OHR.AlpineMarmots_IT-IT4461801484_UHD.jpg",
+    "copyright": "Marmotte alpine, Parco Nazionale degli Alti Tauri, Austria (© Raimund Linke/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Marmotta&form=hpcapt",
+    "title": "Sentinelle d’alta quota",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_AlpineMarmots%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "b3e3375a82f5b6ee5f3d087642afc071"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.Olinda_IT-IT4333912850_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260131",
+    "full_start_date": "202601312300",
+    "end_date": "20260201",
+    "id": "OHR.Olinda_IT-IT4333912850_UHD.jpg",
+    "copyright": "Casa colorata, Olinda, Pernambuco, Brasile (© Robert Pekar/Alamy)",
+    "copyright_link": "https://www.bing.com/search?q=Olinda+Pernambuco+Brasile&form=hpcapt",
+    "title": "Calore e Colore",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260131_Olinda%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "ac8ecccc53aa5ebe7d33c814782231bb"
   }
 ]

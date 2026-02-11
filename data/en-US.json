@@ -102,5 +102,44 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260203_FanetteIsland%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "069a784efc69451abd17952f7d2c9956"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.AlpineMarmots_EN-US0200342638_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260202",
+    "full_start_date": "202602020800",
+    "end_date": "20260203",
+    "id": "OHR.AlpineMarmots_EN-US0200342638_UHD.jpg",
+    "copyright": "Alpine marmots, Hohe Tauern National Park, Austria (© Raimund Linke/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Groundhog+Day+tradition&form=hpcapt&filters=HpDate%3a%2220260202_0800%22",
+    "title": "A shadow's promise",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_AlpineMarmots%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "980067e3d6f16184894167a6abd2aec4"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.ArmyNurses_EN-US0165759491_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602010800",
+    "end_date": "20260202",
+    "id": "OHR.ArmyNurses_EN-US0165759491_UHD.jpg",
+    "copyright": "US Army nurses arrive in Greenock, Scotland, 1944 (© Stocktrek Images, Inc/Alamy)",
+    "copyright_link": "https://www.bing.com/search?q=Black+History+Month&form=hpcapt&filters=HpDate%3a%2220260201_0800%22",
+    "title": "Celebrate. Reflect. Rise.",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_ArmyNurses%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "439db9e82db38038ff556b4367e27da9"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.EtoshaZebra_EN-US0091145236_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260131",
+    "full_start_date": "202601310800",
+    "end_date": "20260201",
+    "id": "OHR.EtoshaZebra_EN-US0091145236_UHD.jpg",
+    "copyright": "Plains zebras, Etosha National Park, Namibia (© Mogens Trolle/Shutterstock)",
+    "copyright_link": "https://www.bing.com/search?q=Plains+zebras&form=hpcapt&filters=HpDate%3a%2220260131_0800%22",
+    "title": "Love at first stripe",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260131_EtoshaZebra%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "773ce09a3beb05626247246633c0c763"
   }
 ]

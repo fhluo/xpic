@@ -102,5 +102,31 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260203_FanetteIsland%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "1314b6118930af06bb46f62c3be7e887"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.AlpineMarmots_FR-CA6904692370_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260202",
+    "full_start_date": "202602020500",
+    "end_date": "20260203",
+    "id": "OHR.AlpineMarmots_FR-CA6904692370_UHD.jpg",
+    "copyright": "Des marmottes des Alpes, Parc National des Hohe Tauern, Autriche (© Raimund Linke/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=2+f%C3%A9vrier+jour+de+la+marmotte&form=hpcapt&filters=HpDate%3a%2220260202_0500%22",
+    "title": "L’ombre d’une promesse",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_AlpineMarmots%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "589313e4c7458cc8a56d6ddd6556b2ef"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.Olinda_FR-CA0267865203_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602010500",
+    "end_date": "20260202",
+    "id": "OHR.Olinda_FR-CA0267865203_UHD.jpg",
+    "copyright": "Maison colorée à Olinda, Brésil (© Robert Pekar/Alamy)",
+    "copyright_link": "https://www.bing.com/search?q=Olinda+ville+Br%C3%A9sil&form=hpcapt&filters=HpDate%3a%2220260201_0500%22",
+    "title": "Une explosion de couleurs",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_Olinda%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "c07a173eeff059ddb63e5e341ea0b9da"
   }
 ]

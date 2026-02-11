@@ -115,5 +115,31 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260203_FanetteIsland%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "5f1c3c83006f31cf158109ad5e9fa82f"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.AlpineMarmots_EN-GB8463846788_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260202",
+    "full_start_date": "202602020000",
+    "end_date": "20260203",
+    "id": "OHR.AlpineMarmots_EN-GB8463846788_UHD.jpg",
+    "copyright": "Alpine marmots, Hohe Tauern National Park, Austria (© Raimund Linke/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Groundhog+Day+tradition&form=hpcapt&filters=HpDate%3a%2220260202_0000%22",
+    "title": "A shadow's promise",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_AlpineMarmots%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "6d21f40cac51e9b8c651e22c90ed12b2"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.Olinda_EN-GB3341173663_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602010000",
+    "end_date": "20260202",
+    "id": "OHR.Olinda_EN-GB3341173663_UHD.jpg",
+    "copyright": "Colourful house in Olinda, Brazil (© Robert Pekar/Alamy)",
+    "copyright_link": "https://www.bing.com/search?q=Olinda+Brazil&form=hpcapt&filters=HpDate%3a%2220260201_0000%22",
+    "title": "Walls of wonder",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_Olinda%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "0a2f1764e8c9d3e351da6d6902bab98d"
   }
 ]

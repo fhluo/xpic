@@ -115,5 +115,31 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_FanetteIsland%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "eb4a7cebd15614cb2ba677245b36f4a1"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.AlpineMarmots_ES-ES4070068615_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602012300",
+    "end_date": "20260202",
+    "id": "OHR.AlpineMarmots_ES-ES4070068615_UHD.jpg",
+    "copyright": "Marmotas alpinas, Parque Nacional Hohe Tauern, Austria (© Raimund Linke/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Marmota+alpina&form=hpcapt&filters=HpDate%3a%2220260201_2300%22",
+    "title": "Guardiana de las montañas",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_AlpineMarmots%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "1b076641dc9a9b269402304f81212a17"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.IcelandSheep_ES-ES7827276592_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260131",
+    "full_start_date": "202601312300",
+    "end_date": "20260201",
+    "id": "OHR.IcelandSheep_ES-ES7827276592_UHD.jpg",
+    "copyright": "Ovejas pastando en la nieve, Islandia (© Christophe Lehenaff/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%C3%9Eorrabl%C3%B3t&form=hpcapt&filters=HpDate%3a%2220260131_2300%22",
+    "title": "Celebrando sobre hielo",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260131_IcelandSheep%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "a6b2ea811befdac887169934e71c2386"
   }
 ]

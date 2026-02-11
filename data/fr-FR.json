@@ -115,5 +115,31 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_FanetteIsland%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "81af8924eb9092165b05d2bb09f520cd"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.BretagneCrepe_FR-FR4282491151_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602012300",
+    "end_date": "20260202",
+    "id": "OHR.BretagneCrepe_FR-FR4282491151_UHD.jpg",
+    "copyright": "Le phare de Kermorvan au coucher de soleil, Bretagne, France (© Fisfra/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Phare+Kermorvan&form=hpcapt&filters=HpDate%3a%2220260201_2300%22",
+    "title": "Plutôt beurre sucre ou chocolat ?",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_BretagneCrepe%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "8010f647712adebd44697f9e0ff256ec"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.AlpineMarmots_FR-FR0828345948_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260131",
+    "full_start_date": "202601312300",
+    "end_date": "20260201",
+    "id": "OHR.AlpineMarmots_FR-FR0828345948_UHD.jpg",
+    "copyright": "Des marmottes des Alpes, Parc National des Hohe Tauern, Autriche (© Raimund Linke/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=marmotte+des+Alpes&form=hpcapt&filters=HpDate%3a%2220260131_2300%22",
+    "title": "L’ombre d’une promesse",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260131_AlpineMarmots%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "485812d282151026565a616fe4e236f6"
   }
 ]

@@ -115,5 +115,31 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_FanetteIsland%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "d6f148efe8b9fbbe422ced0298942afc"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.NeuschwansteinWinter_EN-IN1290603562_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602011830",
+    "end_date": "20260202",
+    "id": "OHR.NeuschwansteinWinter_EN-IN1290603562_UHD.jpg",
+    "copyright": "Neuschwanstein Castle, Bavaria, Germany (© www.fredconcha.com @ All Rights Reserved/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Neuschwanstein+Castle&form=hpcapt&filters=HpDate%3a%2220260201_1830%22",
+    "title": "Bavaria's gem",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_NeuschwansteinWinter%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "dc2048d2b8457f92b4a8bd3999f3ed46"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.Olinda_EN-IN1019677032_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260131",
+    "full_start_date": "202601311830",
+    "end_date": "20260201",
+    "id": "OHR.Olinda_EN-IN1019677032_UHD.jpg",
+    "copyright": "Colourful house in Olinda, Brazil (© Robert Pekar/Alamy)",
+    "copyright_link": "https://www.bing.com/search?q=Olinda+Brazil&form=hpcapt&filters=HpDate%3a%2220260131_1830%22",
+    "title": "Walls of wonder",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260131_Olinda%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "a1e4fec7dfbc65a3c6c64e2e57c23472"
   }
 ]

@@ -102,5 +102,44 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260203_Risshun2026%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "f36005069481b24c7866e9b42154113b"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.FanetteIsland_JA-JP9866283970_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260202",
+    "full_start_date": "202602021500",
+    "end_date": "20260203",
+    "id": "OHR.FanetteIsland_JA-JP9866283970_UHD.jpg",
+    "copyright": "タホ湖, 米国 (© Bill Stevenson/Cavan Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E3%82%BF%E3%83%9B%E6%B9%96&form=hpcapt&filters=HpDate%3a%2220260202_1500%22",
+    "title": "碧き湖に浮かぶ小島",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260202_FanetteIsland%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "a769b2247ba63335e0687d6364f65d89"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.AlpineMarmots_JA-JP1553270450_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260201",
+    "full_start_date": "202602011500",
+    "end_date": "20260202",
+    "id": "OHR.AlpineMarmots_JA-JP1553270450_UHD.jpg",
+    "copyright": "アルプスマーモット, オーストリア (© Raimund Linke/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E3%83%9B%E3%83%83%E3%82%B0%E3%83%87%E3%83%BC&form=hpcapt&filters=HpDate%3a%2220260201_1500%22",
+    "title": "今日はグラウンドホッグデー",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260201_AlpineMarmots%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "161f2f4f0a8eae54e30edd249079fb16"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.Echasse_JA-JP1351434706_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260131",
+    "full_start_date": "202601311500",
+    "end_date": "20260201",
+    "id": "OHR.Echasse_JA-JP1351434706_UHD.jpg",
+    "copyright": "セイタカシギ, フランス (© Antonio Sementa/500px/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E3%82%BB%E3%82%A4%E3%82%BF%E3%82%AB%E3%82%B7%E3%82%AE&form=hpcapt&filters=HpDate%3a%2220260131_1500%22",
+    "title": "水辺の貴婦人",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260131_Echasse%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "53e98e79e5b59c870c7a9aba0b2fe92a"
   }
 ]

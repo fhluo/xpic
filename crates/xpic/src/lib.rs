@@ -5,7 +5,7 @@ pub use crate::image::*;
 pub use bing::Query;
 
 pub async fn list_images(query: &Query) -> Result<Vec<Image>, anyhow::Error> {
-    Ok(bing::list_images(query)
+    Ok(bing::hp_image_archive(query)
         .await?
         .into_iter()
         .filter_map(|raw| Image::parse(raw).ok())

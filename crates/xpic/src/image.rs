@@ -47,7 +47,7 @@ impl Image {
             ..
         } = image;
 
-        let base = Url::parse("https://www.bing.com/")?;
+        let base = Url::parse(bing::BASE_URL)?;
 
         let url = base.join(&url)?;
 

@@ -76,7 +76,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_format() {
+    fn test_query() {
         assert_eq!(
             serde_urlencoded::to_string(Query::new()).unwrap(),
             "format=js&idx=0&n=8&mkt=en-US&uhd=1"

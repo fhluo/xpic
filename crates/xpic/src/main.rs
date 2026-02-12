@@ -48,7 +48,7 @@ struct QueryArgs {
     index: usize,
 
     /// Market code
-    #[arg(short, long)]
+    #[arg(short, long, ignore_case = true)]
     market: Option<Market>,
 
     /// Ultra High Definition

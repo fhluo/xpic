@@ -2,8 +2,9 @@
 name = "xpic"
 version = "0.3.0"
 edition = "2024"
-description = "Save wallpapers from Windows Spotlight and Bing"
+description = "List and download Bing wallpapers."
 categories = ["command-line-utilities"]
+keywords = ["bing", "wallpaper"]
 repository = "https://github.com/fhluo/xpic"
 license = "MIT"
 exclude = ["Taskfile.yaml"]

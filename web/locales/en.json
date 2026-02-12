@@ -1,9 +1,0 @@
-{
-  "menus": {
-    "open_wallpaper": "Open With Default Image Viewer",
-    "show_in_explorer": "Show In Explorer",
-    "copy_image": "Copy",
-    "save_wallpaper": "Save As ...",
-    "set_as_desktop_wallpaper": "Set As Desktop Wallpaper"
-  }
-}

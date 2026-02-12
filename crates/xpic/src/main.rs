@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 use strum::IntoEnumIterator;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use xpic::bing::Market;
-use xpic::{list_images, Image, Query};
+use xpic::{list_images, Image, ListImagesRequestBuilder};
 
 /// Bing wallpapers
 #[derive(Parser)]
@@ -57,18 +57,18 @@ struct QueryArgs {
     uhd: bool,
 }
 
-impl From<QueryArgs> for Query {
-    fn from(args: QueryArgs) -> Self {
-        let mut query = Query::new()
-            .number(args.number)
-            .index(args.index)
-            .uhd(args.uhd);
+impl QueryArgs {
+    fn into_builder(self) -> ListImagesRequestBuilder<'static> {
+        let mut builder = list_images()
+            .number(self.number)
+            .index(self.index)
+            .uhd(self.uhd);
 
-        if let Some(m) = args.market {
-            query = query.market(m);
+        if let Some(market) = self.market {
+            builder = builder.market(market);
         }
 
-        query
+        builder
     }
 }
 
@@ -78,14 +78,16 @@ async fn main() -> Result<(), anyhow::Error> {
 
     match cli {
         List(args) => {
-            let images = list_images(&Query::from(args))
+            let images = args
+                .into_builder()
+                .send()
                 .await
                 .map_err(|err| anyhow!("failed to list wallpapers: {err}"))?;
 
             print_images_table(images);
         }
         Download { output, args } => {
-            download_wallpapers(&output, &Query::from(args))
+            download_wallpapers(&output, args)
                 .await
                 .map_err(|err| anyhow!("failed to save wallpapers: {err}"))?;
         }
@@ -142,27 +144,32 @@ async fn download_file(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), 
     Ok(())
 }
 
-async fn download_wallpapers(dir: impl AsRef<Path>, query: &Query) -> Result<(), anyhow::Error> {
+async fn download_wallpapers(dir: impl AsRef<Path>, args: QueryArgs) -> Result<(), anyhow::Error> {
     let dir = dir.as_ref();
 
     tokio::fs::create_dir_all(dir).await?;
 
-    let tasks = list_images(query).await?.into_iter().filter_map(|image| {
-        let path = dir.join(image.id);
-        if path.exists() {
-            return None;
-        }
-
-        Some(tokio::spawn(async move {
-            let result = download_file(image.url.clone(), path)
-                .await
-                .map_err(|err| anyhow!("download failed: {err}"));
-
-            if let Err(err) = result {
-                eprintln!("{err}");
+    let tasks = args
+        .into_builder()
+        .send()
+        .await?
+        .into_iter()
+        .filter_map(|image| {
+            let path = dir.join(image.id);
+            if path.exists() {
+                return None;
             }
-        }))
-    });
+
+            Some(tokio::spawn(async move {
+                let result = download_file(image.url.clone(), path)
+                    .await
+                    .map_err(|err| anyhow!("download failed: {err}"));
+
+                if let Err(err) = result {
+                    eprintln!("{err}");
+                }
+            }))
+        });
 
     futures::future::join_all(tasks).await;
     Ok(())
@@ -205,7 +212,7 @@ async fn export_metadata(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
     let mut market_images: HashMap<Market, Vec<Image>> = HashMap::new();
 
     for market in Market::iter() {
-        let images = list_images(&Query::new().market(market)).await?;
+        let images = list_images().market(market).send().await?;
 
         for image in images {
             if let Some(id) = image.id_parsed.as_ref() {

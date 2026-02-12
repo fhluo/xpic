@@ -1,15 +1,21 @@
 pub mod bing;
+mod client;
 mod image;
 
-pub use crate::image::*;
-pub use bing::Query;
+use std::sync::LazyLock;
 
-pub async fn list_images(query: &Query) -> Result<Vec<Image>, anyhow::Error> {
-    Ok(bing::hp_image_archive(query)
-        .await?
-        .into_iter()
-        .filter_map(|raw| Image::parse(raw).ok())
-        .collect::<Vec<Image>>())
+pub use crate::client::{Client, ListImagesRequestBuilder};
+pub use crate::image::{Copyright, Image, ID};
+
+static DEFAULT_CLIENT: LazyLock<Client> = LazyLock::new(Client::default);
+
+/// Returns a reference to the global default [`Client`].
+pub fn client() -> &'static Client {
+    &DEFAULT_CLIENT
+}
+
+pub fn list_images() -> ListImagesRequestBuilder<'static> {
+    DEFAULT_CLIENT.list_images()
 }
 
 #[cfg(test)]
@@ -19,8 +25,6 @@ mod tests {
     #[tokio::test]
     #[ignore]
     async fn test_list_images() {
-        let query = Query::new().number(1);
-
-        println!("{:#?}", list_images(&query).await.unwrap())
+        println!("{:#?}", list_images().number(1).send().await.unwrap())
     }
 }

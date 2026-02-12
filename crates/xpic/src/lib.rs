@@ -4,7 +4,7 @@ mod image;
 
 use std::sync::LazyLock;
 
-pub use crate::client::{Client, ListImagesRequestBuilder};
+pub use crate::client::{Client, ListImagesRequestBuilder, ThumbnailRequestBuilder};
 pub use crate::image::{Copyright, Image, ID};
 
 static DEFAULT_CLIENT: LazyLock<Client> = LazyLock::new(Client::default);
@@ -20,6 +20,10 @@ pub fn list_images() -> ListImagesRequestBuilder<'static> {
 
 pub async fn fetch_image(id: impl Into<String>) -> reqwest::Result<reqwest::Response> {
     DEFAULT_CLIENT.fetch_image(id).await
+}
+
+pub fn fetch_thumbnail(id: impl Into<String>) -> ThumbnailRequestBuilder<'static> {
+    DEFAULT_CLIENT.fetch_thumbnail(id)
 }
 
 #[cfg(test)]

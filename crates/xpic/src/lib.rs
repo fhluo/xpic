@@ -18,6 +18,10 @@ pub fn list_images() -> ListImagesRequestBuilder<'static> {
     DEFAULT_CLIENT.list_images()
 }
 
+pub async fn fetch_image(id: impl Into<String>) -> reqwest::Result<reqwest::Response> {
+    DEFAULT_CLIENT.fetch_image(id).await
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

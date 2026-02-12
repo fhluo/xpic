@@ -23,12 +23,7 @@ impl Client {
     }
 
     pub async fn thumbnail(&self, query: &ThumbnailQuery) -> reqwest::Result<reqwest::Response> {
-        self.http
-            .get(THUMBNAIL_URL)
-            .query(query)
-            .send()
-            .await?
-            .error_for_status()
+        self.http.get(THUMBNAIL_URL).query(query).send().await
     }
 }
 

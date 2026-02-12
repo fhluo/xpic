@@ -5,13 +5,12 @@ use comfy_table::modifiers::UTF8_ROUND_CORNERS;
 use comfy_table::presets::UTF8_BORDERS_ONLY;
 use comfy_table::{Attribute, Cell, Color, ContentArrangement, Table};
 use futures::StreamExt;
-use reqwest::IntoUrl;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use strum::IntoEnumIterator;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use xpic::bing::Market;
-use xpic::{list_images, Image, ListImagesRequestBuilder};
+use xpic::{fetch_image, list_images, Image, ListImagesRequestBuilder};
 
 /// Bing wallpapers
 #[derive(Parser)]
@@ -120,12 +119,12 @@ fn print_images_table(images: Vec<Image>) {
     println!("{table}");
 }
 
-async fn download_file(url: impl IntoUrl, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {
+async fn download_file(id: impl Into<String>, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {
     if path.as_ref().exists() {
         return Ok(());
     }
 
-    let resp = reqwest::get(url).await?.error_for_status()?;
+    let resp = fetch_image(id).await?.error_for_status()?;
 
     let mut file = tokio::fs::File::create(path).await?;
     let mut stream = resp.bytes_stream();
@@ -150,13 +149,13 @@ async fn download_wallpapers(dir: impl AsRef<Path>, args: QueryArgs) -> Result<(
         .await?
         .into_iter()
         .filter_map(|image| {
-            let path = dir.join(image.id);
+            let path = dir.join(&image.id);
             if path.exists() {
                 return None;
             }
 
             Some(tokio::spawn(async move {
-                let result = download_file(image.url.clone(), path)
+                let result = download_file(image.id, path)
                     .await
                     .map_err(|err| anyhow!("download failed: {err}"));
 

@@ -28,6 +28,10 @@ impl Client {
             query: bing::Query::new(),
         }
     }
+
+    pub async fn fetch_image(&self, id: impl Into<String>) -> reqwest::Result<reqwest::Response> {
+        self.bing.thumbnail(&bing::ThumbnailQuery::new(id)).await
+    }
 }
 
 pub struct ListImagesRequestBuilder<'a> {

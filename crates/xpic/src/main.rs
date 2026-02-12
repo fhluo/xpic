@@ -59,16 +59,11 @@ struct QueryArgs {
 
 impl QueryArgs {
     fn into_builder(self) -> ListImagesRequestBuilder<'static> {
-        let mut builder = list_images()
+        list_images()
             .number(self.number)
             .index(self.index)
-            .uhd(self.uhd);
-
-        if let Some(market) = self.market {
-            builder = builder.market(market);
-        }
-
-        builder
+            .market_option(self.market)
+            .uhd(self.uhd)
     }
 }
 

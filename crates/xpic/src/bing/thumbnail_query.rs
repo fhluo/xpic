@@ -71,14 +71,32 @@ impl ThumbnailQuery {
         self
     }
 
+    pub fn pid_option(mut self, pid: Option<impl Into<String>>) -> Self {
+        self.pid = pid.map(|p| p.into());
+
+        self
+    }
+
     pub fn width(mut self, width: u32) -> Self {
         self.width = Some(width);
 
         self
     }
 
+    pub fn width_option(mut self, width: Option<u32>) -> Self {
+        self.width = width;
+
+        self
+    }
+
     pub fn height(mut self, height: u32) -> Self {
         self.height = Some(height);
+
+        self
+    }
+
+    pub fn height_option(mut self, height: Option<u32>) -> Self {
+        self.height = height;
 
         self
     }
@@ -90,8 +108,20 @@ impl ThumbnailQuery {
         self
     }
 
+    pub fn padding_option(mut self, padding: Option<u32>) -> Self {
+        self.padding = padding;
+
+        self
+    }
+
     pub fn crop(mut self, mode: CropMode) -> Self {
         self.crop = Some(mode);
+
+        self
+    }
+
+    pub fn crop_option(mut self, mode: Option<CropMode>) -> Self {
+        self.crop = mode;
 
         self
     }

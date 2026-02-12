@@ -54,8 +54,20 @@ impl ListImagesRequestBuilder<'_> {
         self
     }
 
+    pub fn market_option(mut self, market: Option<bing::Market>) -> Self {
+        self.query.market = market;
+
+        self
+    }
+
     pub fn uhd(mut self, uhd: bool) -> Self {
         self.query.uhd = Some(uhd);
+
+        self
+    }
+
+    pub fn uhd_option(mut self, uhd: Option<bool>) -> Self {
+        self.query.uhd = uhd;
 
         self
     }

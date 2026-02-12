@@ -34,6 +34,12 @@ impl Query {
         self
     }
 
+    pub fn format_option(mut self, format: Option<Format>) -> Self {
+        self.format = format;
+
+        self
+    }
+
     pub fn index(mut self, index: usize) -> Self {
         self.index = index;
 
@@ -52,8 +58,20 @@ impl Query {
         self
     }
 
+    pub fn market_option(mut self, market: Option<Market>) -> Self {
+        self.market = market;
+
+        self
+    }
+
     pub fn uhd(mut self, uhd: bool) -> Self {
         self.uhd = Some(uhd);
+
+        self
+    }
+
+    pub fn uhd_option(mut self, uhd: Option<bool>) -> Self {
+        self.uhd = uhd;
 
         self
     }

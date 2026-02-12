@@ -24,154 +24,192 @@ use strum::{EnumCount, EnumIter, EnumString, VariantArray};
 pub enum Market {
     #[serde(rename = "da-DK")]
     #[strum(serialize = "da-DK")]
+    #[value(name = "da-DK")]
     DA_DK,
 
     #[serde(rename = "de-AT")]
     #[strum(serialize = "de-AT")]
+    #[value(name = "de-AT")]
     DE_AT,
 
     #[serde(rename = "de-CH")]
     #[strum(serialize = "de-CH")]
+    #[value(name = "de-CH")]
     DE_CH,
 
     #[serde(rename = "de-DE")]
     #[strum(serialize = "de-DE")]
+    #[value(name = "de-DE")]
     DE_DE,
 
     #[serde(rename = "en-AU")]
     #[strum(serialize = "en-AU")]
+    #[value(name = "en-AU")]
     EN_AU,
 
     #[serde(rename = "en-CA")]
     #[strum(serialize = "en-CA")]
+    #[value(name = "en-CA")]
     EN_CA,
 
     #[serde(rename = "en-GB")]
     #[strum(serialize = "en-GB")]
+    #[value(name = "en-GB")]
     EN_GB,
 
     #[serde(rename = "en-ID")]
     #[strum(serialize = "en-ID")]
+    #[value(name = "en-ID")]
     EN_ID,
 
     #[serde(rename = "en-IN")]
     #[strum(serialize = "en-IN")]
+    #[value(name = "en-IN")]
     EN_IN,
 
     #[serde(rename = "en-MY")]
     #[strum(serialize = "en-MY")]
+    #[value(name = "en-MY")]
     EN_MY,
 
     #[serde(rename = "en-NZ")]
     #[strum(serialize = "en-NZ")]
+    #[value(name = "en-NZ")]
     EN_NZ,
 
     #[serde(rename = "en-PH")]
     #[strum(serialize = "en-PH")]
+    #[value(name = "en-PH")]
     EN_PH,
 
     #[serde(rename = "en-US")]
     #[strum(serialize = "en-US")]
+    #[value(name = "en-US")]
     EN_US,
 
     #[serde(rename = "en-ZA")]
     #[strum(serialize = "en-ZA")]
+    #[value(name = "en-ZA")]
     EN_ZA,
 
     #[serde(rename = "es-AR")]
     #[strum(serialize = "es-AR")]
+    #[value(name = "es-AR")]
     ES_AR,
 
     #[serde(rename = "es-CL")]
     #[strum(serialize = "es-CL")]
+    #[value(name = "es-CL")]
     ES_CL,
 
     #[serde(rename = "es-ES")]
     #[strum(serialize = "es-ES")]
+    #[value(name = "es-ES")]
     ES_ES,
 
     #[serde(rename = "es-MX")]
     #[strum(serialize = "es-MX")]
+    #[value(name = "es-MX")]
     ES_MX,
 
     #[serde(rename = "es-US")]
     #[strum(serialize = "es-US")]
+    #[value(name = "es-US")]
     ES_US,
 
     #[serde(rename = "fi-FI")]
     #[strum(serialize = "fi-FI")]
+    #[value(name = "fi-FI")]
     FI_FI,
 
     #[serde(rename = "fr-BE")]
     #[strum(serialize = "fr-BE")]
+    #[value(name = "fr-BE")]
     FR_BE,
 
     #[serde(rename = "fr-CA")]
     #[strum(serialize = "fr-CA")]
+    #[value(name = "fr-CA")]
     FR_CA,
 
     #[serde(rename = "fr-CH")]
     #[strum(serialize = "fr-CH")]
+    #[value(name = "fr-CH")]
     FR_CH,
 
     #[serde(rename = "fr-FR")]
     #[strum(serialize = "fr-FR")]
+    #[value(name = "fr-FR")]
     FR_FR,
 
     #[serde(rename = "it-IT")]
     #[strum(serialize = "it-IT")]
+    #[value(name = "it-IT")]
     IT_IT,
 
     #[serde(rename = "ja-JP")]
     #[strum(serialize = "ja-JP")]
+    #[value(name = "ja-JP")]
     JA_JP,
 
     #[serde(rename = "ko-KR")]
     #[strum(serialize = "ko-KR")]
+    #[value(name = "ko-KR")]
     KO_KR,
 
     #[serde(rename = "nl-BE")]
     #[strum(serialize = "nl-BE")]
+    #[value(name = "nl-BE")]
     NL_BE,
 
     #[serde(rename = "nl-NL")]
     #[strum(serialize = "nl-NL")]
+    #[value(name = "nl-NL")]
     NL_NL,
 
     #[serde(rename = "no-NO")]
     #[strum(serialize = "no-NO")]
+    #[value(name = "no-NO")]
     NO_NO,
 
     #[serde(rename = "pl-PL")]
     #[strum(serialize = "pl-PL")]
+    #[value(name = "pl-PL")]
     PL_PL,
 
     #[serde(rename = "pt-BR")]
     #[strum(serialize = "pt-BR")]
+    #[value(name = "pt-BR")]
     PT_BR,
 
     #[serde(rename = "ru-RU")]
     #[strum(serialize = "ru-RU")]
+    #[value(name = "ru-RU")]
     RU_RU,
 
     #[serde(rename = "sv-SE")]
     #[strum(serialize = "sv-SE")]
+    #[value(name = "sv-SE")]
     SV_SE,
 
     #[serde(rename = "tr-TR")]
     #[strum(serialize = "tr-TR")]
+    #[value(name = "tr-TR")]
     TR_TR,
 
     #[serde(rename = "zh-CN")]
     #[strum(serialize = "zh-CN")]
+    #[value(name = "zh-CN")]
     ZH_CN,
 
     #[serde(rename = "zh-HK")]
     #[strum(serialize = "zh-HK")]
+    #[value(name = "zh-HK")]
     ZH_HK,
 
     #[serde(rename = "zh-TW")]
     #[strum(serialize = "zh-TW")]
+    #[value(name = "zh-TW")]
     ZH_TW,
 }
 

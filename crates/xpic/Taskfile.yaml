@@ -8,3 +8,7 @@ tasks:
   build:
     cmds:
       - cargo build --release
+
+  install:
+    cmds:
+      - cargo install --path .

@@ -18,11 +18,11 @@ jobs:
       - name: Set up Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
 
-      - name: Build Xpic CLI
-        run: cargo build --release -p xpic
+      - name: Set up Xpic
+        run: cargo install xpic
 
       - name: Export metadata
-        run: ./target/release/xpic export -o data
+        run: xpic export -o data
 
       - name: Commit changes
         run: |

@@ -4,7 +4,7 @@ mod image;
 
 use std::sync::LazyLock;
 
-pub use crate::client::{Client, ListImagesRequestBuilder, ThumbnailRequestBuilder};
+pub use crate::client::{Client, ImagesRequestBuilder, ThumbnailRequestBuilder};
 pub use crate::image::{Copyright, Image, ID};
 
 static DEFAULT_CLIENT: LazyLock<Client> = LazyLock::new(Client::default);
@@ -14,7 +14,7 @@ pub fn client() -> &'static Client {
     &DEFAULT_CLIENT
 }
 
-pub fn list_images() -> ListImagesRequestBuilder<'static> {
+pub fn list_images() -> ImagesRequestBuilder<'static> {
     DEFAULT_CLIENT.list_images()
 }
 

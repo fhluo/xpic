@@ -10,7 +10,7 @@ use std::path::{Path, PathBuf};
 use strum::IntoEnumIterator;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use xpic::bing::Market;
-use xpic::{fetch_image, list_images, Image, ListImagesRequestBuilder};
+use xpic::{fetch_image, list_images, Image, ImagesRequestBuilder};
 
 /// Bing wallpapers
 #[derive(Parser)]
@@ -57,7 +57,7 @@ struct QueryArgs {
 }
 
 impl QueryArgs {
-    fn into_builder(self) -> ListImagesRequestBuilder<'static> {
+    fn into_builder(self) -> ImagesRequestBuilder<'static> {
         list_images()
             .number(self.number)
             .index(self.index)

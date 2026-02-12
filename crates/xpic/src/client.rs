@@ -22,8 +22,8 @@ impl Client {
         &self.bing
     }
 
-    pub fn list_images(&self) -> ListImagesRequestBuilder<'_> {
-        ListImagesRequestBuilder {
+    pub fn list_images(&self) -> ImagesRequestBuilder<'_> {
+        ImagesRequestBuilder {
             client: self,
             query: bing::Query::new(),
         }
@@ -41,12 +41,12 @@ impl Client {
     }
 }
 
-pub struct ListImagesRequestBuilder<'a> {
+pub struct ImagesRequestBuilder<'a> {
     client: &'a Client,
     query: bing::Query,
 }
 
-impl ListImagesRequestBuilder<'_> {
+impl ImagesRequestBuilder<'_> {
     pub fn index(mut self, idx: usize) -> Self {
         self.query.index = idx;
 

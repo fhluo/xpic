@@ -1,10 +1,15 @@
 use crate::app::XpicApp;
 use crate::assets::Assets;
-use gpui::{prelude::*, px, size, App, Application, Bounds, WindowBounds, WindowOptions};
-use gpui_component::{Root, TitleBar};
+use crate::theme::{apply_mica_theme, enable_mica_backdrop};
+use gpui::{
+    prelude::*, px, size, App, Application, Bounds, WindowBackgroundAppearance,
+    WindowBounds, WindowOptions,
+};
+use gpui_component::{Root, ThemeMode, TitleBar};
 
 mod app;
 mod assets;
+mod theme;
 
 fn main() -> anyhow::Result<()> {
     let app = Application::new().with_assets(Assets);
@@ -25,11 +30,14 @@ fn open_main_window(cx: &App) {
             WindowOptions {
                 titlebar: Some(TitleBar::title_bar_options()),
                 window_bounds: Some(WindowBounds::Windowed(bounds)),
+                window_background: WindowBackgroundAppearance::MicaBackdrop,
                 ..Default::default()
             },
             |window, cx| {
-                let view = cx.new(|cx| XpicApp::new(window, cx));
+                enable_mica_backdrop(window);
+                apply_mica_theme(ThemeMode::Light, window, cx);
 
+                let view = cx.new(|cx| XpicApp::new(window, cx));
                 cx.new(|cx| Root::new(view, window, cx))
             },
         )?;

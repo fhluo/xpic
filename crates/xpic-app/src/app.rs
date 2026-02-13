@@ -12,6 +12,6 @@ impl XpicApp {
 
 impl Render for XpicApp {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        div().child(TitleBar::new())
+        div().child(TitleBar::new().border_0())
     }
 }

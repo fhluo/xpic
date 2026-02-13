@@ -2,6 +2,10 @@
 version: "3"
 
 includes:
+  app:
+    taskfile: crates/xpic-app/Taskfile.yaml
+    dir: crates/xpic-app
+
   cli:
     taskfile: crates/xpic/Taskfile.yaml
     dir: crates/xpic

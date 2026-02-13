@@ -41,10 +41,10 @@ pub fn enable_mica_backdrop(window: &mut Window) {
             let _ = DwmExtendFrameIntoClientArea(
                 HWND(handle.hwnd.get() as _),
                 &MARGINS {
-                    cxLeftWidth: -1,
-                    cxRightWidth: -1,
-                    cyTopHeight: -1,
-                    cyBottomHeight: -1,
+                    cxLeftWidth: 0,
+                    cxRightWidth: 0,
+                    cyTopHeight: 1,
+                    cyBottomHeight: 0,
                 },
             );
         }

@@ -1,9 +1,7 @@
-use gpui::{
-    div, img, prelude::*, px, App, StyleRefinement, Styled, Window, WindowControlArea,
-};
+use gpui::{div, img, prelude::*, px, App, StyleRefinement, Styled, Window, WindowControlArea};
 
 use crate::assets::Icon;
-use crate::theme::Theme;
+use crate::theme::{apply_mica_theme, Appearance, Theme};
 
 #[derive(IntoElement)]
 pub struct TitleBar;
@@ -38,19 +36,66 @@ impl RenderOnce for TitleBar {
                             .flex()
                             .items_center()
                             .justify_center()
-                            .ml(px(8.0))
+                            .ml_2()
                             .size(px(18.0))
                             .child(img(Icon::AppIcon).size_full()),
                     )
                     .child(
                         div()
-                            .ml(px(6.0))
+                            .ml_1p5()
                             .text_size(px(12.0))
                             .text_color(theme.foreground)
                             .child("Xpic"),
                     ),
             )
+            .child(
+                div()
+                    .id("title-bar-actions")
+                    .flex()
+                    .flex_row()
+                    .items_center()
+                    .mr_1p5()
+                    .h(theme.title_bar_height)
+                    .child(ThemeToggle),
+            )
             .child(WindowControls)
+    }
+}
+
+#[derive(IntoElement)]
+struct ThemeToggle;
+
+impl RenderOnce for ThemeToggle {
+    fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
+
+        div()
+            .id("theme-toggle")
+            .font_family(Theme::icons_font())
+            .flex()
+            .items_center()
+            .justify_center()
+            .occlude()
+            .size(px(26.0))
+            .rounded(px(4.0))
+            .cursor_pointer()
+            .text_size(px(14.0))
+            .text_color(theme.foreground)
+            .hover(|s| s.bg(theme.hover_bg))
+            .active(|s| s.bg(theme.active_bg))
+            .child(if theme.is_dark() {
+                "\u{E706}"
+            } else {
+                "\u{E708}"
+            })
+            .on_click(|_, window, cx| {
+                let appearance = match cx.global::<Theme>().appearance {
+                    Appearance::Light => Appearance::Dark,
+                    Appearance::Dark => Appearance::Light,
+                };
+
+                apply_mica_theme(appearance, window, cx);
+            })
     }
 }
 

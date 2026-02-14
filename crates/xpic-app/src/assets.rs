@@ -37,3 +37,9 @@ impl From<Icon> for ImageSource {
         ImageSource::Resource(Resource::Embedded(icon.path().into()))
     }
 }
+
+impl From<Icon> for SharedString {
+    fn from(icon: Icon) -> Self {
+        icon.path().into()
+    }
+}

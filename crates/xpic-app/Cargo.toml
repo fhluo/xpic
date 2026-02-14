@@ -10,3 +10,11 @@ rust-embed = "8.11"
 raw-window-handle = "0.6"
 windows = { version = "0.62", features = ["Win32_Foundation", "Win32_Graphics_Dwm", "Win32_UI_Controls"] }
 anyhow = "1.0"
+
+[build-dependencies]
+winresource = "0.1"
+
+[package.metadata.winresource]
+FileDescription = "Xpic"
+ProductName = "Xpic"
+LegalCopyright = "Copyright © 2026 fhluo"

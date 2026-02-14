@@ -7403,6 +7403,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "winresource"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e287ced0f21cd11f4035fe946fd3af145f068d1acb708afd248100f89ec7432d"
+dependencies = [
+ "toml 0.9.12+spec-1.1.0",
+ "version_check",
+]
+
+[[package]]
 name = "winsafe"
 version = "0.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7647,6 +7657,7 @@ dependencies = [
  "raw-window-handle",
  "rust-embed",
  "windows 0.62.2",
+ "winresource",
  "xpic",
 ]
 

@@ -1,5 +1,8 @@
-use gpui::{div, prelude::*, px, App, StyleRefinement, Styled, Window, WindowControlArea};
+use gpui::{
+    div, img, prelude::*, px, App, StyleRefinement, Styled, Window, WindowControlArea,
+};
 
+use crate::assets::Icon;
 use crate::theme::Theme;
 
 #[derive(IntoElement)]
@@ -28,7 +31,24 @@ impl RenderOnce for TitleBar {
                     .flex()
                     .flex_row()
                     .items_center()
-                    .w_full(),
+                    .w_full()
+                    .child(
+                        div()
+                            .flex_none()
+                            .flex()
+                            .items_center()
+                            .justify_center()
+                            .ml(px(8.0))
+                            .size(px(18.0))
+                            .child(img(Icon::AppIcon).size_full()),
+                    )
+                    .child(
+                        div()
+                            .ml(px(6.0))
+                            .text_size(px(12.0))
+                            .text_color(theme.foreground)
+                            .child("Xpic"),
+                    ),
             )
             .child(WindowControls)
     }

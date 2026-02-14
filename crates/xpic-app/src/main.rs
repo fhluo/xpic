@@ -1,21 +1,22 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use crate::app::XpicApp;
 use crate::assets::Assets;
-use crate::theme::{apply_mica_theme, enable_mica_backdrop};
+use crate::theme::{apply_mica_theme, enable_mica_backdrop, Theme};
 use gpui::{
-    prelude::*, px, size, App, Application, Bounds, WindowBackgroundAppearance,
-    WindowBounds, WindowOptions,
+    prelude::*, px, size, App, Application, Bounds, Size,
+    TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowOptions,
 };
-use gpui_component::{Root, ThemeMode, TitleBar};
 
 mod app;
 mod assets;
 mod theme;
+mod title_bar;
 
 fn main() -> anyhow::Result<()> {
     let app = Application::new().with_assets(Assets);
 
     app.run(move |cx| {
-        gpui_component::init(cx);
         open_main_window(cx);
     });
 
@@ -28,17 +29,24 @@ fn open_main_window(cx: &App) {
     cx.spawn(async move |cx| {
         cx.open_window(
             WindowOptions {
-                titlebar: Some(TitleBar::title_bar_options()),
+                titlebar: Some(TitlebarOptions {
+                    title: None,
+                    appears_transparent: true,
+                    traffic_light_position: None,
+                }),
                 window_bounds: Some(WindowBounds::Windowed(bounds)),
+                window_min_size: Some(Size {
+                    width: px(400.),
+                    height: Theme::DEFAULT_TITLE_BAR_HEIGHT,
+                }),
                 window_background: WindowBackgroundAppearance::MicaBackdrop,
                 ..Default::default()
             },
             |window, cx| {
                 enable_mica_backdrop(window);
-                apply_mica_theme(ThemeMode::Light, window, cx);
+                apply_mica_theme(window.appearance().into(), window, cx);
 
-                let view = cx.new(|cx| XpicApp::new(window, cx));
-                cx.new(|cx| Root::new(view, window, cx))
+                cx.new(|cx| XpicApp::new(window, cx))
             },
         )?;
 

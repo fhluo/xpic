@@ -1,17 +1,18 @@
 use gpui::prelude::*;
 use gpui::{div, Context, IntoElement, Render, Window};
-use gpui_component::TitleBar;
+
+use crate::title_bar::TitleBar;
 
 pub struct XpicApp;
 
 impl XpicApp {
-    pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
+    pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
         XpicApp
     }
 }
 
 impl Render for XpicApp {
-    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        div().child(TitleBar::new().border_0())
+    fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
+        div().child(TitleBar::new())
     }
 }

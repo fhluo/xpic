@@ -15,7 +15,7 @@ impl RenderOnce for ThemeToggle {
             .justify_center()
             .occlude()
             .size(px(26.0))
-            .rounded(px(4.0))
+            .rounded(px(6.0))
             .cursor_pointer()
             .hover(|s| s.bg(theme.hover_bg))
             .active(|s| s.bg(theme.active_bg))

@@ -11,6 +11,7 @@ use gpui::{
 mod app;
 mod assets;
 mod data;
+mod market_selector;
 mod theme;
 mod theme_toggle;
 mod title_bar;
@@ -19,6 +20,7 @@ fn main() -> anyhow::Result<()> {
     let app = Application::new().with_assets(Assets);
 
     app.run(move |cx| {
+        gpui_component::init(cx);
         open_main_window(cx);
     });
 

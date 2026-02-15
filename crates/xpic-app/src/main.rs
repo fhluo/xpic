@@ -11,6 +11,7 @@ use gpui::{
 mod app;
 mod assets;
 mod theme;
+mod theme_toggle;
 mod title_bar;
 
 fn main() -> anyhow::Result<()> {

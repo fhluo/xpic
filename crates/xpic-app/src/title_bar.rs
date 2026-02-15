@@ -1,7 +1,8 @@
 use gpui::{div, img, prelude::*, px, App, StyleRefinement, Styled, Window, WindowControlArea};
 
 use crate::assets::Icon;
-use crate::theme::{apply_mica_theme, Appearance, Theme};
+use crate::theme::Theme;
+use crate::theme_toggle::ThemeToggle;
 
 #[derive(IntoElement)]
 pub struct TitleBar;
@@ -59,46 +60,6 @@ impl RenderOnce for TitleBar {
                     .child(ThemeToggle),
             )
             .child(WindowControls)
-    }
-}
-
-#[derive(IntoElement)]
-struct ThemeToggle;
-
-impl RenderOnce for ThemeToggle {
-    fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
-
-        div()
-            .id("theme-toggle")
-            .flex()
-            .items_center()
-            .justify_center()
-            .occlude()
-            .size(px(26.0))
-            .rounded(px(4.0))
-            .cursor_pointer()
-            .hover(|s| s.bg(theme.hover_bg))
-            .active(|s| s.bg(theme.active_bg))
-            .child(
-                div()
-                    .font_family(Theme::icons_font())
-                    .text_size(px(14.0))
-                    .text_color(theme.foreground)
-                    .child(if theme.is_dark() {
-                        "\u{E706}"
-                    } else {
-                        "\u{E708}"
-                    }),
-            )
-            .on_click(|_, window, cx| {
-                let appearance = match cx.global::<Theme>().appearance {
-                    Appearance::Light => Appearance::Dark,
-                    Appearance::Dark => Appearance::Light,
-                };
-
-                apply_mica_theme(appearance, window, cx);
-            })
     }
 }
 

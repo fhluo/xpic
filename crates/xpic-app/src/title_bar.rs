@@ -71,7 +71,6 @@ impl RenderOnce for ThemeToggle {
 
         div()
             .id("theme-toggle")
-            .font_family(Theme::icons_font())
             .flex()
             .items_center()
             .justify_center()
@@ -79,15 +78,19 @@ impl RenderOnce for ThemeToggle {
             .size(px(26.0))
             .rounded(px(4.0))
             .cursor_pointer()
-            .text_size(px(14.0))
-            .text_color(theme.foreground)
             .hover(|s| s.bg(theme.hover_bg))
             .active(|s| s.bg(theme.active_bg))
-            .child(if theme.is_dark() {
-                "\u{E706}"
-            } else {
-                "\u{E708}"
-            })
+            .child(
+                div()
+                    .font_family(Theme::icons_font())
+                    .text_size(px(14.0))
+                    .text_color(theme.foreground)
+                    .child(if theme.is_dark() {
+                        "\u{E706}"
+                    } else {
+                        "\u{E708}"
+                    }),
+            )
             .on_click(|_, window, cx| {
                 let appearance = match cx.global::<Theme>().appearance {
                     Appearance::Light => Appearance::Dark,
@@ -108,7 +111,6 @@ impl RenderOnce for WindowControls {
 
         div()
             .id("window-controls")
-            .font_family(Theme::icons_font())
             .flex()
             .flex_row()
             .justify_center()
@@ -189,11 +191,15 @@ impl RenderOnce for CaptionButton {
             .occlude()
             .w(theme.control_button_width)
             .h_full()
-            .text_size(px(10.0))
-            .text_color(theme.foreground)
             .hover(self.hover_style(theme))
             .active(self.active_style(theme))
             .window_control_area(self.control_area())
-            .child(self.icon())
+            .child(
+                div()
+                    .font_family(Theme::icons_font())
+                    .text_size(px(10.0))
+                    .text_color(theme.foreground)
+                    .child(self.icon()),
+            )
     }
 }

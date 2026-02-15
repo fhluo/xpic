@@ -8209,6 +8209,8 @@ dependencies = [
  "gpui-component",
  "raw-window-handle",
  "rust-embed",
+ "serde",
+ "serde_json",
  "smallvec",
  "windows 0.62.2",
  "winresource",

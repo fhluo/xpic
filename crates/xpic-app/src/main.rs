@@ -10,6 +10,7 @@ use gpui::{
 
 mod app;
 mod assets;
+mod data;
 mod theme;
 mod theme_toggle;
 mod title_bar;

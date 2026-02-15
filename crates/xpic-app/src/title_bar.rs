@@ -1,15 +1,19 @@
-use gpui::{div, img, prelude::*, px, App, StyleRefinement, Styled, Window, WindowControlArea};
-
-use crate::assets::Icon;
 use crate::theme::Theme;
-use crate::theme_toggle::ThemeToggle;
+use gpui::{
+    div, prelude::*, px, AnyElement, App, StyleRefinement, Styled, Window, WindowControlArea,
+};
+use smallvec::SmallVec;
 
 #[derive(IntoElement)]
-pub struct TitleBar;
+pub struct TitleBar {
+    children: SmallVec<[AnyElement; 2]>,
+}
 
 impl TitleBar {
     pub fn new() -> Self {
-        Self
+        Self {
+            children: SmallVec::new(),
+        }
     }
 }
 
@@ -24,42 +28,14 @@ impl RenderOnce for TitleBar {
             .w_full()
             .h(theme.title_bar_height)
             .window_control_area(WindowControlArea::Drag)
-            .child(
-                div()
-                    .id("title-bar-content")
-                    .flex()
-                    .flex_row()
-                    .items_center()
-                    .w_full()
-                    .child(
-                        div()
-                            .flex_none()
-                            .flex()
-                            .items_center()
-                            .justify_center()
-                            .ml_2()
-                            .size(px(18.0))
-                            .child(img(Icon::AppIcon).size_full()),
-                    )
-                    .child(
-                        div()
-                            .ml_1p5()
-                            .text_size(px(12.0))
-                            .text_color(theme.foreground)
-                            .child("Xpic"),
-                    ),
-            )
-            .child(
-                div()
-                    .id("title-bar-actions")
-                    .flex()
-                    .flex_row()
-                    .items_center()
-                    .mr_1p5()
-                    .h(theme.title_bar_height)
-                    .child(ThemeToggle),
-            )
+            .children(self.children)
             .child(WindowControls)
+    }
+}
+
+impl ParentElement for TitleBar {
+    fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
+        self.children.extend(elements);
     }
 }
 

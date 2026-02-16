@@ -1,4 +1,5 @@
 use gpui::{hsla, px, rgba, App, Global, Hsla, Pixels, Window, WindowAppearance};
+use gpui_component::theme::{Theme as ComponentTheme, ThemeMode};
 use raw_window_handle::{HasWindowHandle, RawWindowHandle};
 use windows::core::BOOL;
 use windows::Win32::Foundation::HWND;
@@ -86,6 +87,7 @@ pub fn apply_mica_theme(mode: Appearance, window: &mut Window, cx: &mut App) {
 
     let is_dark = theme.is_dark();
     cx.set_global(theme);
+    sync_component_theme(mode, cx);
 
     if let Ok(handle) = window.window_handle()
         && let RawWindowHandle::Win32(handle) = handle.as_raw()
@@ -102,6 +104,34 @@ pub fn apply_mica_theme(mode: Appearance, window: &mut Window, cx: &mut App) {
     }
 
     window.refresh();
+}
+
+fn sync_component_theme(mode: Appearance, cx: &mut App) {
+    let component_mode = match mode {
+        Appearance::Dark => ThemeMode::Dark,
+        Appearance::Light => ThemeMode::Light,
+    };
+    ComponentTheme::change(component_mode, None, cx);
+
+    let theme = cx.global_mut::<ComponentTheme>();
+    theme.shadow = false;
+
+    match mode {
+        Appearance::Dark => {
+            theme.colors.background = hsla(0., 0., 0.05, 0.0);
+            theme.colors.secondary = hsla(0., 0., 0.12, 0.5);
+            theme.colors.muted = hsla(0., 0., 0.15, 0.4);
+            theme.colors.popover = hsla(0., 0., 0.18, 1.0);
+            theme.colors.border = hsla(0., 0., 1., 0.08);
+        }
+        Appearance::Light => {
+            theme.colors.background = hsla(0., 0., 1., 0.0);
+            theme.colors.secondary = hsla(0., 0., 0.96, 0.5);
+            theme.colors.muted = hsla(0., 0., 0.94, 0.4);
+            theme.colors.popover = hsla(0., 0., 0.96, 1.0);
+            theme.colors.border = hsla(0., 0., 0., 0.08);
+        }
+    }
 }
 
 pub fn enable_mica_backdrop(window: &mut Window) {

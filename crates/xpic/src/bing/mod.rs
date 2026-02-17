@@ -4,6 +4,7 @@ mod market;
 mod query;
 mod response;
 mod thumbnail_query;
+mod url;
 
 pub use client::Client;
 pub use format::Format;
@@ -11,6 +12,7 @@ pub use market::Market;
 pub use query::Query;
 pub use response::{Image, Response, Tooltips};
 pub use thumbnail_query::{CropMode, ThumbnailQuery};
+pub use url::UrlBuilder;
 
 use const_format::concatc;
 use std::sync::LazyLock;

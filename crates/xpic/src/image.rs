@@ -78,6 +78,11 @@ impl Image {
             hash,
         })
     }
+
+    /// Returns a [`UrlBuilder`](bing::UrlBuilder) for this image's thumbnail.
+    pub fn url_builder(&self) -> bing::UrlBuilder {
+        bing::UrlBuilder::new(&self.id)
+    }
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]

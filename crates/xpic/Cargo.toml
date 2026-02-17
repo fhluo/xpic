@@ -23,6 +23,5 @@ strum = { version = "0.27", features = ["derive"] }
 anyhow = "1.0"
 comfy-table = "7.2"
 const_format = { version = "0.2", features = ["fmt"] }
-
-[dev-dependencies]
 serde_urlencoded = "0.7"
+

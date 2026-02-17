@@ -64,65 +64,76 @@ impl ThumbnailQuery {
             crop: None,
         }
     }
+}
 
-    pub fn pid(mut self, pid: impl Into<String>) -> Self {
-        self.pid = Some(pid.into());
+/// Shared builder methods for types that contain thumbnail parameters.
+pub trait ThumbnailParams: Sized {
+    fn query_mut(&mut self) -> &mut ThumbnailQuery;
 
-        self
-    }
-
-    pub fn pid_option(mut self, pid: Option<impl Into<String>>) -> Self {
-        self.pid = pid.map(|p| p.into());
-
-        self
-    }
-
-    pub fn width(mut self, width: u32) -> Self {
-        self.width = Some(width);
+    fn pid(mut self, pid: impl Into<String>) -> Self {
+        self.query_mut().pid = Some(pid.into());
 
         self
     }
 
-    pub fn width_option(mut self, width: Option<u32>) -> Self {
-        self.width = width;
+    fn pid_option(mut self, pid: Option<impl Into<String>>) -> Self {
+        self.query_mut().pid = pid.map(|p| p.into());
 
         self
     }
 
-    pub fn height(mut self, height: u32) -> Self {
-        self.height = Some(height);
+    fn width(mut self, width: u32) -> Self {
+        self.query_mut().width = Some(width);
 
         self
     }
 
-    pub fn height_option(mut self, height: Option<u32>) -> Self {
-        self.height = height;
+    fn width_option(mut self, width: Option<u32>) -> Self {
+        self.query_mut().width = width;
+
+        self
+    }
+
+    fn height(mut self, height: u32) -> Self {
+        self.query_mut().height = Some(height);
+
+        self
+    }
+
+    fn height_option(mut self, height: Option<u32>) -> Self {
+        self.query_mut().height = height;
 
         self
     }
 
     /// Prevent white padding when the requested size exceeds the original.
-    pub fn no_padding(mut self) -> Self {
-        self.padding = Some(0);
+    fn no_padding(mut self) -> Self {
+        self.query_mut().padding = Some(0);
 
         self
     }
 
-    pub fn padding_option(mut self, padding: Option<u32>) -> Self {
-        self.padding = padding;
+    fn padding_option(mut self, padding: Option<u32>) -> Self {
+        self.query_mut().padding = padding;
 
         self
     }
 
-    pub fn crop(mut self, mode: CropMode) -> Self {
-        self.crop = Some(mode);
+    fn crop(mut self, mode: CropMode) -> Self {
+        self.query_mut().crop = Some(mode);
 
         self
     }
 
-    pub fn crop_option(mut self, mode: Option<CropMode>) -> Self {
-        self.crop = mode;
+    fn crop_option(mut self, mode: Option<CropMode>) -> Self {
+        self.query_mut().crop = mode;
 
+        self
+    }
+}
+
+impl ThumbnailParams for ThumbnailQuery {
+    fn query_mut(&mut self) -> &mut ThumbnailQuery {
         self
     }
 }

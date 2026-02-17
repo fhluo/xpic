@@ -11,7 +11,7 @@ pub use format::Format;
 pub use market::Market;
 pub use query::Query;
 pub use response::{Image, Response, Tooltips};
-pub use thumbnail_query::{CropMode, ThumbnailQuery};
+pub use thumbnail_query::{CropMode, ThumbnailParams, ThumbnailQuery};
 pub use url::UrlBuilder;
 
 use const_format::concatc;

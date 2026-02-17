@@ -1,81 +1,37 @@
-use super::{CropMode, THUMBNAIL_URL};
-use serde::Serialize;
-use serde_with::skip_serializing_none;
+use super::{ThumbnailParams, ThumbnailQuery, THUMBNAIL_URL};
 
-#[skip_serializing_none]
-#[derive(Debug, Clone, Serialize)]
+/// Builder for constructing Bing thumbnail URLs without making requests.
+#[derive(Debug, Clone)]
 pub struct UrlBuilder {
-    pub id: String,
-
-    pub pid: Option<String>,
-
-    #[serde(rename = "w")]
-    pub width: Option<u32>,
-
-    #[serde(rename = "h")]
-    pub height: Option<u32>,
-
-    #[serde(rename = "p")]
-    pub padding: Option<u32>,
-
-    #[serde(rename = "c")]
-    pub crop: Option<CropMode>,
+    query: ThumbnailQuery,
 }
 
 impl UrlBuilder {
     pub fn new(id: impl Into<String>) -> Self {
         Self {
-            id: id.into(),
-            width: None,
-            height: None,
-            pid: None,
-            padding: None,
-            crop: None,
+            query: ThumbnailQuery::new(id),
         }
-    }
-
-    pub fn width(mut self, width: u32) -> Self {
-        self.width = Some(width);
-
-        self
-    }
-
-    pub fn height(mut self, height: u32) -> Self {
-        self.height = Some(height);
-
-        self
-    }
-
-    pub fn pid(mut self, pid: impl Into<String>) -> Self {
-        self.pid = Some(pid.into());
-
-        self
-    }
-
-    pub fn crop(mut self, mode: CropMode) -> Self {
-        self.crop = Some(mode);
-
-        self
-    }
-
-    pub fn no_padding(mut self) -> Self {
-        self.padding = Some(0);
-
-        self
     }
 
     /// Builds the full thumbnail URL with query parameters.
     pub fn build(&self) -> Result<String, anyhow::Error> {
         Ok(format!(
             "{THUMBNAIL_URL}?{}",
-            serde_urlencoded::to_string(self)?
+            serde_urlencoded::to_string(&self.query)?
         ))
+    }
+}
+
+impl ThumbnailParams for UrlBuilder {
+    fn query_mut(&mut self) -> &mut ThumbnailQuery {
+        &mut self.query
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::bing::CropMode;
 
     #[test]
     fn test_basic_url() {
@@ -113,7 +69,7 @@ mod tests {
 
         assert_eq!(
             url,
-            "https://www.bing.com/th?id=OHR.Test_EN-US123_UHD.jpg&w=200&h=200&pid=hp&p=0&c=7"
+            "https://www.bing.com/th?id=OHR.Test_EN-US123_UHD.jpg&pid=hp&w=200&h=200&p=0&c=7"
         );
     }
 }

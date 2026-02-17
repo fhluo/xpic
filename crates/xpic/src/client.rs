@@ -100,55 +100,13 @@ pub struct ThumbnailRequestBuilder<'a> {
     query: bing::ThumbnailQuery,
 }
 
+impl bing::ThumbnailParams for ThumbnailRequestBuilder<'_> {
+    fn query_mut(&mut self) -> &mut bing::ThumbnailQuery {
+        &mut self.query
+    }
+}
+
 impl ThumbnailRequestBuilder<'_> {
-    pub fn width(mut self, width: u32) -> Self {
-        self.query.width = Some(width);
-
-        self
-    }
-
-    pub fn width_option(mut self, width: Option<u32>) -> Self {
-        self.query.width = width;
-
-        self
-    }
-
-    pub fn height(mut self, height: u32) -> Self {
-        self.query.height = Some(height);
-
-        self
-    }
-
-    pub fn height_option(mut self, height: Option<u32>) -> Self {
-        self.query.height = height;
-
-        self
-    }
-
-    pub fn crop(mut self, mode: bing::CropMode) -> Self {
-        self.query.crop = Some(mode);
-
-        self
-    }
-
-    pub fn crop_option(mut self, crop_mode: Option<bing::CropMode>) -> Self {
-        self.query.crop = crop_mode;
-
-        self
-    }
-
-    pub fn no_padding(mut self) -> Self {
-        self.query.padding = Some(0);
-
-        self
-    }
-
-    pub fn padding_option(mut self, padding: Option<u32>) -> Self {
-        self.query.padding = padding;
-
-        self
-    }
-
     pub async fn send(self) -> reqwest::Result<reqwest::Response> {
         self.client.bing.thumbnail(&self.query).await
     }

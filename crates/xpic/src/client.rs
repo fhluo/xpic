@@ -46,43 +46,13 @@ pub struct ImagesRequestBuilder<'a> {
     query: bing::Query,
 }
 
+impl bing::QueryParams for ImagesRequestBuilder<'_> {
+    fn query_mut(&mut self) -> &mut bing::Query {
+        &mut self.query
+    }
+}
+
 impl ImagesRequestBuilder<'_> {
-    pub fn index(mut self, idx: usize) -> Self {
-        self.query.index = idx;
-
-        self
-    }
-
-    pub fn number(mut self, n: usize) -> Self {
-        self.query.number = n;
-
-        self
-    }
-
-    pub fn market(mut self, market: bing::Market) -> Self {
-        self.query.market = Some(market);
-
-        self
-    }
-
-    pub fn market_option(mut self, market: Option<bing::Market>) -> Self {
-        self.query.market = market;
-
-        self
-    }
-
-    pub fn uhd(mut self, uhd: bool) -> Self {
-        self.query.uhd = Some(uhd);
-
-        self
-    }
-
-    pub fn uhd_option(mut self, uhd: Option<bool>) -> Self {
-        self.query.uhd = uhd;
-
-        self
-    }
-
     pub async fn send(self) -> Result<Vec<Image>, anyhow::Error> {
         Ok(self
             .client

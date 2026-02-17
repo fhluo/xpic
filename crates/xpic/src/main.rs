@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 use strum::IntoEnumIterator;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use xpic::bing::Market;
+use xpic::bing::QueryParams;
 use xpic::{fetch_image, list_images, Image, ImagesRequestBuilder};
 
 /// Bing wallpapers

@@ -9,7 +9,7 @@ mod url;
 pub use client::Client;
 pub use format::Format;
 pub use market::Market;
-pub use query::Query;
+pub use query::{Query, QueryParams};
 pub use response::{Image, Response, Tooltips};
 pub use thumbnail_query::{CropMode, ThumbnailParams, ThumbnailQuery};
 pub use url::UrlBuilder;

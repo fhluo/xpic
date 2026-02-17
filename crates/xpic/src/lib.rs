@@ -29,6 +29,7 @@ pub fn fetch_thumbnail(id: impl Into<String>) -> ThumbnailRequestBuilder<'static
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::bing::QueryParams;
 
     #[tokio::test]
     #[ignore]

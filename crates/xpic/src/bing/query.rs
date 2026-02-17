@@ -39,40 +39,50 @@ impl Query {
 
         self
     }
+}
 
-    pub fn index(mut self, index: usize) -> Self {
-        self.index = index;
+pub trait QueryParams: Sized {
+    fn query_mut(&mut self) -> &mut Query;
 
-        self
-    }
-
-    pub fn number(mut self, number: usize) -> Self {
-        self.number = number;
+    fn index(mut self, index: usize) -> Self {
+        self.query_mut().index = index;
 
         self
     }
 
-    pub fn market(mut self, market: Market) -> Self {
-        self.market = Some(market);
+    fn number(mut self, number: usize) -> Self {
+        self.query_mut().number = number;
 
         self
     }
 
-    pub fn market_option(mut self, market: Option<Market>) -> Self {
-        self.market = market;
+    fn market(mut self, market: Market) -> Self {
+        self.query_mut().market = Some(market);
 
         self
     }
 
-    pub fn uhd(mut self, uhd: bool) -> Self {
-        self.uhd = Some(uhd);
+    fn market_option(mut self, market: Option<Market>) -> Self {
+        self.query_mut().market = market;
 
         self
     }
 
-    pub fn uhd_option(mut self, uhd: Option<bool>) -> Self {
-        self.uhd = uhd;
+    fn uhd(mut self, uhd: bool) -> Self {
+        self.query_mut().uhd = Some(uhd);
 
+        self
+    }
+
+    fn uhd_option(mut self, uhd: Option<bool>) -> Self {
+        self.query_mut().uhd = uhd;
+
+        self
+    }
+}
+
+impl QueryParams for Query {
+    fn query_mut(&mut self) -> &mut Query {
         self
     }
 }

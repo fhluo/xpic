@@ -2,6 +2,7 @@
 
 use crate::app::XpicApp;
 use crate::assets::Assets;
+use crate::config::Config;
 use crate::theme::{apply_mica_theme, enable_mica_backdrop, Theme};
 use gpui::{
     prelude::*, px, size, App, Application, Bounds, Size,
@@ -10,6 +11,7 @@ use gpui::{
 
 mod app;
 mod assets;
+mod config;
 mod data;
 mod market_selector;
 mod theme;
@@ -21,6 +23,8 @@ fn main() -> anyhow::Result<()> {
 
     app.run(move |cx| {
         gpui_component::init(cx);
+
+        cx.set_global(Config::default());
         open_main_window(cx);
     });
 

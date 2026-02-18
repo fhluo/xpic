@@ -1,27 +1,22 @@
 use crate::config::Config;
 use crate::RUNTIME;
 use gpui::{
-    img, prelude::*, App, Asset, ImageCacheError, ImageSource, ImageStyle, IntoElement,
-    RenderImage, SharedString, StyleRefinement, StyledImage, Window,
+    img, prelude::*, App, Asset, ImageCacheError, ImageSource, Img, IntoElement, RenderImage,
+    SharedString,
 };
 use image::ImageReader;
 use std::io::Cursor;
 use std::sync::Arc;
 use xpic::bing::{ThumbnailParams, ThumbnailQuery, UrlBuilder};
 
-#[derive(IntoElement)]
 pub struct Image {
     url: UrlBuilder,
-    base_style: StyleRefinement,
-    style: ImageStyle,
 }
 
 impl Image {
     pub fn new(id: impl Into<String>) -> Self {
         Self {
             url: UrlBuilder::new(id),
-            base_style: StyleRefinement::default(),
-            style: ImageStyle::default(),
         }
     }
 
@@ -41,36 +36,21 @@ impl Image {
     }
 }
 
-impl Styled for Image {
-    fn style(&mut self) -> &mut StyleRefinement {
-        &mut self.base_style
-    }
-}
-
-impl StyledImage for Image {
-    fn image_style(&mut self) -> &mut ImageStyle {
-        &mut self.style
-    }
-}
-
 impl ThumbnailParams for Image {
     fn query_mut(&mut self) -> &mut ThumbnailQuery {
         self.url.query_mut()
     }
 }
 
-impl RenderOnce for Image {
-    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
-        let url: SharedString = self.url.build().unwrap().into();
+impl IntoElement for Image {
+    type Element = Img;
 
-        let mut element = img(ImageSource::Custom(Arc::new(move |window, cx| {
+    fn into_element(self) -> Self::Element {
+        let url = self.url.build().unwrap().into();
+
+        img(ImageSource::Custom(Arc::new(move |window, cx| {
             window.use_asset::<Image>(&url, cx)
-        })));
-
-        *element.style() = self.base_style;
-        *element.image_style() = self.style;
-
-        element
+        })))
     }
 }
 

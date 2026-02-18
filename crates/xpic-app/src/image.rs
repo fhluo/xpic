@@ -1,8 +1,8 @@
 use crate::config::Config;
 use crate::RUNTIME;
 use gpui::{
-    img, prelude::*, App, Asset, ImageCacheError, ImageSource, IntoElement, RenderImage, SharedString,
-    Window,
+    img, prelude::*, App, Asset, ImageCacheError, ImageSource, ImageStyle, IntoElement,
+    RenderImage, SharedString, StyledImage, Window,
 };
 use image::ImageReader;
 use std::io::Cursor;
@@ -12,12 +12,14 @@ use xpic::bing::{ThumbnailParams, ThumbnailQuery, UrlBuilder};
 #[derive(IntoElement)]
 pub struct Image {
     url: UrlBuilder,
+    style: ImageStyle,
 }
 
 impl Image {
     pub fn new(id: impl Into<String>) -> Self {
         Self {
             url: UrlBuilder::new(id),
+            style: ImageStyle::default(),
         }
     }
 
@@ -37,6 +39,12 @@ impl Image {
     }
 }
 
+impl StyledImage for Image {
+    fn image_style(&mut self) -> &mut ImageStyle {
+        &mut self.style
+    }
+}
+
 impl ThumbnailParams for Image {
     fn query_mut(&mut self) -> &mut ThumbnailQuery {
         self.url.query_mut()
@@ -47,11 +55,12 @@ impl RenderOnce for Image {
     fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         let url: SharedString = self.url.build().unwrap().into();
 
-        let source = ImageSource::Custom(Arc::new(move |window, cx| {
+        let mut element = img(ImageSource::Custom(Arc::new(move |window, cx| {
             window.use_asset::<Image>(&url, cx)
-        }));
+        })));
+        *element.image_style() = self.style;
 
-        img(source)
+        element
     }
 }
 

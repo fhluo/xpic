@@ -8,6 +8,7 @@ use gpui::{
     prelude::*, px, size, App, Application, Bounds, Size,
     TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowOptions,
 };
+use std::sync::LazyLock;
 
 mod app;
 mod assets;
@@ -18,12 +19,20 @@ mod theme;
 mod theme_toggle;
 mod title_bar;
 
+pub static RUNTIME: LazyLock<tokio::runtime::Runtime> = LazyLock::new(|| {
+    tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .expect("failed to create Tokio runtime")
+});
+
 fn main() -> anyhow::Result<()> {
     let app = Application::new().with_assets(Assets);
 
     app.run(move |cx| {
         gpui_component::init(cx);
 
+        LazyLock::force(&RUNTIME);
         cx.set_global(Config::default());
         open_main_window(cx);
     });

@@ -63,6 +63,17 @@ impl Image {
             Self::rgba_to_bgra(img),
         )])))
     }
+
+    pub fn source(&self) -> ImageSource {
+        let source = ImageAssetSource {
+            url: self.url.build().unwrap().into(),
+            lighten_level: self.lighten_level,
+        };
+
+        ImageSource::Custom(Arc::new(move |window, cx| {
+            window.use_asset::<Image>(&source, cx)
+        }))
+    }
 }
 
 impl ThumbnailParams for Image {
@@ -88,14 +99,7 @@ impl IntoElement for Image {
     type Element = Img;
 
     fn into_element(self) -> Self::Element {
-        let source = ImageAssetSource {
-            url: self.url.build().unwrap().into(),
-            lighten_level: self.lighten_level,
-        };
-
-        img(ImageSource::Custom(Arc::new(move |window, cx| {
-            window.use_asset::<Image>(&source, cx)
-        })))
+        img(self.source())
     }
 }
 

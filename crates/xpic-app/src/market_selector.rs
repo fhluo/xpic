@@ -4,7 +4,7 @@ use gpui::prelude::*;
 use gpui::{div, px, Action, App, Corner, Window};
 use gpui_component::button::{Button, ButtonCustomVariant, ButtonVariants};
 use gpui_component::menu::{DropdownMenu, PopupMenuItem};
-use gpui_component::{Sizable, Size};
+use gpui_component::Sizable;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use xpic::bing::Market;

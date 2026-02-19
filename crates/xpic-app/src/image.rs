@@ -30,6 +30,18 @@ impl Image {
         self
     }
 
+    pub fn aspect_ratio(&self) -> Option<f32> {
+        let query = self.url.query();
+
+        if let (Some(w), Some(h)) = (query.width, query.height)
+            && h > 0
+        {
+            Some(w as f32 / h as f32)
+        } else {
+            None
+        }
+    }
+
     fn rgba_to_bgra(mut img: RgbaImage) -> RgbaImage {
         for pixel in img.chunks_exact_mut(4) {
             pixel.swap(0, 2);

@@ -4,8 +4,7 @@ use gpui::{
     img, prelude::*, App, Asset, ImageCacheError, ImageSource, Img, IntoElement, RenderImage,
     SharedString,
 };
-use image::ImageReader;
-use std::io::Cursor;
+use image::RgbaImage;
 use std::sync::Arc;
 use xpic::bing::{ThumbnailParams, ThumbnailQuery, UrlBuilder};
 
@@ -20,19 +19,22 @@ impl Image {
         }
     }
 
-    pub fn decode(bytes: impl AsRef<[u8]>) -> Result<Arc<RenderImage>, ImageCacheError> {
-        let mut data = ImageReader::new(Cursor::new(bytes))
-            .with_guessed_format()
-            .map_err(|err| ImageCacheError::Other(Arc::new(err.into())))?
-            .decode()
-            .map_err(|err| ImageCacheError::Other(Arc::new(err.into())))?
-            .into_rgba8();
-
-        for pixel in data.chunks_exact_mut(4) {
+    fn rgba_to_bgra(mut img: RgbaImage) -> RgbaImage {
+        for pixel in img.chunks_exact_mut(4) {
             pixel.swap(0, 2);
         }
 
-        Ok(Arc::new(RenderImage::new([image::Frame::new(data)])))
+        img
+    }
+
+    pub fn decode(bytes: impl AsRef<[u8]>) -> Result<Arc<RenderImage>, ImageCacheError> {
+        let img = image::load_from_memory(bytes.as_ref())
+            .map_err(|err| ImageCacheError::Other(Arc::new(err.into())))?
+            .into_rgba8();
+
+        Ok(Arc::new(RenderImage::new([image::Frame::new(
+            Self::rgba_to_bgra(img),
+        )])))
     }
 }
 

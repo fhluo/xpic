@@ -5,6 +5,8 @@ use gpui::{
     SharedString,
 };
 use image::RgbaImage;
+use photon_rs::colour_spaces::lighten_hsl;
+use photon_rs::PhotonImage;
 use std::sync::Arc;
 use xpic::bing::{ThumbnailParams, ThumbnailQuery, UrlBuilder};
 
@@ -27,10 +29,26 @@ impl Image {
         img
     }
 
-    pub fn decode(bytes: impl AsRef<[u8]>) -> Result<Arc<RenderImage>, ImageCacheError> {
-        let img = image::load_from_memory(bytes.as_ref())
+    fn lighten(img: RgbaImage, level: f32) -> RgbaImage {
+        let (w, h) = img.dimensions();
+
+        let mut photon_img = PhotonImage::new(img.into_raw(), w, h);
+        lighten_hsl(&mut photon_img, level);
+
+        RgbaImage::from_raw(w, h, photon_img.get_raw_pixels()).unwrap()
+    }
+
+    pub fn decode(
+        bytes: impl AsRef<[u8]>,
+        lighten_level: Option<f32>,
+    ) -> Result<Arc<RenderImage>, ImageCacheError> {
+        let mut img = image::load_from_memory(bytes.as_ref())
             .map_err(|err| ImageCacheError::Other(Arc::new(err.into())))?
             .into_rgba8();
+
+        if let Some(lighten_level) = lighten_level {
+            img = Self::lighten(img, lighten_level)
+        }
 
         Ok(Arc::new(RenderImage::new([image::Frame::new(
             Self::rgba_to_bgra(img),
@@ -93,7 +111,7 @@ impl Asset for Image {
                 .map_err(|err| ImageCacheError::Other(Arc::new(err.into())))?
                 .map_err(|err| ImageCacheError::Io(Arc::new(err)))?;
 
-            Image::decode(bytes)
+            Image::decode(bytes, None)
         }
     }
 }

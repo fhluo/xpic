@@ -1,24 +1,33 @@
 use crate::config::Config;
 use crate::RUNTIME;
 use gpui::{
-    img, prelude::*, App, Asset, ImageCacheError, ImageSource, Img, IntoElement, RenderImage,
-    SharedString,
+    img, App, Asset, ImageCacheError, ImageSource, Img, IntoElement, RenderImage, SharedString,
 };
 use image::RgbaImage;
 use photon_rs::colour_spaces::lighten_hsl;
 use photon_rs::PhotonImage;
+use std::hash::{Hash, Hasher};
 use std::sync::Arc;
 use xpic::bing::{ThumbnailParams, ThumbnailQuery, UrlBuilder};
 
+#[derive(Debug, Clone)]
 pub struct Image {
     url: UrlBuilder,
+    lighten_level: Option<f32>,
 }
 
 impl Image {
     pub fn new(id: impl Into<String>) -> Self {
         Self {
             url: UrlBuilder::new(id),
+            lighten_level: None,
         }
+    }
+
+    pub fn lighten_level(mut self, level: f32) -> Self {
+        self.lighten_level = Some(level);
+
+        self
     }
 
     fn rgba_to_bgra(mut img: RgbaImage) -> RgbaImage {
@@ -62,24 +71,40 @@ impl ThumbnailParams for Image {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct ImageAssetSource {
+    url: SharedString,
+    lighten_level: Option<f32>,
+}
+
+impl Hash for ImageAssetSource {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.url.hash(state);
+        self.lighten_level.map(f32::to_bits).hash(state);
+    }
+}
+
 impl IntoElement for Image {
     type Element = Img;
 
     fn into_element(self) -> Self::Element {
-        let url = self.url.build().unwrap().into();
+        let source = ImageAssetSource {
+            url: self.url.build().unwrap().into(),
+            lighten_level: self.lighten_level,
+        };
 
         img(ImageSource::Custom(Arc::new(move |window, cx| {
-            window.use_asset::<Image>(&url, cx)
+            window.use_asset::<Image>(&source, cx)
         })))
     }
 }
 
 impl Asset for Image {
-    type Source = SharedString;
+    type Source = ImageAssetSource;
     type Output = Result<Arc<RenderImage>, ImageCacheError>;
 
     fn load(
-        url: Self::Source,
+        ImageAssetSource { url, lighten_level }: Self::Source,
         cx: &mut App,
     ) -> impl Future<Output = Self::Output> + Send + 'static {
         let path = cx.global::<Config>().image_cache(&url);
@@ -111,7 +136,7 @@ impl Asset for Image {
                 .map_err(|err| ImageCacheError::Other(Arc::new(err.into())))?
                 .map_err(|err| ImageCacheError::Io(Arc::new(err)))?;
 
-            Image::decode(bytes, None)
+            Image::decode(bytes, lighten_level)
         }
     }
 }

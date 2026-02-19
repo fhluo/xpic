@@ -1,11 +1,13 @@
 use crate::image::Image;
-use gpui::{div, prelude::*, App, ElementId, StyleRefinement, Window};
+use crate::theme::Theme;
+use gpui::{div, img, prelude::*, App, ElementId, SharedString, StyleRefinement, Window};
 use gpui_component::StyledExt;
-use xpic::bing::ThumbnailParams;
+use xpic::bing::{ThumbnailParams, ThumbnailQuery};
 
 #[derive(IntoElement)]
 pub struct Card {
     id: ElementId,
+    title: Option<SharedString>,
     image: Image,
     style: StyleRefinement,
 }
@@ -16,46 +18,87 @@ impl Styled for Card {
     }
 }
 
+impl ThumbnailParams for Card {
+    fn query(&self) -> &ThumbnailQuery {
+        self.image.query()
+    }
+
+    fn query_mut(&mut self) -> &mut ThumbnailQuery {
+        self.image.query_mut()
+    }
+}
+
 impl Card {
     pub fn new(id: impl Into<String>) -> Self {
         let id = id.into();
 
         Self {
             id: id.clone().into(),
+            title: None,
             image: Image::new(id),
             style: StyleRefinement::default(),
         }
     }
-}
 
-impl ThumbnailParams for Card {
-    fn query_mut(&mut self) -> &mut xpic::bing::ThumbnailQuery {
-        self.image.query_mut()
+    pub fn title(mut self, title: impl Into<SharedString>) -> Self {
+        self.title = Some(title.into());
+
+        self
     }
 }
 
 impl RenderOnce for Card {
-    fn render(self, _: &mut Window, _: &mut App) -> impl IntoElement {
-        let lightened = self.image.clone().lighten_level(0.1);
-        let style = StyleRefinement::default().size_full().rounded_sm();
+    fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
+
+        let img_source = self.image.source();
+        let lightened_img_source = self.image.clone().lighten_level(0.1).source();
+
+        let img_style = StyleRefinement::default().size_full().rounded_t_sm();
+        let mut img_area_style = StyleRefinement::default();
+        img_area_style.style().aspect_ratio = self.image.aspect_ratio();
 
         div()
             .id(self.id)
             .group("card")
-            .relative()
+            .flex()
+            .flex_col()
             .overflow_hidden()
+            .cursor_pointer()
             .refine_style(&self.style)
-            .rounded_sm()
-            .child(self.image.into_element().refine_style(&style))
             .child(
-                lightened
-                    .into_element()
-                    .absolute()
-                    .top_0()
-                    .left_0()
-                    .invisible()
-                    .refine_style(&style)
-                    .group_hover("card", |s| s.visible()),
+                div()
+                    .relative()
+                    .w_full()
+                    .flex_shrink_0()
+                    .refine_style(&img_area_style)
+                    .child(img(img_source).refine_style(&img_style))
+                    .child(
+                        img(lightened_img_source)
+                            .absolute()
+                            .top_0()
+                            .left_0()
+                            .invisible()
+                            .refine_style(&img_style)
+                            .group_hover("card", |s| s.visible()),
+                    ),
             )
+            .when_some(self.title, |card, title| {
+                card.child(
+                    div()
+                        .bg(theme.secondary)
+                        .border_x_1()
+                        .border_b_1()
+                        .border_color(theme.border)
+                        .rounded_b_sm()
+                        .px_2()
+                        .py_1()
+                        .text_xs()
+                        .text_color(theme.caption)
+                        .truncate()
+                        .child(title)
+                        .group_hover("card", |s| s.bg(theme.secondary_hover)),
+                )
+            })
     }
 }

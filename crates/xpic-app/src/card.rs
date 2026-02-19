@@ -1,7 +1,9 @@
 use crate::image::Image;
+use crate::spinner::Spinner;
 use crate::theme::Theme;
 use gpui::{div, img, prelude::*, App, ElementId, SharedString, StyleRefinement, Window};
 use gpui_component::StyledExt;
+use std::time::Duration;
 use xpic::bing::{ThumbnailParams, ThumbnailQuery};
 
 #[derive(IntoElement)]
@@ -72,7 +74,11 @@ impl RenderOnce for Card {
                     .w_full()
                     .flex_shrink_0()
                     .refine_style(&img_area_style)
-                    .child(img(img_source).refine_style(&img_style))
+                    .child(
+                        img(img_source)
+                            .refine_style(&img_style)
+                            .with_loading(|| Loading.into_any_element()),
+                    )
                     .child(
                         img(lightened_img_source)
                             .absolute()
@@ -100,5 +106,23 @@ impl RenderOnce for Card {
                         .group_hover("card", |s| s.bg(theme.secondary_hover)),
                 )
             })
+    }
+}
+
+#[derive(IntoElement)]
+struct Loading;
+
+impl RenderOnce for Loading {
+    fn render(self, _: &mut Window, _: &mut App) -> impl IntoElement {
+        div()
+            .size_full()
+            .flex()
+            .items_center()
+            .justify_center()
+            .child(
+                Spinner::new()
+                    .duration(Duration::from_secs_f64(0.5))
+                    .size_6(),
+            )
     }
 }

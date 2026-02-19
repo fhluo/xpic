@@ -15,6 +15,7 @@ mod assets;
 mod config;
 mod data;
 mod image;
+mod card;
 mod market_selector;
 mod theme;
 mod theme_toggle;

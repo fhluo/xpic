@@ -68,6 +68,8 @@ impl ThumbnailQuery {
 
 /// Shared builder methods for types that contain thumbnail parameters.
 pub trait ThumbnailParams: Sized {
+    fn query(&self) -> &ThumbnailQuery;
+
     fn query_mut(&mut self) -> &mut ThumbnailQuery;
 
     fn pid(mut self, pid: impl Into<String>) -> Self {
@@ -133,6 +135,10 @@ pub trait ThumbnailParams: Sized {
 }
 
 impl ThumbnailParams for ThumbnailQuery {
+    fn query(&self) -> &ThumbnailQuery {
+        self
+    }
+
     fn query_mut(&mut self) -> &mut ThumbnailQuery {
         self
     }

@@ -42,6 +42,8 @@ impl Query {
 }
 
 pub trait QueryParams: Sized {
+    fn query(&self) -> &Query;
+    
     fn query_mut(&mut self) -> &mut Query;
 
     fn index(mut self, index: usize) -> Self {
@@ -82,6 +84,10 @@ pub trait QueryParams: Sized {
 }
 
 impl QueryParams for Query {
+    fn query(&self) -> &Query {
+        self
+    }
+    
     fn query_mut(&mut self) -> &mut Query {
         self
     }

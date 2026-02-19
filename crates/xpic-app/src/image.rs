@@ -77,6 +77,10 @@ impl Image {
 }
 
 impl ThumbnailParams for Image {
+    fn query(&self) -> &ThumbnailQuery {
+        self.url.query()
+    }
+
     fn query_mut(&mut self) -> &mut ThumbnailQuery {
         self.url.query_mut()
     }

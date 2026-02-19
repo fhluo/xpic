@@ -1,3 +1,4 @@
+use crate::bing::{Query, QueryParams, ThumbnailParams, ThumbnailQuery};
 use crate::{bing, Image};
 
 pub struct Client {
@@ -43,11 +44,15 @@ impl Client {
 
 pub struct ImagesRequestBuilder<'a> {
     client: &'a Client,
-    query: bing::Query,
+    query: Query,
 }
 
-impl bing::QueryParams for ImagesRequestBuilder<'_> {
-    fn query_mut(&mut self) -> &mut bing::Query {
+impl QueryParams for ImagesRequestBuilder<'_> {
+    fn query(&self) -> &Query {
+        &self.query
+    }
+
+    fn query_mut(&mut self) -> &mut Query {
         &mut self.query
     }
 }
@@ -67,11 +72,15 @@ impl ImagesRequestBuilder<'_> {
 
 pub struct ThumbnailRequestBuilder<'a> {
     client: &'a Client,
-    query: bing::ThumbnailQuery,
+    query: ThumbnailQuery,
 }
 
-impl bing::ThumbnailParams for ThumbnailRequestBuilder<'_> {
-    fn query_mut(&mut self) -> &mut bing::ThumbnailQuery {
+impl ThumbnailParams for ThumbnailRequestBuilder<'_> {
+    fn query(&self) -> &ThumbnailQuery {
+        &self.query
+    }
+
+    fn query_mut(&mut self) -> &mut ThumbnailQuery {
         &mut self.query
     }
 }

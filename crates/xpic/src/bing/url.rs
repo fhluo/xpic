@@ -23,6 +23,10 @@ impl UrlBuilder {
 }
 
 impl ThumbnailParams for UrlBuilder {
+    fn query(&self) -> &ThumbnailQuery {
+        &self.query
+    }
+
     fn query_mut(&mut self) -> &mut ThumbnailQuery {
         &mut self.query
     }

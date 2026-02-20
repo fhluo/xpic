@@ -7,7 +7,7 @@ macro_rules! data {
         pub static MARKET_DATA: LazyLock<Vec<(Market, Vec<Image>)>> = LazyLock::new(|| {
             vec![
                 $(
-                    (Market::$market, serde_json::from_str(include_str!(concat!("../../../data/", $file))).unwrap()),
+                    (Market::$market, serde_json::from_str(include_str!(concat!("../../../data/", $file))).expect(concat!("embedded data should be valid JSON: ", $file))),
                 )*
             ]
         });

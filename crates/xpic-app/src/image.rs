@@ -56,7 +56,8 @@ impl Image {
         let mut photon_img = PhotonImage::new(img.into_raw(), w, h);
         lighten_hsl(&mut photon_img, level);
 
-        RgbaImage::from_raw(w, h, photon_img.get_raw_pixels()).unwrap()
+        RgbaImage::from_raw(w, h, photon_img.get_raw_pixels())
+            .expect("pixel buffer should match image dimensions")
     }
 
     pub fn decode(
@@ -78,7 +79,7 @@ impl Image {
 
     pub fn source(&self) -> ImageSource {
         let source = ImageAssetSource {
-            url: self.url.build().unwrap().into(),
+            url: self.url.build().expect("URL should be valid").into(),
             lighten_level: self.lighten_level,
         };
 

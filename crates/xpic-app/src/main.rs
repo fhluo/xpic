@@ -5,8 +5,8 @@ use crate::assets::Assets;
 use crate::config::Config;
 use crate::theme::{apply_mica_theme, enable_mica_backdrop, Theme};
 use gpui::{
-    prelude::*, px, size, App, Application, Bounds, Size,
-    TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowOptions,
+    prelude::*, px, size, App, Bounds, Size, TitlebarOptions,
+    WindowBackgroundAppearance, WindowBounds, WindowOptions,
 };
 use std::sync::LazyLock;
 
@@ -31,7 +31,7 @@ pub static RUNTIME: LazyLock<tokio::runtime::Runtime> = LazyLock::new(|| {
 });
 
 fn main() -> anyhow::Result<()> {
-    let app = Application::new().with_assets(Assets);
+    let app = gpui_platform::application().with_assets(Assets);
 
     app.run(move |cx| {
         gpui_component::init(cx);

@@ -2,14 +2,14 @@ use crate::assets::Icon;
 use crate::data;
 use crate::gallery::Gallery;
 use crate::market_selector::{ChangeMarket, MarketSelector};
+use crate::search_bar::SearchBar;
 use crate::theme::Theme;
 use crate::theme_toggle::ThemeToggle;
 use crate::title_bar::TitleBar;
 use gpui::prelude::*;
 use gpui::{div, img, px, Context, Entity, Render, Window};
-use gpui_component::input::{Input, InputEvent, InputState};
+use gpui_component::input::{InputEvent, InputState};
 use gpui_component::scroll::ScrollableElement;
-use gpui_component::{IconName, Sizable};
 use xpic::bing::Market;
 
 pub struct XpicApp {
@@ -142,39 +142,6 @@ impl Render for XpicApp {
                         .when(!is_empty, |el| el.child(Gallery::new(images))),
                 ),
             )
-            .child(
-                div()
-                    .absolute()
-                    .top(px(8.))
-                    .left_0()
-                    .right_0()
-                    .flex()
-                    .justify_center()
-                    .child(
-                        div()
-                            .occlude()
-                            .w(px(280.))
-                            .bg(theme.secondary)
-                            .rounded_xl()
-                            .border_1()
-                            .border_color(theme.border.opacity(0.5))
-                            .child(
-                                Input::new(&self.search_input)
-                                    .prefix(
-                                        div()
-                                            .child(
-                                                gpui_component::Icon::new(IconName::Search)
-                                                    .xsmall()
-                                                    .text_color(theme.caption),
-                                            )
-                                            .mr_0p5(),
-                                    )
-                                    .small()
-                                    .py(px(14.))
-                                    .cleanable(true)
-                                    .appearance(false),
-                            ),
-                    ),
-            )
+            .child(SearchBar::new(self.search_input.clone()))
     }
 }

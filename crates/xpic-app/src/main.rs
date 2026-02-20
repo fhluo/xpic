@@ -19,6 +19,7 @@ mod data;
 mod gallery;
 mod image;
 mod market_selector;
+mod search_bar;
 mod spinner;
 mod theme;
 mod theme_toggle;

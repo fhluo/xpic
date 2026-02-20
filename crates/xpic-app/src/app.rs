@@ -6,18 +6,36 @@ use crate::theme::Theme;
 use crate::theme_toggle::ThemeToggle;
 use crate::title_bar::TitleBar;
 use gpui::prelude::*;
-use gpui::{div, img, px, Context, Render, Window};
+use gpui::{div, img, px, Context, Entity, Render, Window};
+use gpui_component::input::{Input, InputEvent, InputState};
 use gpui_component::scroll::ScrollableElement;
+use gpui_component::{IconName, Sizable};
 use xpic::bing::Market;
 
 pub struct XpicApp {
     market: Market,
+
+    search_input: Entity<InputState>,
+    search_query: String,
 }
 
 impl XpicApp {
-    pub fn new(_window: &mut Window, _cx: &mut Context<Self>) -> Self {
+    pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
+        let search_input =
+            cx.new(|cx| InputState::new(window, cx).placeholder("Search wallpapers..."));
+
+        cx.subscribe(&search_input, |this, input, event, cx| {
+            if matches!(event, InputEvent::Change) {
+                this.search_query = input.read(cx).value().to_string();
+                cx.notify();
+            }
+        })
+        .detach();
+
         XpicApp {
             market: Market::EN_US,
+            search_input,
+            search_query: String::new(),
         }
     }
 
@@ -34,17 +52,35 @@ impl XpicApp {
             cx.notify();
         }
     }
+
+    fn filtered_images(&self) -> Vec<&'static xpic::Image> {
+        let images = data::images(self.market).unwrap_or_default();
+
+        if self.search_query.is_empty() {
+            return images.iter().collect();
+        }
+
+        images
+            .iter()
+            .filter(|img| {
+                img.title.eq_ignore_ascii_case(&self.search_query)
+                    || img.copyright.eq_ignore_ascii_case(&self.search_query)
+            })
+            .collect()
+    }
 }
 
 impl Render for XpicApp {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.global::<Theme>();
-        let images = data::images(self.market).unwrap_or_default();
+        let images = self.filtered_images();
+        let is_empty = images.is_empty();
 
         div()
             .size_full()
             .flex()
             .flex_col()
+            .relative()
             .on_action(cx.listener(Self::on_change_market))
             .child(
                 TitleBar::new()
@@ -90,8 +126,55 @@ impl Render for XpicApp {
                     div()
                         .size_full()
                         .overflow_y_scrollbar()
-                        .child(Gallery::new(images)),
+                        .when(is_empty, |this| {
+                            this.child(
+                                div()
+                                    .flex()
+                                    .items_center()
+                                    .justify_center()
+                                    .flex_1()
+                                    .size_full()
+                                    .text_color(theme.caption)
+                                    .text_sm()
+                                    .child("No wallpapers found"),
+                            )
+                        })
+                        .when(!is_empty, |el| el.child(Gallery::new(images))),
                 ),
+            )
+            .child(
+                div()
+                    .absolute()
+                    .top(px(8.))
+                    .left_0()
+                    .right_0()
+                    .flex()
+                    .justify_center()
+                    .child(
+                        div()
+                            .occlude()
+                            .w(px(280.))
+                            .bg(theme.secondary)
+                            .rounded_xl()
+                            .border_1()
+                            .border_color(theme.border.opacity(0.5))
+                            .child(
+                                Input::new(&self.search_input)
+                                    .prefix(
+                                        div()
+                                            .child(
+                                                gpui_component::Icon::new(IconName::Search)
+                                                    .xsmall()
+                                                    .text_color(theme.caption),
+                                            )
+                                            .mr_0p5(),
+                                    )
+                                    .small()
+                                    .py(px(14.))
+                                    .cleanable(true)
+                                    .appearance(false),
+                            ),
+                    ),
             )
     }
 }

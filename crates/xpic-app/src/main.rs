@@ -8,6 +8,7 @@ use gpui::{
     prelude::*, px, size, App, Bounds, Size, TitlebarOptions,
     WindowBackgroundAppearance, WindowBounds, WindowOptions,
 };
+use gpui_component::Root;
 use std::sync::LazyLock;
 
 mod app;
@@ -67,7 +68,8 @@ fn open_main_window(cx: &App) {
                 enable_mica_backdrop(window);
                 apply_mica_theme(window.appearance().into(), window, cx);
 
-                cx.new(|cx| XpicApp::new(window, cx))
+                let view = cx.new(|cx| XpicApp::new(window, cx));
+                cx.new(|cx| Root::new(view, window, cx))
             },
         )?;
 

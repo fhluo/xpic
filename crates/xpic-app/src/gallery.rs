@@ -87,7 +87,7 @@ impl RenderOnce for Gallery {
         let cols = self.compute_cols(f32::from(window.viewport_size().width));
         let remainder = self.images.len() % cols;
 
-        if remainder > 0 && self.images.len() > cols {
+        if remainder > 0 {
             for _ in 0..(cols - remainder) {
                 gallery = gallery.child(div().w(px(self.card_width)).h(px(0.)).invisible());
             }

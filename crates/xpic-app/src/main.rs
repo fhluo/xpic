@@ -12,11 +12,13 @@ use std::sync::LazyLock;
 
 mod app;
 mod assets;
+mod card;
 mod config;
 mod data;
+mod gallery;
 mod image;
-mod card;
 mod market_selector;
+mod spinner;
 mod theme;
 mod theme_toggle;
 mod title_bar;

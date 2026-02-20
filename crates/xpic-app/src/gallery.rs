@@ -64,7 +64,6 @@ impl RenderOnce for Gallery {
     fn render(self, window: &mut Window, _cx: &mut App) -> impl IntoElement {
         let mut gallery = div()
             .id("gallery")
-            .flex_1()
             .flex()
             .flex_wrap()
             .justify_center()

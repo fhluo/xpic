@@ -7,6 +7,7 @@ use crate::theme_toggle::ThemeToggle;
 use crate::title_bar::TitleBar;
 use gpui::prelude::*;
 use gpui::{div, img, px, Context, Render, Window};
+use gpui_component::scroll::ScrollableElement;
 use xpic::bing::Market;
 
 pub struct XpicApp {
@@ -84,6 +85,13 @@ impl Render for XpicApp {
                             .child(ThemeToggle),
                     ),
             )
-            .child(Gallery::new(images))
+            .child(
+                div().flex_1().relative().overflow_hidden().child(
+                    div()
+                        .size_full()
+                        .overflow_y_scrollbar()
+                        .child(Gallery::new(images)),
+                ),
+            )
     }
 }

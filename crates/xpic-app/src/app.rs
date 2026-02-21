@@ -53,11 +53,11 @@ impl XpicApp {
         }
     }
 
-    fn filtered_images(&self) -> Vec<&'static xpic::Image> {
-        let images = data::images(self.market).unwrap_or_default();
+    fn filtered_images(&self) -> Vec<xpic::Image> {
+        let images = data::images(self.market);
 
         if self.search_query.is_empty() {
-            return images.iter().collect();
+            return images.to_vec();
         }
 
         let query = self.search_query.to_lowercase();
@@ -68,6 +68,7 @@ impl XpicApp {
                 img.title.to_lowercase().contains(&query)
                     || img.copyright.to_lowercase().contains(&query)
             })
+            .cloned()
             .collect()
     }
 }

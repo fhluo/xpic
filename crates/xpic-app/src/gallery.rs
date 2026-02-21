@@ -9,14 +9,14 @@ const DEFAULT_PADDING_X: f32 = 24.;
 
 #[derive(IntoElement)]
 pub struct Gallery {
-    images: Vec<&'static xpic::Image>,
+    images: Vec<xpic::Image>,
     card_width: f32,
     gap: f32,
     padding_x: f32,
 }
 
 impl Gallery {
-    pub fn new(images: Vec<&'static xpic::Image>) -> Self {
+    pub fn new(images: Vec<xpic::Image>) -> Self {
         Self {
             images,
             card_width: DEFAULT_CARD_WIDTH,

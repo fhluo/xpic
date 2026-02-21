@@ -33,9 +33,10 @@ data! {
     ZH_CN => "zh-CN.json",
 }
 
-pub fn images(market: Market) -> Option<&'static [Image]> {
+pub fn images(market: Market) -> &'static [Image] {
     MARKET_DATA
         .iter()
         .find(|(m, _)| *m == market)
         .map(|(_, images)| images.as_slice())
+        .unwrap_or_default()
 }

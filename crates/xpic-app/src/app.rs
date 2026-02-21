@@ -60,11 +60,13 @@ impl XpicApp {
             return images.iter().collect();
         }
 
+        let query = self.search_query.to_lowercase();
+
         images
             .iter()
             .filter(|img| {
-                img.title.eq_ignore_ascii_case(&self.search_query)
-                    || img.copyright.eq_ignore_ascii_case(&self.search_query)
+                img.title.to_lowercase().contains(&query)
+                    || img.copyright.to_lowercase().contains(&query)
             })
             .collect()
     }

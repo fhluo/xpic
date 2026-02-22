@@ -1,6 +1,6 @@
 use ahash::AHashSet;
 use std::path::Path;
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 use xpic::bing::{Market, QueryParams};
 use xpic::Image;
 
@@ -59,6 +59,28 @@ pub fn merge(existing: &[Image], new: &[Image]) -> Vec<Image> {
 
     result.sort_by(|a, b| b.start_date.cmp(&a.start_date));
     result
+}
+
+pub fn merge_arc(existing: &[Arc<Image>], new: &[Arc<Image>]) -> Vec<Arc<Image>> {
+    let mut seen = AHashSet::new();
+    let mut result: Vec<Arc<Image>> = Vec::with_capacity(existing.len() + new.len());
+
+    for img in new.iter().chain(existing.iter()) {
+        if seen.insert(img.id.clone()) {
+            result.push(img.clone());
+        }
+    }
+
+    result.sort_by(|a, b| b.start_date.cmp(&a.start_date));
+    result
+}
+
+pub fn to_arc(images: &[Image]) -> Vec<Arc<Image>> {
+    images.iter().cloned().map(Arc::new).collect()
+}
+
+pub fn into_arc(images: Vec<Image>) -> Vec<Arc<Image>> {
+    images.into_iter().map(Arc::new).collect()
 }
 
 pub async fn save(path: impl AsRef<Path>, images: &[Image]) -> anyhow::Result<()> {

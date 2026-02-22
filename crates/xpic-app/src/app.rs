@@ -13,14 +13,15 @@ use gpui::prelude::*;
 use gpui::{div, img, px, App, Context, Entity, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
 use gpui_component::scroll::ScrollableElement;
+use std::sync::Arc;
 use xpic::bing::Market;
 use xpic::Image;
 
 pub struct XpicApp {
     market: Market,
-    cache: AHashMap<Market, Vec<Image>>,
-    images: Vec<Image>,
-    filtered_images: Vec<Image>,
+    cache: AHashMap<Market, Vec<Arc<Image>>>,
+    images: Vec<Arc<Image>>,
+    filtered_images: Vec<Arc<Image>>,
 
     search_input: Entity<InputState>,
     search_query: String,
@@ -44,7 +45,7 @@ impl XpicApp {
         .detach();
 
         let market = Market::EN_US;
-        let images = data::embedded(market).to_vec();
+        let images = data::to_arc(data::embedded(market));
         Self::load(market, cx);
 
         XpicApp {
@@ -71,7 +72,7 @@ impl XpicApp {
             if let Some(cached) = self.cache.get(&market) {
                 self.images = cached.clone();
             } else {
-                self.images = data::embedded(market).to_vec();
+                self.images = data::to_arc(data::embedded(market));
                 Self::load(market, cx);
             }
 
@@ -110,7 +111,7 @@ impl XpicApp {
                         let _ = data::save(&path, &images).await;
                     }
 
-                    images
+                    data::into_arc(images)
                 })
                 .await;
 
@@ -118,10 +119,9 @@ impl XpicApp {
                 && !images.is_empty()
             {
                 this.update(cx, |this, cx| {
-                    this.images = data::merge(&this.images, &images);
-                    this.filtered_images = this.search(&this.search_query);
-
+                    this.images = data::merge_arc(&this.images, &images);
                     this.cache.insert(market, this.images.clone());
+                    this.filtered_images = this.search(&this.search_query);
                     cx.notify();
                 })?;
             }
@@ -131,7 +131,7 @@ impl XpicApp {
         .detach();
     }
 
-    fn search(&self, query: impl AsRef<str>) -> Vec<Image> {
+    fn search(&self, query: impl AsRef<str>) -> Vec<Arc<Image>> {
         let query = query.as_ref();
         if query.is_empty() {
             return self.images.clone();

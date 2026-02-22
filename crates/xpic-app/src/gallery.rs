@@ -1,6 +1,7 @@
 use crate::card::Card;
 use gpui::prelude::*;
 use gpui::{div, px, App, SharedString, Window};
+use std::sync::Arc;
 use xpic::bing::ThumbnailParams;
 
 const DEFAULT_CARD_WIDTH: f32 = 240.;
@@ -9,14 +10,14 @@ const DEFAULT_PADDING_X: f32 = 24.;
 
 #[derive(IntoElement)]
 pub struct Gallery {
-    images: Vec<xpic::Image>,
+    images: Vec<Arc<xpic::Image>>,
     card_width: f32,
     gap: f32,
     padding_x: f32,
 }
 
 impl Gallery {
-    pub fn new(images: Vec<xpic::Image>) -> Self {
+    pub fn new(images: Vec<Arc<xpic::Image>>) -> Self {
         Self {
             images,
             card_width: DEFAULT_CARD_WIDTH,

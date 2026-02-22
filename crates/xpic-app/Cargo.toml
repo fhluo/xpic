@@ -23,7 +23,9 @@ hex = "0.4"
 reqwest = "0.13"
 tokio = { version = "1.49", features = ["full"] }
 image = "0.25"
+chrono = "0.4"
 photon-rs = "0.3"
+ahash = "0.8"
 
 [build-dependencies]
 winresource = "0.1"

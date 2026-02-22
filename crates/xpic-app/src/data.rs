@@ -1,6 +1,6 @@
 use std::path::Path;
 use std::sync::LazyLock;
-use xpic::bing::Market;
+use xpic::bing::{Market, QueryParams};
 use xpic::Image;
 
 macro_rules! data {
@@ -52,4 +52,21 @@ pub async fn save(path: impl AsRef<Path>, images: &[Image]) -> anyhow::Result<()
     tokio::fs::write(path, serde_json::to_vec_pretty(images)?)
         .await
         .map_err(anyhow::Error::msg)
+}
+
+pub async fn fetch(market: Market) -> anyhow::Result<Vec<Image>> {
+    xpic::list_images().market(market).send().await
+}
+
+pub async fn fetch_remote(market: Market) -> anyhow::Result<Vec<Image>> {
+    let url = format!(
+        "https://raw.githubusercontent.com/fhluo/xpic/main/data/{}.json",
+        market.code()
+    );
+
+    Ok(reqwest::get(&url)
+        .await?
+        .error_for_status()?
+        .json::<Vec<Image>>()
+        .await?)
 }

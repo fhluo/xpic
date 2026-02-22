@@ -8,6 +8,7 @@ use crate::theme::Theme;
 use crate::theme_toggle::ThemeToggle;
 use crate::title_bar::TitleBar;
 use crate::RUNTIME;
+use ahash::AHashMap;
 use gpui::prelude::*;
 use gpui::{div, img, px, App, Context, Entity, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
@@ -17,6 +18,7 @@ use xpic::Image;
 
 pub struct XpicApp {
     market: Market,
+    cache: AHashMap<Market, Vec<Image>>,
     images: Vec<Image>,
     filtered_images: Vec<Image>,
 
@@ -47,8 +49,9 @@ impl XpicApp {
 
         XpicApp {
             market,
-            images: images.clone(),
-            filtered_images: images,
+            cache: AHashMap::new(),
+            filtered_images: images.clone(),
+            images,
             search_input,
             search_query: String::new(),
         }
@@ -64,10 +67,16 @@ impl XpicApp {
             && self.market != market
         {
             self.market = market;
-            self.images = data::embedded(market).to_vec();
-            self.filtered_images = data::embedded(market).to_vec();
+
+            if let Some(cached) = self.cache.get(&market) {
+                self.images = cached.clone();
+            } else {
+                self.images = data::embedded(market).to_vec();
+                Self::load(market, cx);
+            }
+
+            self.filtered_images = self.images.clone();
             self.search_query = String::new();
-            Self::load(market, cx);
             cx.notify();
         }
     }
@@ -111,6 +120,8 @@ impl XpicApp {
                 this.update(cx, |this, cx| {
                     this.images = data::merge(&this.images, &images);
                     this.filtered_images = this.search(&this.search_query);
+
+                    this.cache.insert(market, this.images.clone());
                     cx.notify();
                 })?;
             }

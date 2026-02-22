@@ -9,8 +9,8 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use strum::IntoEnumIterator;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use xpic::bing::Market;
 use xpic::bing::QueryParams;
+use xpic::bing::{Market, UrlBuilder};
 use xpic::{fetch_image, list_images, Image, ImagesRequestBuilder};
 
 /// Bing wallpapers
@@ -79,7 +79,7 @@ async fn main() -> Result<(), anyhow::Error> {
                 .await
                 .map_err(|err| anyhow!("failed to list wallpapers: {err}"))?;
 
-            print_images_table(images);
+            print_images_table(images)?;
         }
         Download { output, args } => {
             download_wallpapers(&output, args)
@@ -96,7 +96,7 @@ async fn main() -> Result<(), anyhow::Error> {
     Ok(())
 }
 
-fn print_images_table(images: Vec<Image>) {
+fn print_images_table(images: Vec<Image>) -> anyhow::Result<()> {
     let mut table = Table::new();
 
     table
@@ -113,11 +113,13 @@ fn print_images_table(images: Vec<Image>) {
         table.add_row(vec![
             Cell::new(image.start_date).fg(Color::DarkYellow),
             Cell::new(image.title).fg(Color::DarkGreen),
-            Cell::new(image.url).fg(Color::DarkCyan),
+            Cell::new(UrlBuilder::new(image.id).build()?).fg(Color::DarkCyan),
         ]);
     }
 
     println!("{table}");
+
+    Ok(())
 }
 
 async fn download_file(id: impl Into<String>, path: impl AsRef<Path>) -> Result<(), anyhow::Error> {

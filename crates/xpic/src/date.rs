@@ -74,3 +74,33 @@ pub mod ymdhm {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    struct Date {
+        #[serde(with = "ymd")]
+        date: NaiveDate,
+        #[serde(with = "ymdhm")]
+        datetime: DateTime<Utc>,
+    }
+
+    #[test]
+    fn test_round_trip() {
+        let date = Date {
+            date: NaiveDate::from_ymd_opt(2026, 2, 21).unwrap(),
+            datetime: NaiveDateTime::parse_from_str("202602210800", "%Y%m%d%H%M")
+                .unwrap()
+                .and_utc(),
+        };
+
+        let json = serde_json::to_string(&date).unwrap();
+        assert_eq!(json, r#"{"date":"20260221","datetime":"202602210800"}"#);
+
+        let parsed: Date = serde_json::from_str(&json).unwrap();
+        assert_eq!(parsed, date);
+    }
+}

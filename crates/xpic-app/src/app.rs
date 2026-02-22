@@ -1,4 +1,5 @@
 use crate::assets::Icon;
+use crate::config::Config;
 use crate::data;
 use crate::gallery::Gallery;
 use crate::market_selector::{ChangeMarket, MarketSelector};
@@ -6,6 +7,7 @@ use crate::search_bar::SearchBar;
 use crate::theme::Theme;
 use crate::theme_toggle::ThemeToggle;
 use crate::title_bar::TitleBar;
+use crate::RUNTIME;
 use gpui::prelude::*;
 use gpui::{div, img, px, App, Context, Entity, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
@@ -40,11 +42,13 @@ impl XpicApp {
         .detach();
 
         let market = Market::EN_US;
+        let images = data::embedded(market).to_vec();
+        Self::load(market, cx);
 
         XpicApp {
             market,
-            images: data::embedded(market).to_vec(),
-            filtered_images: data::embedded(market).to_vec(),
+            images: images.clone(),
+            filtered_images: images,
             search_input,
             search_query: String::new(),
         }
@@ -63,8 +67,57 @@ impl XpicApp {
             self.images = data::embedded(market).to_vec();
             self.filtered_images = data::embedded(market).to_vec();
             self.search_query = String::new();
+            Self::load(market, cx);
             cx.notify();
         }
+    }
+
+    /// Loads local data and fetch remote if stale.
+    fn load(market: Market, cx: &mut Context<Self>) {
+        let path = cx.global::<Config>().data_path(market);
+        let handle = RUNTIME.handle().clone();
+
+        cx.spawn(async move |this, cx| {
+            let loaded = handle
+                .spawn(async move {
+                    let mut images: Vec<Image> = Vec::new();
+
+                    if let Ok(local) = data::load(&path).await {
+                        images = local;
+                    }
+
+                    let is_stale = images
+                        .iter()
+                        .max_by_key(|img| img.full_start_date)
+                        .is_none_or(|latest| {
+                            chrono::Utc::now()
+                                .signed_duration_since(latest.full_start_date)
+                                .num_days()
+                                > 7
+                        });
+
+                    if is_stale && let Ok(remote) = data::fetch_remote(market).await {
+                        images = data::merge(&images, &remote);
+                        let _ = data::save(&path, &images).await;
+                    }
+
+                    images
+                })
+                .await;
+
+            if let Ok(images) = loaded
+                && !images.is_empty()
+            {
+                this.update(cx, |this, cx| {
+                    this.images = data::merge(&this.images, &images);
+                    this.filtered_images = this.search(&this.search_query);
+                    cx.notify();
+                })?;
+            }
+
+            Ok::<_, anyhow::Error>(())
+        })
+        .detach();
     }
 
     fn search(&self, query: impl AsRef<str>) -> Vec<Image> {

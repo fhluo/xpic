@@ -3,18 +3,24 @@ use xpic::bing::Market;
 use xpic::Image;
 
 macro_rules! data {
-    ($($market:ident => $file:literal),* $(,)?) => {
-        pub static MARKET_DATA: LazyLock<Vec<(Market, Vec<Image>)>> = LazyLock::new(|| {
-            vec![
-                $(
-                    (Market::$market, serde_json::from_str(include_str!(concat!("../../../data/", $file))).expect(concat!("embedded data should be valid JSON: ", $file))),
-                )*
-            ]
-        });
+    ($($market:ident => $filename:literal),* $(,)?) => {
+        $(
+            static $market: LazyLock<Vec<Image>> = LazyLock::new(|| {
+                serde_json::from_str(include_str!(concat!("../../../data/", $filename)))
+                    .expect(concat!("embedded data should be valid JSON: ", $filename))
+            });
+        )*
 
         pub const AVAILABLE_MARKETS: &'static [Market] = &[
             $(Market::$market,)*
         ];
+
+        pub fn embedded(market: Market) -> &'static [Image] {
+            match market {
+                $(Market::$market => &$market,)*
+                _ => &[],
+            }
+        }
     };
 }
 
@@ -31,12 +37,4 @@ data! {
     JA_JP => "ja-JP.json",
     PT_BR => "pt-BR.json",
     ZH_CN => "zh-CN.json",
-}
-
-pub fn images(market: Market) -> &'static [Image] {
-    MARKET_DATA
-        .iter()
-        .find(|(m, _)| *m == market)
-        .map(|(_, images)| images.as_slice())
-        .unwrap_or_default()
 }

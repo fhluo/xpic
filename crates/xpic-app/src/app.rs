@@ -11,9 +11,12 @@ use gpui::{div, img, px, Context, Entity, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
 use gpui_component::scroll::ScrollableElement;
 use xpic::bing::Market;
+use xpic::Image;
 
 pub struct XpicApp {
     market: Market,
+    images: Vec<Image>,
+    filtered_images: Vec<Image>,
 
     search_input: Entity<InputState>,
     search_query: String,
@@ -26,14 +29,22 @@ impl XpicApp {
 
         cx.subscribe(&search_input, |this, input, event, cx| {
             if matches!(event, InputEvent::Change) {
-                this.search_query = input.read(cx).value().to_string();
-                cx.notify();
+                let query = input.read(cx).value();
+                if this.search_query != query {
+                    this.search_query = query.to_string();
+                    this.filtered_images = this.search(query);
+                    cx.notify();
+                }
             }
         })
         .detach();
 
+        let market = Market::EN_US;
+
         XpicApp {
-            market: Market::EN_US,
+            market,
+            images: data::embedded(market).to_vec(),
+            filtered_images: data::embedded(market).to_vec(),
             search_input,
             search_query: String::new(),
         }
@@ -49,20 +60,22 @@ impl XpicApp {
             && self.market != market
         {
             self.market = market;
+            self.images = data::embedded(market).to_vec();
+            self.filtered_images = data::embedded(market).to_vec();
+            self.search_query = String::new();
             cx.notify();
         }
     }
 
-    fn filtered_images(&self) -> Vec<xpic::Image> {
-        let images = data::images(self.market);
-
-        if self.search_query.is_empty() {
-            return images.to_vec();
+    fn search(&self, query: impl AsRef<str>) -> Vec<Image> {
+        let query = query.as_ref();
+        if query.is_empty() {
+            return self.images.clone();
         }
 
-        let query = self.search_query.to_lowercase();
+        let query = query.to_lowercase();
 
-        images
+        self.images
             .iter()
             .filter(|img| {
                 img.title.to_lowercase().contains(&query)
@@ -76,8 +89,6 @@ impl XpicApp {
 impl Render for XpicApp {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.global::<Theme>();
-        let images = self.filtered_images();
-        let is_empty = images.is_empty();
 
         div()
             .size_full()
@@ -124,27 +135,28 @@ impl Render for XpicApp {
                             .child(ThemeToggle),
                     ),
             )
-            .child(
-                div().flex_1().relative().overflow_hidden().child(
-                    div()
-                        .size_full()
-                        .overflow_y_scrollbar()
-                        .when(is_empty, |this| {
-                            this.child(
-                                div()
-                                    .flex()
-                                    .items_center()
-                                    .justify_center()
-                                    .flex_1()
-                                    .size_full()
-                                    .text_color(theme.caption)
-                                    .text_sm()
-                                    .child("No wallpapers found"),
-                            )
-                        })
-                        .when(!is_empty, |el| el.child(Gallery::new(images))),
-                ),
-            )
+            .child(div().flex_1().relative().overflow_hidden().child({
+                let is_empty = self.filtered_images.is_empty();
+                div()
+                    .size_full()
+                    .overflow_y_scrollbar()
+                    .when(is_empty, |this| {
+                        this.child(
+                            div()
+                                .flex()
+                                .items_center()
+                                .justify_center()
+                                .flex_1()
+                                .size_full()
+                                .text_color(theme.caption)
+                                .text_sm()
+                                .child("No wallpapers found"),
+                        )
+                    })
+                    .when(!is_empty, |el| {
+                        el.child(Gallery::new(self.filtered_images.clone()))
+                    })
+            }))
             .child(SearchBar::new(self.search_input.clone()))
     }
 }

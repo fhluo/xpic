@@ -1,4 +1,6 @@
 pub mod bing;
+pub mod date;
+
 mod client;
 mod image;
 

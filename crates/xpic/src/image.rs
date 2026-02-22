@@ -1,6 +1,8 @@
 use crate::bing;
 use crate::bing::Market;
+use crate::date;
 use anyhow::anyhow;
+use chrono::{DateTime, NaiveDate, NaiveDateTime, Utc};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -12,9 +14,12 @@ use url::Url;
 pub struct Image {
     pub url: Url,
 
-    pub start_date: String,
-    pub full_start_date: String,
-    pub end_date: String,
+    #[serde(with = "date::ymd")]
+    pub start_date: NaiveDate,
+    #[serde(with = "date::ymdhm")]
+    pub full_start_date: DateTime<Utc>,
+    #[serde(with = "date::ymd")]
+    pub end_date: NaiveDate,
 
     pub id: String,
     #[serde(skip)]
@@ -64,9 +69,10 @@ impl Image {
 
         Ok(Image {
             url,
-            start_date,
-            full_start_date,
-            end_date,
+            start_date: NaiveDate::parse_from_str(&start_date, "%Y%m%d")?,
+            full_start_date: NaiveDateTime::parse_from_str(&full_start_date, "%Y%m%d%H%M")?
+                .and_utc(),
+            end_date: NaiveDate::parse_from_str(&end_date, "%Y%m%d")?,
             id_parsed: ID::parse(&id),
             id,
             copyright_parsed: Copyright::parse(&copyright),

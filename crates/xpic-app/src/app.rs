@@ -29,10 +29,10 @@ impl XpicApp {
 
         cx.subscribe(&search_input, |this, input, event, cx| {
             if matches!(event, InputEvent::Change) {
-                let query = input.read(cx).value();
+                let query = input.read(cx).value().trim().to_string();
                 if this.search_query != query {
-                    this.search_query = query.to_string();
-                    this.filtered_images = this.search(query);
+                    this.search_query = query;
+                    this.filtered_images = this.search(&this.search_query);
                     cx.notify();
                 }
             }

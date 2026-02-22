@@ -1,3 +1,4 @@
+use std::path::Path;
 use std::sync::LazyLock;
 use xpic::bing::Market;
 use xpic::Image;
@@ -37,4 +38,18 @@ data! {
     JA_JP => "ja-JP.json",
     PT_BR => "pt-BR.json",
     ZH_CN => "zh-CN.json",
+}
+
+pub async fn load(path: impl AsRef<Path>) -> anyhow::Result<Vec<Image>> {
+    serde_json::from_slice(&tokio::fs::read(&path).await?).map_err(anyhow::Error::msg)
+}
+
+pub async fn save(path: impl AsRef<Path>, images: &[Image]) -> anyhow::Result<()> {
+    if let Some(dir) = path.as_ref().parent() {
+        let _ = tokio::fs::create_dir_all(dir).await.ok();
+    }
+
+    tokio::fs::write(path, serde_json::to_vec_pretty(images)?)
+        .await
+        .map_err(anyhow::Error::msg)
 }

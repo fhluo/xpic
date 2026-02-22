@@ -7,7 +7,7 @@ use crate::theme::Theme;
 use crate::theme_toggle::ThemeToggle;
 use crate::title_bar::TitleBar;
 use gpui::prelude::*;
-use gpui::{div, img, px, Context, Entity, Render, Window};
+use gpui::{div, img, px, App, Context, Entity, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
 use gpui_component::scroll::ScrollableElement;
 use xpic::bing::Market;
@@ -84,6 +84,48 @@ impl XpicApp {
             .cloned()
             .collect()
     }
+
+    fn render_title_bar(&self, cx: &App) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
+
+        TitleBar::new()
+            .child(
+                div()
+                    .id("title-bar-content")
+                    .flex()
+                    .flex_row()
+                    .items_center()
+                    .w_full()
+                    .child(
+                        div()
+                            .flex_none()
+                            .flex()
+                            .items_center()
+                            .justify_center()
+                            .ml_2()
+                            .size(px(18.0))
+                            .child(img(Icon::AppIcon).size_full()),
+                    )
+                    .child(
+                        div()
+                            .ml_1p5()
+                            .text_size(px(12.0))
+                            .text_color(theme.foreground)
+                            .child("Xpic"),
+                    ),
+            )
+            .child(
+                div()
+                    .id("title-bar-actions")
+                    .flex()
+                    .flex_row()
+                    .items_center()
+                    .mr_1p5()
+                    .h(theme.title_bar_height)
+                    .child(MarketSelector::new(self.market))
+                    .child(ThemeToggle),
+            )
+    }
 }
 
 impl Render for XpicApp {
@@ -96,45 +138,7 @@ impl Render for XpicApp {
             .flex_col()
             .relative()
             .on_action(cx.listener(Self::on_change_market))
-            .child(
-                TitleBar::new()
-                    .child(
-                        div()
-                            .id("title-bar-content")
-                            .flex()
-                            .flex_row()
-                            .items_center()
-                            .w_full()
-                            .child(
-                                div()
-                                    .flex_none()
-                                    .flex()
-                                    .items_center()
-                                    .justify_center()
-                                    .ml_2()
-                                    .size(px(18.0))
-                                    .child(img(Icon::AppIcon).size_full()),
-                            )
-                            .child(
-                                div()
-                                    .ml_1p5()
-                                    .text_size(px(12.0))
-                                    .text_color(theme.foreground)
-                                    .child("Xpic"),
-                            ),
-                    )
-                    .child(
-                        div()
-                            .id("title-bar-actions")
-                            .flex()
-                            .flex_row()
-                            .items_center()
-                            .mr_1p5()
-                            .h(theme.title_bar_height)
-                            .child(MarketSelector::new(self.market))
-                            .child(ThemeToggle),
-                    ),
-            )
+            .child(self.render_title_bar(cx))
             .child(div().flex_1().relative().overflow_hidden().child({
                 let is_empty = self.filtered_images.is_empty();
                 div()

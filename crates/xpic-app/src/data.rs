@@ -1,3 +1,4 @@
+use ahash::AHashSet;
 use std::path::Path;
 use std::sync::LazyLock;
 use xpic::bing::{Market, QueryParams};
@@ -42,6 +43,22 @@ data! {
 
 pub async fn load(path: impl AsRef<Path>) -> anyhow::Result<Vec<Image>> {
     serde_json::from_slice(&tokio::fs::read(&path).await?).map_err(anyhow::Error::msg)
+}
+
+/// Merges two image lists, deduplicating by `id`. Items from `new` take priority over `existing`.
+/// The result is sorted by `start_date` descending.
+pub fn merge(existing: &[Image], new: &[Image]) -> Vec<Image> {
+    let mut seen = AHashSet::new();
+    let mut result: Vec<Image> = Vec::with_capacity(existing.len() + new.len());
+
+    for img in new.iter().chain(existing.iter()) {
+        if seen.insert(img.id.clone()) {
+            result.push(img.clone());
+        }
+    }
+
+    result.sort_by(|a, b| b.start_date.cmp(&a.start_date));
+    result
 }
 
 pub async fn save(path: impl AsRef<Path>, images: &[Image]) -> anyhow::Result<()> {

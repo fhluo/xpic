@@ -26,18 +26,18 @@ impl Client {
     pub fn list_images(&self) -> ImagesRequestBuilder<'_> {
         ImagesRequestBuilder {
             client: self,
-            query: bing::Query::new(),
+            query: Query::new(),
         }
     }
 
     pub async fn fetch_image(&self, id: impl Into<String>) -> reqwest::Result<reqwest::Response> {
-        self.bing.thumbnail(&bing::ThumbnailQuery::new(id)).await
+        self.bing.thumbnail(&ThumbnailQuery::new(id)).await
     }
 
     pub fn fetch_thumbnail(&self, id: impl Into<String>) -> ThumbnailRequestBuilder<'_> {
         ThumbnailRequestBuilder {
             client: self,
-            query: bing::ThumbnailQuery::new(id),
+            query: ThumbnailQuery::new(id),
         }
     }
 }

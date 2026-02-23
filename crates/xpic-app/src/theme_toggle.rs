@@ -1,3 +1,4 @@
+use crate::config::Config;
 use crate::theme::{apply_mica_theme, Appearance, Theme};
 use gpui::{div, prelude::*, px, App, Window};
 
@@ -35,6 +36,7 @@ impl RenderOnce for ThemeToggle {
                     Appearance::Light => Appearance::Dark,
                     Appearance::Dark => Appearance::Light,
                 };
+                cx.global_mut::<Config>().appearance = appearance;
 
                 apply_mica_theme(appearance, window, cx);
             })

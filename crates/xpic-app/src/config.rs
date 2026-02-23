@@ -1,3 +1,4 @@
+use crate::theme::Appearance;
 use gpui::Global;
 use sha2::{Digest, Sha256};
 use std::path::PathBuf;
@@ -6,6 +7,7 @@ use xpic::bing::Market;
 pub struct Config {
     pub cache_dir: PathBuf,
     pub data_dir: PathBuf,
+    pub appearance: Appearance,
 }
 
 impl Default for Config {
@@ -17,6 +19,7 @@ impl Default for Config {
         Self {
             cache_dir: base.join("cache"),
             data_dir: base.join("data"),
+            appearance: Appearance::Dark,
         }
     }
 }

@@ -3,7 +3,7 @@
 use crate::app::XpicApp;
 use crate::assets::Assets;
 use crate::config::Config;
-use crate::theme::{apply_mica_theme, enable_mica_backdrop, Theme};
+use crate::theme::{apply_mica_theme, enable_mica_backdrop, Appearance, Theme};
 use gpui::{
     prelude::*, px, size, App, Bounds, Size, TitlebarOptions,
     WindowBackgroundAppearance, WindowBounds, WindowOptions,
@@ -39,7 +39,15 @@ fn main() -> anyhow::Result<()> {
         gpui_component::init(cx);
 
         LazyLock::force(&RUNTIME);
+
         cx.set_global(Config::default());
+        cx.set_global({
+            match cx.global::<Config>().appearance {
+                Appearance::Light => Theme::light(),
+                Appearance::Dark => Theme::dark(),
+            }
+        });
+
         open_main_window(cx);
     });
 
@@ -67,7 +75,7 @@ fn open_main_window(cx: &App) {
             },
             |window, cx| {
                 enable_mica_backdrop(window);
-                apply_mica_theme(window.appearance().into(), window, cx);
+                apply_mica_theme(cx.global::<Config>().appearance, window, cx);
 
                 let view = cx.new(|cx| XpicApp::new(window, cx));
                 cx.new(|cx| Root::new(view, window, cx))

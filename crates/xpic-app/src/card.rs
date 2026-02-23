@@ -1,8 +1,12 @@
 use crate::image::Image;
 use crate::spinner::Spinner;
 use crate::theme::Theme;
-use gpui::{div, img, prelude::*, App, ElementId, SharedString, StyleRefinement, Window};
+use gpui::{
+    div, img, prelude::*, App, ElementId, MouseButton, SharedString, StyleRefinement, Window,
+};
 use gpui_component::StyledExt;
+use std::cell::Cell;
+use std::rc::Rc;
 use std::time::Duration;
 use xpic::bing::{ThumbnailParams, ThumbnailQuery};
 
@@ -11,6 +15,8 @@ pub struct Card {
     id: ElementId,
     title: Option<SharedString>,
     image: Image,
+    /// Shared context menu index tracker.
+    context_menu_index: Option<(usize, Rc<Cell<usize>>)>,
     style: StyleRefinement,
 }
 
@@ -38,13 +44,19 @@ impl Card {
             id: id.clone().into(),
             title: None,
             image: Image::new(id),
+            context_menu_index: None,
             style: StyleRefinement::default(),
         }
     }
 
     pub fn title(mut self, title: impl Into<SharedString>) -> Self {
         self.title = Some(title.into());
+        self
+    }
 
+    /// Sets the shared context menu index tracker for this card.
+    pub fn context_menu_index(mut self, idx: usize, shared: Rc<Cell<usize>>) -> Self {
+        self.context_menu_index = Some((idx, shared));
         self
     }
 }
@@ -68,6 +80,11 @@ impl RenderOnce for Card {
             .overflow_hidden()
             .cursor_pointer()
             .refine_style(&self.style)
+            .when_some(self.context_menu_index, |this, (idx, shared)| {
+                this.on_mouse_down(MouseButton::Right, move |_, _, _| {
+                    shared.set(idx);
+                })
+            })
             .child(
                 div()
                     .relative()

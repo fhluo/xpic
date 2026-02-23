@@ -1,7 +1,10 @@
 use crate::card::Card;
 use crate::theme::Theme;
 use gpui::prelude::*;
-use gpui::{div, px, App, SharedString, Window};
+use gpui::{div, px, App, ClipboardItem, SharedString, Window};
+use gpui_component::menu::{ContextMenuExt, PopupMenuItem};
+use std::cell::Cell;
+use std::rc::Rc;
 use std::sync::Arc;
 use xpic::bing::ThumbnailParams;
 
@@ -27,6 +30,7 @@ impl Gallery {
 impl RenderOnce for Gallery {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
+        let context_menu_index = Rc::new(Cell::new(0usize));
 
         let mut gallery = div()
             .id("gallery")
@@ -38,10 +42,11 @@ impl RenderOnce for Gallery {
             .py(px(theme.gallery_padding_y))
             .content_start();
 
-        for image in &self.images {
+        for (i, image) in self.images.iter().enumerate() {
             gallery = gallery.child(
                 Card::new(&image.id)
                     .title(Self::display_title(image))
+                    .context_menu_index(i, context_menu_index.clone())
                     .w(px(theme.card_width))
                     .width(theme.thumbnail_width)
                     .height(theme.thumbnail_height)
@@ -62,6 +67,26 @@ impl RenderOnce for Gallery {
             }
         }
 
-        gallery
+        let images = self.images.clone();
+        gallery.context_menu(move |menu, _window, _cx| {
+            let i = context_menu_index.get();
+            if i >= images.len() {
+                return menu;
+            }
+            let image = &images[i];
+
+            menu.item(PopupMenuItem::new("Copy Title").on_click({
+                let title = image.title.clone();
+                move |_, _, cx| {
+                    cx.write_to_clipboard(ClipboardItem::new_string(title.clone()));
+                }
+            }))
+            .item(PopupMenuItem::new("Copy Copyright").on_click({
+                let copyright = image.copyright.clone();
+                move |_, _, cx| {
+                    cx.write_to_clipboard(ClipboardItem::new_string(copyright.clone()));
+                }
+            }))
+        })
     }
 }

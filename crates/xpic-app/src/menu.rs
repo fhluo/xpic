@@ -3,7 +3,7 @@ use crate::image::fetch_cached;
 use crate::wallpaper;
 use crate::RUNTIME;
 use anyhow::anyhow;
-use gpui::{App, ClipboardItem, Context, SharedString, Window};
+use gpui::{App, ClipboardItem, Context, ImageFormat, SharedString, Window};
 use gpui_component::menu::{PopupMenu, PopupMenuItem};
 use xpic::bing::{ThumbnailParams, UrlBuilder};
 
@@ -11,6 +11,30 @@ pub fn copy(label: impl Into<SharedString>, text: impl Into<String>) -> PopupMen
     let text = text.into();
     PopupMenuItem::new(label).on_click(move |_, _, cx| {
         cx.write_to_clipboard(ClipboardItem::new_string(text.clone()));
+    })
+}
+
+pub fn copy_image(id: impl Into<String>) -> PopupMenuItem {
+    let id = id.into();
+
+    PopupMenuItem::new("Copy Image").on_click(move |_, _, cx| {
+        let url = UrlBuilder::new(&id).build().expect("URL should be valid");
+        let cache_path = cx.global::<Config>().image_cache(&url);
+        let handle = RUNTIME.handle().clone();
+
+        cx.spawn(async move |cx| {
+            let bytes = handle
+                .spawn(async move { fetch_cached(&url, &cache_path).await })
+                .await??;
+
+            cx.update(|cx| {
+                let image = gpui::Image::from_bytes(ImageFormat::Jpeg, bytes);
+                cx.write_to_clipboard(ClipboardItem::new_image(&image));
+            });
+
+            Ok::<_, anyhow::Error>(())
+        })
+        .detach();
     })
 }
 

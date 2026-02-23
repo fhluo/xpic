@@ -83,6 +83,7 @@ impl RenderOnce for Gallery {
 
                     menu.item(menu::copy("Copy Title", &image.title))
                         .item(menu::copy("Copy Copyright", &image.copyright))
+                        .item(menu::copy_image(&image.id))
                         .separator()
                         .submenu("Download", window, cx, menu::download_submenu(&image.id))
                         .item(menu::set_wallpaper(&image.id))

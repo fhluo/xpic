@@ -5,8 +5,8 @@ use crate::assets::Assets;
 use crate::config::Config;
 use crate::theme::{apply_mica_theme, enable_mica_backdrop, Appearance, Theme};
 use gpui::{
-    prelude::*, px, size, App, Bounds, Size, TitlebarOptions,
-    WindowBackgroundAppearance, WindowBounds, WindowOptions,
+    prelude::*, px, App, Bounds, Size, TitlebarOptions, WindowBackgroundAppearance,
+    WindowBounds, WindowOptions,
 };
 use gpui_component::Root;
 use std::sync::LazyLock;
@@ -55,7 +55,7 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn open_main_window(cx: &App) {
-    let bounds = Bounds::centered(None, size(px(1000.), px(625.)), cx);
+    let bounds = Bounds::centered(None, cx.global::<Theme>().window_size(), cx);
 
     cx.spawn(async move |cx| {
         cx.open_window(

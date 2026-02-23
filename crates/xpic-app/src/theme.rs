@@ -65,6 +65,17 @@ impl Theme {
     pub const DEFAULT_GALLERY_PADDING_X: f32 = 60.;
     pub const DEFAULT_GALLERY_PADDING_Y: f32 = 16.;
 
+    pub fn window_size(&self) -> Size<Pixels> {
+        let w = self.cols as f32 * self.card_width
+            + (self.cols - 1) as f32 * self.gallery_gap
+            + self.gallery_padding_x * 2.;
+        let h = self.rows as f32 * self.card_height
+            + (self.rows - 1) as f32 * self.gallery_gap
+            + self.gallery_padding_y * 2.
+            + f32::from(self.title_bar_height);
+        size(px(w), px(h))
+    }
+
     pub fn icons_font() -> &'static str {
         "Segoe Fluent Icons"
     }

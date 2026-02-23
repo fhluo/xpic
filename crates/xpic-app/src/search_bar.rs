@@ -1,7 +1,7 @@
 use crate::theme::Theme;
 use gpui::{div, prelude::*, px, App, Entity, Styled, Window};
 use gpui_component::input::{Input, InputState};
-use gpui_component::{IconName, Sizable};
+use gpui_component::Sizable;
 
 #[derive(IntoElement)]
 pub struct SearchBar {
@@ -37,9 +37,11 @@ impl RenderOnce for SearchBar {
                     .items_center()
                     .pl_2()
                     .child(
-                        gpui_component::Icon::new(IconName::Search)
-                            .xsmall()
-                            .text_color(theme.caption),
+                        div()
+                            .font_family(Theme::icons_font())
+                            .text_size(px(12.0))
+                            .text_color(theme.caption)
+                            .child("\u{E721}"),
                     )
                     .child(
                         Input::new(&self.input_state)

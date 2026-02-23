@@ -141,6 +141,15 @@ impl Theme {
     }
 }
 
+impl From<Appearance> for Theme {
+    fn from(appearance: Appearance) -> Self {
+        match appearance {
+            Appearance::Light => Self::light(),
+            Appearance::Dark => Self::dark(),
+        }
+    }
+}
+
 pub fn apply_mica_theme(mode: Appearance, window: &mut Window, cx: &mut App) {
     let theme = match mode {
         Appearance::Light => Theme::light(),

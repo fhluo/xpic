@@ -33,17 +33,16 @@ impl RenderOnce for SearchBar {
                     .rounded_xl()
                     .border_1()
                     .border_color(theme.border.opacity(0.5))
+                    .flex()
+                    .items_center()
+                    .pl_2()
+                    .child(
+                        gpui_component::Icon::new(IconName::Search)
+                            .xsmall()
+                            .text_color(theme.caption),
+                    )
                     .child(
                         Input::new(&self.input_state)
-                            .prefix(
-                                div()
-                                    .child(
-                                        gpui_component::Icon::new(IconName::Search)
-                                            .xsmall()
-                                            .text_color(theme.caption),
-                                    )
-                                    .mr_0p5(),
-                            )
                             .small()
                             .py(px(14.))
                             .cleanable(true)

@@ -72,6 +72,10 @@ impl XpicApp {
 
             if let Some(cached) = self.cache.get(&market) {
                 self.images = cached.clone();
+
+                if data::is_stale(&self.images, Duration::hours(24)) {
+                    Self::load(market, cx);
+                }
             } else {
                 self.images = data::to_arc(data::embedded(market));
                 Self::load(market, cx);

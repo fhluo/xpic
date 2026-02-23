@@ -6,7 +6,7 @@ use gpui::{App, ClipboardItem, Context, SharedString, Window};
 use gpui_component::menu::{PopupMenu, PopupMenuItem};
 use xpic::bing::{ThumbnailParams, UrlBuilder};
 
-pub fn copy_item(label: impl Into<SharedString>, text: impl Into<String>) -> PopupMenuItem {
+pub fn copy(label: impl Into<SharedString>, text: impl Into<String>) -> PopupMenuItem {
     let text = text.into();
     PopupMenuItem::new(label).on_click(move |_, _, cx| {
         cx.write_to_clipboard(ClipboardItem::new_string(text.clone()));

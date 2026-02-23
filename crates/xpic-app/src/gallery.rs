@@ -81,8 +81,8 @@ impl RenderOnce for Gallery {
                 Some(i) if i < images.len() => {
                     let image = &images[i];
 
-                    menu.item(menu::copy_item("Copy Title", &image.title))
-                        .item(menu::copy_item("Copy Copyright", &image.copyright))
+                    menu.item(menu::copy("Copy Title", &image.title))
+                        .item(menu::copy("Copy Copyright", &image.copyright))
                         .separator()
                         .submenu("Download", window, cx, menu::download_submenu(&image.id))
                 }

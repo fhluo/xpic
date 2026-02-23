@@ -1,5 +1,8 @@
 use crate::card::Card;
+use crate::config::Config;
 use crate::theme::Theme;
+use crate::RUNTIME;
+use anyhow::anyhow;
 use gpui::prelude::*;
 use gpui::{div, px, Action, App, ClipboardItem, SharedString, Window};
 use gpui_component::menu::{ContextMenuExt, PopupMenuItem};
@@ -8,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use std::cell::Cell;
 use std::rc::Rc;
 use std::sync::Arc;
-use xpic::bing::ThumbnailParams;
+use xpic::bing::{ThumbnailParams, UrlBuilder};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, Action)]
 pub struct Refresh;
@@ -73,7 +76,7 @@ impl RenderOnce for Gallery {
         }
 
         let images = self.images.clone();
-        gallery.context_menu(move |menu, _window, _cx| {
+        gallery.context_menu(move |menu, window, cx| {
             let index = context_menu_index.take();
 
             match index {
@@ -92,9 +95,84 @@ impl RenderOnce for Gallery {
                             cx.write_to_clipboard(ClipboardItem::new_string(copyright.clone()));
                         }
                     }))
+                    .separator()
+                    .submenu("Download", window, cx, {
+                        let id = image.id.clone();
+                        move |mut menu, _, _| {
+                            let resolutions: &[(&str, Option<(u32, u32)>)] = &[
+                                ("1920×1080", Some((1920, 1080))),
+                                ("2560×1440", Some((2560, 1440))),
+                                ("3840×2160", Some((3840, 2160))),
+                                ("UHD", None),
+                            ];
+
+                            for &(label, resolution) in resolutions {
+                                let id = id.clone();
+                                menu = menu.item(PopupMenuItem::new(label).on_click(
+                                    move |_, _, cx| {
+                                        let _ = download(&id, resolution, cx);
+                                    },
+                                ));
+                            }
+
+                            menu
+                        }
+                    })
                 }
                 _ => menu.item(PopupMenuItem::new("Refresh").action(Box::new(Refresh))),
             }
         })
     }
+}
+
+fn download(id: &str, resolution: Option<(u32, u32)>, cx: &mut App) -> Result<(), anyhow::Error> {
+    let mut builder = UrlBuilder::new(id);
+    let mut id = xpic::ID::parse(id).ok_or_else(|| anyhow!("invalid ID"))?;
+    id.uhd = true;
+
+    if let Some((w, h)) = resolution {
+        builder = builder.width(w).height(h).no_padding();
+
+        id.uhd = false;
+        id.width = Some(w as usize);
+        id.height = Some(h as usize);
+    }
+
+    let url = builder.build()?;
+    let cache_path = cx.global::<Config>().image_cache(&url);
+
+    let dir = dirs::picture_dir()
+        .unwrap_or_else(|| dirs::download_dir().unwrap_or_else(std::env::temp_dir));
+    let filename = id.to_string();
+    let receiver = cx.prompt_for_new_path(&dir, Some(&filename));
+
+    RUNTIME.handle().spawn(async move {
+        let save_path = receiver
+            .await??
+            .ok_or_else(|| anyhow!("failed to get save path"))?;
+
+        if cache_path.exists() {
+            return tokio::fs::copy(&cache_path, &save_path)
+                .await
+                .map(drop)
+                .map_err(anyhow::Error::msg);
+        }
+
+        let data = reqwest::get(&url)
+            .await?
+            .error_for_status()?
+            .bytes()
+            .await?;
+
+        if let Some(dir) = cache_path.parent() {
+            let _ = tokio::fs::create_dir_all(dir).await;
+        }
+
+        let _ = tokio::fs::write(&cache_path, &data).await;
+        let _ = tokio::fs::write(&save_path, &data).await;
+
+        Ok::<_, anyhow::Error>(())
+    });
+
+    Ok(())
 }

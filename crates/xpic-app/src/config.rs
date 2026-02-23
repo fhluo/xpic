@@ -7,6 +7,8 @@ use xpic::bing::Market;
 pub struct Config {
     pub cache_dir: PathBuf,
     pub data_dir: PathBuf,
+
+    pub market: Market,
     pub appearance: Appearance,
 }
 
@@ -19,6 +21,7 @@ impl Default for Config {
         Self {
             cache_dir: base.join("cache"),
             data_dir: base.join("data"),
+            market: Market::EN_US,
             appearance: Appearance::Dark,
         }
     }

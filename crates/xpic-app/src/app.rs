@@ -45,7 +45,7 @@ impl XpicApp {
         })
         .detach();
 
-        let market = Market::EN_US;
+        let market = cx.global::<Config>().market;
         let images = data::to_arc(data::embedded(market));
         Self::load(market, cx);
 
@@ -69,6 +69,7 @@ impl XpicApp {
             && self.market != market
         {
             self.market = market;
+            cx.global_mut::<Config>().market = self.market;
 
             if let Some(cached) = self.cache.get(&market) {
                 self.images = cached.clone();

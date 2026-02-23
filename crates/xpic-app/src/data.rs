@@ -1,4 +1,5 @@
 use ahash::AHashSet;
+use chrono::{Duration, Utc};
 use serde::Serialize;
 use std::borrow::Borrow;
 use std::path::Path;
@@ -82,6 +83,16 @@ pub async fn save(path: impl AsRef<Path>, images: &[impl Serialize]) -> anyhow::
     tokio::fs::write(path, serde_json::to_vec_pretty(images)?)
         .await
         .map_err(anyhow::Error::msg)
+}
+
+/// Returns `true` if the latest image is older than `max_age`, or the list is empty.
+pub fn is_stale(images: &[impl Borrow<Image>], max_age: Duration) -> bool {
+    images
+        .iter()
+        .max_by_key(|&img| img.borrow().full_start_date)
+        .is_none_or(|latest| {
+            Utc::now().signed_duration_since(latest.borrow().full_start_date) > max_age
+        })
 }
 
 pub async fn fetch(market: Market) -> anyhow::Result<Vec<Image>> {

@@ -9,7 +9,7 @@ use crate::theme_toggle::ThemeToggle;
 use crate::title_bar::TitleBar;
 use crate::RUNTIME;
 use ahash::AHashMap;
-use chrono::Utc;
+use chrono::Duration;
 use gpui::prelude::*;
 use gpui::{div, img, px, App, Context, Entity, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
@@ -97,19 +97,9 @@ impl XpicApp {
                         images = local;
                     }
 
-                    let is_stale = images
-                        .iter()
-                        .max_by_key(|img| img.full_start_date)
-                        .is_none_or(|latest| {
-                            Utc::now()
-                                .signed_duration_since(latest.full_start_date)
-                                .num_days()
-                                > 7
-                        });
-
                     let mut merged = false;
 
-                    if is_stale
+                    if data::is_stale(&images, Duration::days(7))
                         && let Ok(remote) = data::fetch_remote(market).await
                         && !remote.is_empty()
                     {
@@ -117,17 +107,7 @@ impl XpicApp {
                         merged = true;
                     }
 
-                    let is_stale = images
-                        .iter()
-                        .max_by_key(|img| img.full_start_date)
-                        .is_none_or(|latest| {
-                            Utc::now()
-                                .signed_duration_since(latest.full_start_date)
-                                .num_hours()
-                                > 24
-                        });
-
-                    if is_stale
+                    if data::is_stale(&images, Duration::hours(24))
                         && let Ok(api) = data::fetch(market).await
                         && !api.is_empty()
                     {

@@ -16,12 +16,16 @@ pub fn set_wallpaper(path: impl AsRef<Path>) -> anyhow::Result<()> {
 
     unsafe {
         CoInitializeEx(None, COINIT_MULTITHREADED).ok()?;
+    }
 
-        let wallpaper: IDesktopWallpaper = CoCreateInstance(&DesktopWallpaper, None, CLSCTX_ALL)?;
-        wallpaper.SetWallpaper(PCWSTR::null(), &path)?;
-
-        CoUninitialize();
+    let result = unsafe {
+        CoCreateInstance(&DesktopWallpaper, None, CLSCTX_ALL)
+            .and_then(|wallpaper: IDesktopWallpaper| wallpaper.SetWallpaper(PCWSTR::null(), &path))
     };
 
-    Ok(())
+    unsafe {
+        CoUninitialize();
+    }
+
+    result.map_err(anyhow::Error::msg)
 }

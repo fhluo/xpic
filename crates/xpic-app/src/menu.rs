@@ -1,4 +1,5 @@
 use crate::config::Config;
+use crate::image::fetch_cached;
 use crate::RUNTIME;
 use anyhow::anyhow;
 use gpui::{App, ClipboardItem, Context, SharedString, Window};
@@ -64,25 +65,8 @@ pub fn download(
             .await??
             .ok_or_else(|| anyhow!("failed to get save path"))?;
 
-        if cache_path.exists() {
-            return tokio::fs::copy(&cache_path, &save_path)
-                .await
-                .map(drop)
-                .map_err(anyhow::Error::msg);
-        }
-
-        let data = reqwest::get(&url)
-            .await?
-            .error_for_status()?
-            .bytes()
-            .await?;
-
-        if let Some(dir) = cache_path.parent() {
-            let _ = tokio::fs::create_dir_all(dir).await;
-        }
-
-        let _ = tokio::fs::write(&cache_path, &data).await;
-        let _ = tokio::fs::write(&save_path, &data).await;
+        let data = fetch_cached(&url, &cache_path).await?;
+        tokio::fs::write(&save_path, &data).await?;
 
         Ok::<_, anyhow::Error>(())
     });

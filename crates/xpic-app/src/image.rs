@@ -7,6 +7,7 @@ use image::RgbaImage;
 use photon_rs::colour_spaces::lighten_hsl;
 use photon_rs::PhotonImage;
 use std::hash::{Hash, Hasher};
+use std::path::Path;
 use std::sync::Arc;
 use xpic::bing::{ThumbnailParams, ThumbnailQuery, UrlBuilder};
 
@@ -120,6 +121,28 @@ impl IntoElement for Image {
     }
 }
 
+/// Fetches data from a URL, caching to the given path.
+pub async fn fetch_cached(
+    url: impl AsRef<str>,
+    cache_path: impl AsRef<Path>,
+) -> anyhow::Result<Vec<u8>> {
+    let url = url.as_ref();
+    let cache_path = cache_path.as_ref();
+
+    if cache_path.exists() {
+        return Ok(tokio::fs::read(cache_path).await?);
+    }
+
+    let data = reqwest::get(url).await?.error_for_status()?.bytes().await?;
+
+    if let Some(dir) = cache_path.parent() {
+        let _ = tokio::fs::create_dir_all(dir).await;
+    }
+    let _ = tokio::fs::write(cache_path, &data).await;
+
+    Ok(data.to_vec())
+}
+
 impl Asset for Image {
     type Source = ImageAssetSource;
     type Output = Result<Arc<RenderImage>, ImageCacheError>;
@@ -133,29 +156,10 @@ impl Asset for Image {
 
         async move {
             let bytes = handle
-                .spawn(async move {
-                    if path.exists() {
-                        return tokio::fs::read(&path).await;
-                    }
-
-                    let data = reqwest::get(url.as_ref())
-                        .await
-                        .and_then(|r| r.error_for_status())
-                        .map_err(|err| std::io::Error::other(err))?
-                        .bytes()
-                        .await
-                        .map_err(|err| std::io::Error::other(err))?;
-
-                    if let Some(dir) = path.parent() {
-                        let _ = tokio::fs::create_dir_all(dir).await;
-                    }
-                    let _ = tokio::fs::write(&path, &data).await;
-
-                    Ok(data.to_vec())
-                })
+                .spawn(async move { fetch_cached(&url, &path).await })
                 .await
                 .map_err(|err| ImageCacheError::Other(Arc::new(err.into())))?
-                .map_err(|err| ImageCacheError::Io(Arc::new(err)))?;
+                .map_err(|err| ImageCacheError::Other(Arc::new(err)))?;
 
             Image::decode(bytes, lighten_level)
         }

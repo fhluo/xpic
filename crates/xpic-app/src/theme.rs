@@ -1,4 +1,4 @@
-use gpui::{hsla, px, rgba, App, Global, Hsla, Pixels, Window, WindowAppearance};
+use gpui::{hsla, px, rgba, size, App, Global, Hsla, Pixels, Size, Window, WindowAppearance};
 use gpui_component::theme::{Theme as ComponentTheme, ThemeMode};
 use raw_window_handle::{HasWindowHandle, RawWindowHandle};
 use windows::core::BOOL;
@@ -28,6 +28,15 @@ pub struct Theme {
     pub appearance: Appearance,
     pub title_bar_height: Pixels,
     pub control_button_width: Pixels,
+    pub cols: usize,
+    pub rows: usize,
+    pub card_width: f32,
+    pub card_height: f32,
+    pub thumbnail_width: u32,
+    pub thumbnail_height: u32,
+    pub gallery_gap: f32,
+    pub gallery_padding_x: f32,
+    pub gallery_padding_y: f32,
     pub foreground: Hsla,
     pub hover_bg: Hsla,
     pub active_bg: Hsla,
@@ -46,6 +55,15 @@ impl Global for Theme {}
 impl Theme {
     pub const DEFAULT_TITLE_BAR_HEIGHT: Pixels = px(34.);
     pub const DEFAULT_CONTROL_BUTTON_WIDTH: Pixels = px(46.);
+    pub const DEFAULT_COLS: usize = 4;
+    pub const DEFAULT_ROWS: usize = 3;
+    pub const DEFAULT_CARD_WIDTH: f32 = 240.;
+    pub const DEFAULT_CARD_HEIGHT: f32 = 160.;
+    pub const DEFAULT_THUMBNAIL_WIDTH: u32 = 480;
+    pub const DEFAULT_THUMBNAIL_HEIGHT: u32 = 270;
+    pub const DEFAULT_GALLERY_GAP: f32 = 16.;
+    pub const DEFAULT_GALLERY_PADDING_X: f32 = 60.;
+    pub const DEFAULT_GALLERY_PADDING_Y: f32 = 16.;
 
     pub fn icons_font() -> &'static str {
         "Segoe Fluent Icons"
@@ -56,6 +74,15 @@ impl Theme {
             appearance: Appearance::Light,
             title_bar_height: Self::DEFAULT_TITLE_BAR_HEIGHT,
             control_button_width: Self::DEFAULT_CONTROL_BUTTON_WIDTH,
+            cols: Self::DEFAULT_COLS,
+            rows: Self::DEFAULT_ROWS,
+            card_width: Self::DEFAULT_CARD_WIDTH,
+            card_height: Self::DEFAULT_CARD_HEIGHT,
+            thumbnail_width: Self::DEFAULT_THUMBNAIL_WIDTH,
+            thumbnail_height: Self::DEFAULT_THUMBNAIL_HEIGHT,
+            gallery_gap: Self::DEFAULT_GALLERY_GAP,
+            gallery_padding_x: Self::DEFAULT_GALLERY_PADDING_X,
+            gallery_padding_y: Self::DEFAULT_GALLERY_PADDING_Y,
             foreground: hsla(0., 0., 0.1, 1.0),
             hover_bg: hsla(0., 0., 0., 0.05),
             active_bg: hsla(0., 0., 0., 0.08),
@@ -75,6 +102,15 @@ impl Theme {
             appearance: Appearance::Dark,
             title_bar_height: Self::DEFAULT_TITLE_BAR_HEIGHT,
             control_button_width: Self::DEFAULT_CONTROL_BUTTON_WIDTH,
+            cols: Self::DEFAULT_COLS,
+            rows: Self::DEFAULT_ROWS,
+            card_width: Self::DEFAULT_CARD_WIDTH,
+            card_height: Self::DEFAULT_CARD_HEIGHT,
+            thumbnail_width: Self::DEFAULT_THUMBNAIL_WIDTH,
+            thumbnail_height: Self::DEFAULT_THUMBNAIL_HEIGHT,
+            gallery_gap: Self::DEFAULT_GALLERY_GAP,
+            gallery_padding_x: Self::DEFAULT_GALLERY_PADDING_X,
+            gallery_padding_y: Self::DEFAULT_GALLERY_PADDING_Y,
             foreground: hsla(0., 0., 0.95, 1.0),
             hover_bg: hsla(0., 0., 1.0, 0.08),
             active_bg: hsla(0., 0., 1.0, 0.12),

@@ -9,6 +9,7 @@ use crate::theme_toggle::ThemeToggle;
 use crate::title_bar::TitleBar;
 use crate::RUNTIME;
 use ahash::AHashMap;
+use chrono::Utc;
 use gpui::prelude::*;
 use gpui::{div, img, px, App, Context, Entity, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
@@ -100,14 +101,41 @@ impl XpicApp {
                         .iter()
                         .max_by_key(|img| img.full_start_date)
                         .is_none_or(|latest| {
-                            chrono::Utc::now()
+                            Utc::now()
                                 .signed_duration_since(latest.full_start_date)
                                 .num_days()
                                 > 7
                         });
 
-                    if is_stale && let Ok(remote) = data::fetch_remote(market).await {
+                    let mut merged = false;
+
+                    if is_stale
+                        && let Ok(remote) = data::fetch_remote(market).await
+                        && !remote.is_empty()
+                    {
                         images = data::merge(&images, &remote);
+                        merged = true;
+                    }
+
+                    let is_stale = images
+                        .iter()
+                        .max_by_key(|img| img.full_start_date)
+                        .is_none_or(|latest| {
+                            Utc::now()
+                                .signed_duration_since(latest.full_start_date)
+                                .num_hours()
+                                > 24
+                        });
+
+                    if is_stale
+                        && let Ok(api) = data::fetch(market).await
+                        && !api.is_empty()
+                    {
+                        images = data::merge(&images, &api);
+                        merged = true;
+                    }
+
+                    if merged {
                         let _ = data::save(&path, &images).await;
                     }
 

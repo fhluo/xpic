@@ -49,6 +49,15 @@ impl XpicApp {
         let images = data::to_arc(data::embedded(market));
         Self::load(market, cx);
 
+        window.on_window_should_close(cx, |window, cx| {
+            let config = cx.global_mut::<Config>();
+
+            config.window_bounds = Some(window.bounds());
+            config.save();
+
+            true
+        });
+
         XpicApp {
             market,
             cache: AHashMap::new(),

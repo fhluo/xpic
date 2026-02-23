@@ -40,8 +40,10 @@ fn main() -> anyhow::Result<()> {
 
         LazyLock::force(&RUNTIME);
 
-        cx.set_global(Config::default());
-        cx.set_global(Theme::from(cx.global::<Config>().appearance));
+        let config = Config::load();
+
+        cx.set_global(Theme::from(config.appearance));
+        cx.set_global(config);
 
         open_main_window(cx);
     });
@@ -50,7 +52,10 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn open_main_window(cx: &App) {
-    let bounds = Bounds::centered(None, cx.global::<Theme>().window_size(), cx);
+    let bounds = cx
+        .global::<Config>()
+        .window_bounds
+        .unwrap_or_else(|| Bounds::centered(None, cx.global::<Theme>().window_size(), cx));
 
     cx.spawn(async move |cx| {
         cx.open_window(

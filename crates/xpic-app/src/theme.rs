@@ -1,6 +1,7 @@
 use gpui::{hsla, px, rgba, size, App, Global, Hsla, Pixels, Size, Window, WindowAppearance};
 use gpui_component::theme::{Theme as ComponentTheme, ThemeMode};
 use raw_window_handle::{HasWindowHandle, RawWindowHandle};
+use serde::{Deserialize, Serialize};
 use windows::core::BOOL;
 use windows::Win32::Foundation::HWND;
 use windows::Win32::Graphics::Dwm::{
@@ -8,7 +9,7 @@ use windows::Win32::Graphics::Dwm::{
 };
 use windows::Win32::UI::Controls::MARGINS;
 
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Appearance {
     Light,
     Dark,

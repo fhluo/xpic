@@ -87,6 +87,7 @@ impl RenderOnce for Gallery {
                         .separator()
                         .submenu("Download", window, cx, menu::download_submenu(&image.id))
                         .item(menu::set_wallpaper(&image.id))
+                        .item(menu::set_lock_screen(&image.id))
                 }
                 _ => menu.item(PopupMenuItem::new("Refresh").action(Box::new(Refresh))),
             }

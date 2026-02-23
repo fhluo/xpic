@@ -30,6 +30,9 @@ confy = "2.0"
 [dependencies.windows]
 version = "0.62"
 features = [
+    "Storage",
+    "Storage_Streams",
+    "System_UserProfile",
     "Win32_Foundation",
     "Win32_Graphics_Dwm",
     "Win32_System_Com",

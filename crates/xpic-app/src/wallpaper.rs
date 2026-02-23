@@ -2,6 +2,8 @@ use std::path::Path;
 
 use windows::{
     core::{HSTRING, PCWSTR},
+    Storage::StorageFile,
+    System::UserProfile::LockScreen,
     Win32::{
         System::Com::{
             CoCreateInstance, CoInitializeEx, CoUninitialize, CLSCTX_ALL, COINIT_MULTITHREADED,
@@ -28,4 +30,17 @@ pub fn set_wallpaper(path: impl AsRef<Path>) -> anyhow::Result<()> {
     }
 
     result.map_err(anyhow::Error::msg)
+}
+
+/// Sets the lock screen image using the WinRT `LockScreen` API.
+pub async fn set_lock_screen(path: impl AsRef<Path>) -> anyhow::Result<()> {
+    let path = HSTRING::from(path.as_ref().as_os_str());
+
+    {
+        let file = StorageFile::GetFileFromPathAsync(&path)?.await?;
+        LockScreen::SetImageFileAsync(&file)?
+    }
+    .await?;
+
+    Ok(())
 }

@@ -1,4 +1,5 @@
 use ahash::AHashSet;
+use serde::Serialize;
 use std::path::Path;
 use std::sync::{Arc, LazyLock};
 use xpic::bing::{Market, QueryParams};
@@ -83,7 +84,7 @@ pub fn into_arc(images: Vec<Image>) -> Vec<Arc<Image>> {
     images.into_iter().map(Arc::new).collect()
 }
 
-pub async fn save(path: impl AsRef<Path>, images: &[Image]) -> anyhow::Result<()> {
+pub async fn save(path: impl AsRef<Path>, images: &[impl Serialize]) -> anyhow::Result<()> {
     if let Some(dir) = path.as_ref().parent() {
         let _ = tokio::fs::create_dir_all(dir).await.ok();
     }

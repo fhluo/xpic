@@ -47,9 +47,28 @@ impl RenderOnce for SearchBar {
                         Input::new(&self.input_state)
                             .small()
                             .py(px(14.))
-                            .cleanable(true)
                             .appearance(false),
-                    ),
+                    )
+                    .when(!self.input_state.read(cx).value().is_empty(), |this| {
+                        this.child(
+                            div()
+                                .id("search-clear")
+                                .cursor_pointer()
+                                .pr_2()
+                                .on_click(move |_, window, cx| {
+                                    self.input_state.update(cx, |state, cx| {
+                                        state.set_value("", window, cx);
+                                    });
+                                })
+                                .child(
+                                    div()
+                                        .font_family(Theme::icons_font())
+                                        .text_size(px(12.0))
+                                        .text_color(theme.caption)
+                                        .child("\u{E894}"),
+                                ),
+                        )
+                    }),
             )
     }
 }

@@ -85,6 +85,7 @@ impl RenderOnce for Gallery {
                         .item(menu::copy("Copy Copyright", &image.copyright))
                         .separator()
                         .submenu("Download", window, cx, menu::download_submenu(&image.id))
+                        .item(menu::set_wallpaper(&image.id))
                 }
                 _ => menu.item(PopupMenuItem::new("Refresh").action(Box::new(Refresh))),
             }

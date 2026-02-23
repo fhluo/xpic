@@ -1,5 +1,6 @@
 use crate::config::Config;
 use crate::image::fetch_cached;
+use crate::wallpaper;
 use crate::RUNTIME;
 use anyhow::anyhow;
 use gpui::{App, ClipboardItem, Context, SharedString, Window};
@@ -72,4 +73,24 @@ pub fn download(
     });
 
     Ok(())
+}
+
+pub fn set_wallpaper(id: impl Into<String>) -> PopupMenuItem {
+    let id = id.into();
+
+    PopupMenuItem::new("Set as Wallpaper").on_click(move |_, _, cx| {
+        let url = UrlBuilder::new(&id).build().expect("URL should be valid");
+        let cache_path = cx.global::<Config>().image_cache(&url);
+
+        RUNTIME.handle().spawn(async move {
+            if let Err(err) = fetch_cached(&url, &cache_path).await {
+                eprintln!("failed to fetch image: {err}");
+                return;
+            }
+
+            if let Err(err) = wallpaper::set_wallpaper(&cache_path) {
+                eprintln!("failed to set wallpaper: {err}");
+            }
+        });
+    })
 }

@@ -1,5 +1,6 @@
 use ahash::AHashSet;
 use serde::Serialize;
+use std::borrow::Borrow;
 use std::path::Path;
 use std::sync::{Arc, LazyLock};
 use xpic::bing::{Market, QueryParams};
@@ -48,31 +49,20 @@ pub async fn load(path: impl AsRef<Path>) -> anyhow::Result<Vec<Image>> {
 
 /// Merges two image lists, deduplicating by `id`. Items from `new` take priority over `existing`.
 /// The result is sorted by `start_date` descending.
-pub fn merge(existing: &[Image], new: &[Image]) -> Vec<Image> {
+pub fn merge<T>(existing: &[T], new: &[T]) -> Vec<T>
+where
+    T: Borrow<Image> + Clone,
+{
     let mut seen = AHashSet::new();
-    let mut result: Vec<Image> = Vec::with_capacity(existing.len() + new.len());
+    let mut result = Vec::with_capacity(existing.len() + new.len());
 
     for img in new.iter().chain(existing.iter()) {
-        if seen.insert(img.id.clone()) {
+        if seen.insert(img.borrow().id.clone()) {
             result.push(img.clone());
         }
     }
 
-    result.sort_by(|a, b| b.start_date.cmp(&a.start_date));
-    result
-}
-
-pub fn merge_arc(existing: &[Arc<Image>], new: &[Arc<Image>]) -> Vec<Arc<Image>> {
-    let mut seen = AHashSet::new();
-    let mut result: Vec<Arc<Image>> = Vec::with_capacity(existing.len() + new.len());
-
-    for img in new.iter().chain(existing.iter()) {
-        if seen.insert(img.id.clone()) {
-            result.push(img.clone());
-        }
-    }
-
-    result.sort_by(|a, b| b.start_date.cmp(&a.start_date));
+    result.sort_by(|a, b| b.borrow().start_date.cmp(&a.borrow().start_date));
     result
 }
 

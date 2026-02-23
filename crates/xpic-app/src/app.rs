@@ -119,7 +119,7 @@ impl XpicApp {
                 && !images.is_empty()
             {
                 this.update(cx, |this, cx| {
-                    this.images = data::merge_arc(&this.images, &images);
+                    this.images = data::merge(&this.images, &images);
                     this.cache.insert(market, this.images.clone());
                     this.filtered_images = this.search(&this.search_query);
                     cx.notify();

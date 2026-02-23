@@ -16,7 +16,7 @@ pub struct Card {
     title: Option<SharedString>,
     image: Image,
     /// Shared context menu index tracker.
-    context_menu_index: Option<(usize, Rc<Cell<usize>>)>,
+    context_menu_index: Option<(usize, Rc<Cell<Option<usize>>>)>,
     style: StyleRefinement,
 }
 
@@ -55,7 +55,7 @@ impl Card {
     }
 
     /// Sets the shared context menu index tracker for this card.
-    pub fn context_menu_index(mut self, idx: usize, shared: Rc<Cell<usize>>) -> Self {
+    pub fn context_menu_index(mut self, idx: usize, shared: Rc<Cell<Option<usize>>>) -> Self {
         self.context_menu_index = Some((idx, shared));
         self
     }
@@ -80,9 +80,9 @@ impl RenderOnce for Card {
             .overflow_hidden()
             .cursor_pointer()
             .refine_style(&self.style)
-            .when_some(self.context_menu_index, |this, (idx, shared)| {
+            .when_some(self.context_menu_index, |this, (index, shared)| {
                 this.on_mouse_down(MouseButton::Right, move |_, _, _| {
-                    shared.set(idx);
+                    shared.set(Some(index));
                 })
             })
             .child(

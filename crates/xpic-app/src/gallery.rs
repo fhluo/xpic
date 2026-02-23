@@ -1,12 +1,17 @@
 use crate::card::Card;
 use crate::theme::Theme;
 use gpui::prelude::*;
-use gpui::{div, px, App, ClipboardItem, SharedString, Window};
+use gpui::{div, px, Action, App, ClipboardItem, SharedString, Window};
 use gpui_component::menu::{ContextMenuExt, PopupMenuItem};
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 use std::cell::Cell;
 use std::rc::Rc;
 use std::sync::Arc;
 use xpic::bing::ThumbnailParams;
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, Action)]
+pub struct Refresh;
 
 #[derive(IntoElement)]
 pub struct Gallery {
@@ -30,7 +35,7 @@ impl Gallery {
 impl RenderOnce for Gallery {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
-        let context_menu_index = Rc::new(Cell::new(0usize));
+        let context_menu_index: Rc<Cell<Option<usize>>> = Rc::new(Cell::new(None));
 
         let mut gallery = div()
             .id("gallery")
@@ -69,24 +74,27 @@ impl RenderOnce for Gallery {
 
         let images = self.images.clone();
         gallery.context_menu(move |menu, _window, _cx| {
-            let i = context_menu_index.get();
-            if i >= images.len() {
-                return menu;
-            }
-            let image = &images[i];
+            let index = context_menu_index.take();
 
-            menu.item(PopupMenuItem::new("Copy Title").on_click({
-                let title = image.title.clone();
-                move |_, _, cx| {
-                    cx.write_to_clipboard(ClipboardItem::new_string(title.clone()));
+            match index {
+                Some(i) if i < images.len() => {
+                    let image = &images[i];
+
+                    menu.item(PopupMenuItem::new("Copy Title").on_click({
+                        let title = image.title.clone();
+                        move |_, _, cx| {
+                            cx.write_to_clipboard(ClipboardItem::new_string(title.clone()));
+                        }
+                    }))
+                    .item(PopupMenuItem::new("Copy Copyright").on_click({
+                        let copyright = image.copyright.clone();
+                        move |_, _, cx| {
+                            cx.write_to_clipboard(ClipboardItem::new_string(copyright.clone()));
+                        }
+                    }))
                 }
-            }))
-            .item(PopupMenuItem::new("Copy Copyright").on_click({
-                let copyright = image.copyright.clone();
-                move |_, _, cx| {
-                    cx.write_to_clipboard(ClipboardItem::new_string(copyright.clone()));
-                }
-            }))
+                _ => menu.item(PopupMenuItem::new("Refresh").action(Box::new(Refresh))),
+            }
         })
     }
 }

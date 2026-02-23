@@ -1,7 +1,7 @@
 use crate::assets::Icon;
 use crate::config::Config;
 use crate::data;
-use crate::gallery::Gallery;
+use crate::gallery::{Gallery, Refresh};
 use crate::market_selector::{ChangeMarket, MarketSelector};
 use crate::search_bar::SearchBar;
 use crate::theme::Theme;
@@ -95,6 +95,10 @@ impl XpicApp {
             self.search_query = String::new();
             cx.notify();
         }
+    }
+
+    fn on_refresh(&mut self, _: &Refresh, _: &mut Window, cx: &mut Context<Self>) {
+        Self::load(self.market, cx);
     }
 
     /// Loads local data and fetch remote if stale.
@@ -224,6 +228,7 @@ impl Render for XpicApp {
             .flex_col()
             .relative()
             .on_action(cx.listener(Self::on_change_market))
+            .on_action(cx.listener(Self::on_refresh))
             .child(self.render_title_bar(cx))
             .child(div().flex_1().relative().overflow_hidden().child({
                 let is_empty = self.filtered_images.is_empty();

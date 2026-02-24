@@ -19,6 +19,7 @@ tasks:
     deps:
       - task: cli:build
       - task: spotlight:build
+      - task: app:build
 
   release:
     deps:

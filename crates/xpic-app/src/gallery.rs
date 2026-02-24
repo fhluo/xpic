@@ -81,12 +81,14 @@ impl RenderOnce for Gallery {
                 Some(i) if i < images.len() => {
                     let image = &images[i];
 
-                    menu.item(menu::copy(t!("copy-title"), &image.title))
-                        .item(menu::copy_image(&image.id))
-                        .submenu(t!("copy"), window, cx, menu::copy_submenu(image))
+                    menu.item(menu::open_in_browser(&image.id))
                         .separator()
                         .item(menu::save(&image.id))
                         .submenu(t!("save-as"), window, cx, menu::save_submenu(&image.id))
+                        .separator()
+                        .item(menu::copy(t!("copy-title"), &image.title))
+                        .item(menu::copy_image(&image.id))
+                        .submenu(t!("copy"), window, cx, menu::copy_submenu(image))
                         .separator()
                         .item(menu::set_wallpaper(&image.id))
                         .item(menu::set_lock_screen(&image.id))

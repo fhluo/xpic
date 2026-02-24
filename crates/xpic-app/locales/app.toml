@@ -51,3 +51,7 @@ zh-CN = "设为锁屏"
 [refresh]
 en = "Refresh"
 zh-CN = "刷新"
+
+[open-in-browser]
+en = "Open in Browser"
+zh-CN = "在浏览器中打开"

@@ -141,6 +141,16 @@ pub fn download(
     Ok(())
 }
 
+pub fn open_in_browser(id: impl Into<String>) -> PopupMenuItem {
+    let id = id.into();
+
+    PopupMenuItem::new(t!("open-in-browser")).on_click(move |_, _, cx| {
+        if let Ok(url) = UrlBuilder::new(&id).build() {
+            cx.open_url(&url);
+        }
+    })
+}
+
 pub fn set_wallpaper(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
 

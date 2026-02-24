@@ -1,5 +1,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+#[macro_use]
+extern crate rust_i18n;
+
 use crate::app::XpicApp;
 use crate::assets::Assets;
 use crate::config::Config;
@@ -11,6 +14,8 @@ use gpui::{
 use gpui_component::Root;
 use std::sync::LazyLock;
 
+i18n!("locales", fallback = "en");
+
 mod app;
 mod assets;
 mod card;
@@ -18,6 +23,7 @@ mod config;
 mod data;
 mod gallery;
 mod image;
+mod locale;
 mod market_selector;
 mod menu;
 mod search_bar;
@@ -43,6 +49,7 @@ fn main() -> anyhow::Result<()> {
         LazyLock::force(&RUNTIME);
 
         let config = Config::load();
+        locale::set_from_market(config.market);
 
         cx.set_global(Theme::from(config.appearance));
         cx.set_global(config);

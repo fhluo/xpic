@@ -17,7 +17,7 @@ pub fn copy(label: impl Into<SharedString>, text: impl Into<String>) -> PopupMen
 pub fn copy_image(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
 
-    PopupMenuItem::new("Copy Image").on_click(move |_, _, cx| {
+    PopupMenuItem::new(t!("copy-image")).on_click(move |_, _, cx| {
         let url = UrlBuilder::new(&id).build().expect("URL should be valid");
         let cache_path = cx.global::<Config>().image_cache(&url);
         let handle = RUNTIME.handle().clone();
@@ -119,7 +119,7 @@ pub fn download(
 pub fn set_wallpaper(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
 
-    PopupMenuItem::new("Set as Wallpaper").on_click(move |_, _, cx| {
+    PopupMenuItem::new(t!("set-as-wallpaper")).on_click(move |_, _, cx| {
         let url = UrlBuilder::new(&id).build().expect("URL should be valid");
         let cache_path = cx.global::<Config>().image_cache(&url);
 
@@ -139,7 +139,7 @@ pub fn set_wallpaper(id: impl Into<String>) -> PopupMenuItem {
 pub fn set_lock_screen(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
 
-    PopupMenuItem::new("Set as Lock Screen").on_click(move |_, _, cx| {
+    PopupMenuItem::new(t!("set-as-lock-screen")).on_click(move |_, _, cx| {
         let url = UrlBuilder::new(&id).build().expect("URL should be valid");
         let cache_path = cx.global::<Config>().image_cache(&url);
 

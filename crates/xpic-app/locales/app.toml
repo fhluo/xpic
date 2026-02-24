@@ -1,0 +1,41 @@
+_version = 2
+
+[search-placeholder]
+en = "Search wallpapers..."
+zh-CN = "搜索壁纸…"
+
+[no-wallpapers-found]
+en = "No wallpapers found"
+zh-CN = "未找到壁纸"
+
+[copy-title]
+en = "Copy Title"
+zh-CN = "复制标题"
+
+[copy-description]
+en = "Copy Description"
+zh-CN = "复制描述"
+
+[copy-copyright]
+en = "Copy Copyright"
+zh-CN = "复制版权信息"
+
+[copy-image]
+en = "Copy Image"
+zh-CN = "复制图片"
+
+[download]
+en = "Download"
+zh-CN = "下载"
+
+[set-as-wallpaper]
+en = "Set as Wallpaper"
+zh-CN = "设为壁纸"
+
+[set-as-lock-screen]
+en = "Set as Lock Screen"
+zh-CN = "设为锁屏"
+
+[refresh]
+en = "Refresh"
+zh-CN = "刷新"

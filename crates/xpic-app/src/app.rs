@@ -2,6 +2,7 @@ use crate::assets::Icon;
 use crate::config::Config;
 use crate::data;
 use crate::gallery::{Gallery, Refresh};
+use crate::locale;
 use crate::market_selector::{ChangeMarket, MarketSelector};
 use crate::search_bar::SearchBar;
 use crate::theme::Theme;
@@ -31,7 +32,7 @@ pub struct XpicApp {
 impl XpicApp {
     pub fn new(window: &mut Window, cx: &mut Context<Self>) -> Self {
         let search_input =
-            cx.new(|cx| InputState::new(window, cx).placeholder("Search wallpapers..."));
+            cx.new(|cx| InputState::new(window, cx).placeholder(t!("search-placeholder")));
 
         cx.subscribe(&search_input, |this, input, event, cx| {
             if matches!(event, InputEvent::Change) {
@@ -79,6 +80,7 @@ impl XpicApp {
         {
             self.market = market;
             cx.global_mut::<Config>().market = self.market;
+            locale::set_from_market(market);
 
             if let Some(cached) = self.cache.get(&market) {
                 self.images = cached.clone();
@@ -245,7 +247,7 @@ impl Render for XpicApp {
                                 .size_full()
                                 .text_color(theme.caption)
                                 .text_sm()
-                                .child("No wallpapers found"),
+                                .child(t!("no-wallpapers-found")),
                         )
                     })
                     .when(!is_empty, |el| {

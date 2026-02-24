@@ -1,3 +1,4 @@
+use crate::locale;
 use crate::theme::Appearance;
 use gpui::{Bounds, Global, Pixels};
 use serde::{Deserialize, Serialize};
@@ -26,7 +27,7 @@ impl Default for Config {
         Self {
             cache_dir: base.join("cache"),
             data_dir: base.join("data"),
-            market: Market::EN_US,
+            market: locale::default_market(),
             appearance: Appearance::Dark,
             window_bounds: None,
         }

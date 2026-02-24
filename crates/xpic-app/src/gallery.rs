@@ -82,21 +82,26 @@ impl RenderOnce for Gallery {
                     let image = &images[i];
                     let copyright = xpic::Copyright::parse(&image.copyright);
 
-                    menu.item(menu::copy("Copy Title", &image.title))
+                    menu.item(menu::copy(t!("copy-title"), &image.title))
                         .when_none(&copyright, |this| {
-                            this.item(menu::copy("Copy Copyright", &image.copyright))
+                            this.item(menu::copy(t!("copy-copyright"), &image.copyright))
                         })
                         .when_some(copyright, |this, copyright| {
-                            this.item(menu::copy("Copy Description", copyright.description))
-                                .item(menu::copy("Copy Copyright", copyright.copyright))
+                            this.item(menu::copy(t!("copy-description"), copyright.description))
+                                .item(menu::copy(t!("copy-copyright"), copyright.copyright))
                         })
                         .item(menu::copy_image(&image.id))
                         .separator()
-                        .submenu("Download", window, cx, menu::download_submenu(&image.id))
+                        .submenu(
+                            t!("download"),
+                            window,
+                            cx,
+                            menu::download_submenu(&image.id),
+                        )
                         .item(menu::set_wallpaper(&image.id))
                         .item(menu::set_lock_screen(&image.id))
                 }
-                _ => menu.item(PopupMenuItem::new("Refresh").action(Box::new(Refresh))),
+                _ => menu.item(PopupMenuItem::new(t!("refresh")).action(Box::new(Refresh))),
             }
         })
     }

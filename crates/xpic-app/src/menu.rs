@@ -5,38 +5,83 @@ use crate::RUNTIME;
 use anyhow::anyhow;
 use gpui::{prelude::*, App, ClipboardItem, Context, ImageFormat, SharedString, Window};
 use gpui_component::menu::{PopupMenu, PopupMenuItem};
+use gpui_component::IconNamed;
 use xpic::bing::{ThumbnailParams, UrlBuilder};
 use xpic::Copyright;
 
+#[derive(Clone, Copy)]
+pub enum MenuIcon {
+    Copy,
+    ClipboardCopy,
+    Copyright,
+    ExternalLink,
+    FileText,
+    Link,
+    Lock,
+    RefreshCW,
+    Save,
+    Wallpaper,
+}
+
+impl IconNamed for MenuIcon {
+    fn path(self) -> SharedString {
+        match self {
+            Self::Copy => "icons/copy.svg",
+            Self::ClipboardCopy => "icons/clipboard-copy.svg",
+            Self::Copyright => "icons/copyright.svg",
+            Self::ExternalLink => "icons/external-link.svg",
+            Self::FileText => "icons/file-text.svg",
+            Self::Link => "icons/link.svg",
+            Self::Lock => "icons/lock.svg",
+            Self::RefreshCW => "icons/refresh-cw.svg",
+            Self::Save => "icons/save.svg",
+            Self::Wallpaper => "icons/wallpaper.svg",
+        }
+        .into()
+    }
+}
+
 pub fn copy(label: impl Into<SharedString>, text: impl Into<String>) -> PopupMenuItem {
+    copy_with_icon(MenuIcon::Copy, label, text)
+}
+
+pub fn copy_with_icon(
+    icon: MenuIcon,
+    label: impl Into<SharedString>,
+    text: impl Into<String>,
+) -> PopupMenuItem {
     let text = text.into();
-    PopupMenuItem::new(label).on_click(move |_, _, cx| {
-        cx.write_to_clipboard(ClipboardItem::new_string(text.clone()));
-    })
+    PopupMenuItem::new(label)
+        .icon(icon)
+        .on_click(move |_, _, cx| {
+            cx.write_to_clipboard(ClipboardItem::new_string(text.clone()));
+        })
 }
 
 pub fn copy_image(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
 
-    PopupMenuItem::new(t!("copy-image")).on_click(move |_, _, cx| {
-        let url = UrlBuilder::new(&id).build().expect("URL should be valid");
-        let cache_path = cx.global::<Config>().image_cache(&url);
-        let handle = RUNTIME.handle().clone();
+    PopupMenuItem::new(t!("copy-image"))
+        .icon(MenuIcon::ClipboardCopy)
+        .on_click(move |_, _, cx| {
+            let url = UrlBuilder::new(&id).build().expect("URL should be valid");
+            let cache_path = cx.global::<Config>().image_cache(&url);
+            let handle = RUNTIME.handle().clone();
 
-        cx.spawn(async move |cx| {
-            let bytes = handle
-                .spawn(async move { fetch_cached(&url, &cache_path).await })
-                .await??;
+            cx.spawn(async move |cx| {
+                let bytes = handle
+                    .spawn(async move { fetch_cached(&url, &cache_path).await })
+                    .await??;
 
-            cx.update(|cx| {
-                let image = gpui::Image::from_bytes(ImageFormat::Jpeg, bytes);
-                cx.write_to_clipboard(ClipboardItem::new_image(&image));
-            });
+                cx.update(|cx| {
+                    let image = gpui::Image::from_bytes(ImageFormat::Jpeg, bytes);
+                    cx.write_to_clipboard(ClipboardItem::new_image(&image));
+                });
 
-            Ok::<_, anyhow::Error>(())
+                Ok::<_, anyhow::Error>(())
+            })
+            .detach();
         })
-        .detach();
-    })
 }
 
 pub fn copy_submenu(
@@ -48,23 +93,37 @@ pub fn copy_submenu(
 
     move |menu, _, _| {
         menu.when_none(&copyright, |menu| {
-            menu.item(copy(t!("copyright"), &copyright_text))
+            menu.item(copy_with_icon(
+                MenuIcon::Copyright,
+                t!("copyright"),
+                &copyright_text,
+            ))
         })
         .when_some(copyright.clone(), |menu, copyright| {
-            menu.item(copy(t!("description"), copyright.description))
-                .item(copy(t!("copyright"), copyright.copyright))
+            menu.item(copy_with_icon(
+                MenuIcon::FileText,
+                t!("description"),
+                copyright.description,
+            ))
+            .item(copy_with_icon(
+                MenuIcon::Copyright,
+                t!("copyright"),
+                copyright.copyright,
+            ))
         })
         .when_some(image_link.clone(), |menu, link| {
-            menu.item(copy(t!("image-link"), link))
+            menu.item(copy_with_icon(MenuIcon::Link, t!("image-link"), link))
         })
     }
 }
 
 pub fn save(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
-    PopupMenuItem::new(t!("save")).on_click(move |_, _, cx| {
-        let _ = download(&id, None, cx);
-    })
+    PopupMenuItem::new(t!("save"))
+        .icon(MenuIcon::Save)
+        .on_click(move |_, _, cx| {
+            let _ = download(&id, None, cx);
+        })
 }
 
 struct ResolutionPreset {
@@ -144,49 +203,55 @@ pub fn download(
 pub fn open_in_browser(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
 
-    PopupMenuItem::new(t!("open-in-browser")).on_click(move |_, _, cx| {
-        if let Ok(url) = UrlBuilder::new(&id).build() {
-            cx.open_url(&url);
-        }
-    })
+    PopupMenuItem::new(t!("open-in-browser"))
+        .icon(MenuIcon::ExternalLink)
+        .on_click(move |_, _, cx| {
+            if let Ok(url) = UrlBuilder::new(&id).build() {
+                cx.open_url(&url);
+            }
+        })
 }
 
 pub fn set_wallpaper(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
 
-    PopupMenuItem::new(t!("set-as-wallpaper")).on_click(move |_, _, cx| {
-        let url = UrlBuilder::new(&id).build().expect("URL should be valid");
-        let cache_path = cx.global::<Config>().image_cache(&url);
+    PopupMenuItem::new(t!("set-as-wallpaper"))
+        .icon(MenuIcon::Wallpaper)
+        .on_click(move |_, _, cx| {
+            let url = UrlBuilder::new(&id).build().expect("URL should be valid");
+            let cache_path = cx.global::<Config>().image_cache(&url);
 
-        RUNTIME.handle().spawn(async move {
-            if let Err(err) = fetch_cached(&url, &cache_path).await {
-                eprintln!("failed to fetch image: {err}");
-                return;
-            }
+            RUNTIME.handle().spawn(async move {
+                if let Err(err) = fetch_cached(&url, &cache_path).await {
+                    eprintln!("failed to fetch image: {err}");
+                    return;
+                }
 
-            if let Err(err) = wallpaper::set_wallpaper(&cache_path) {
-                eprintln!("failed to set wallpaper: {err}");
-            }
-        });
-    })
+                if let Err(err) = wallpaper::set_wallpaper(&cache_path) {
+                    eprintln!("failed to set wallpaper: {err}");
+                }
+            });
+        })
 }
 
 pub fn set_lock_screen(id: impl Into<String>) -> PopupMenuItem {
     let id = id.into();
 
-    PopupMenuItem::new(t!("set-as-lock-screen")).on_click(move |_, _, cx| {
-        let url = UrlBuilder::new(&id).build().expect("URL should be valid");
-        let cache_path = cx.global::<Config>().image_cache(&url);
+    PopupMenuItem::new(t!("set-as-lock-screen"))
+        .icon(MenuIcon::Lock)
+        .on_click(move |_, _, cx| {
+            let url = UrlBuilder::new(&id).build().expect("URL should be valid");
+            let cache_path = cx.global::<Config>().image_cache(&url);
 
-        RUNTIME.handle().spawn(async move {
-            if let Err(err) = fetch_cached(&url, &cache_path).await {
-                eprintln!("failed to fetch image: {err}");
-                return;
-            }
+            RUNTIME.handle().spawn(async move {
+                if let Err(err) = fetch_cached(&url, &cache_path).await {
+                    eprintln!("failed to fetch image: {err}");
+                    return;
+                }
 
-            if let Err(err) = wallpaper::set_lock_screen(&cache_path).await {
-                eprintln!("failed to set lock screen: {err}");
-            }
-        });
-    })
+                if let Err(err) = wallpaper::set_lock_screen(&cache_path).await {
+                    eprintln!("failed to set lock screen: {err}");
+                }
+            });
+        })
 }

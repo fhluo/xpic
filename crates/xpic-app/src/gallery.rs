@@ -93,7 +93,11 @@ impl RenderOnce for Gallery {
                         .item(menu::set_wallpaper(&image.id))
                         .item(menu::set_lock_screen(&image.id))
                 }
-                _ => menu.item(PopupMenuItem::new(t!("refresh")).action(Box::new(Refresh))),
+                _ => menu.item(
+                    PopupMenuItem::new(t!("refresh"))
+                        .icon(menu::MenuIcon::RefreshCW)
+                        .action(Box::new(Refresh)),
+                ),
             }
         })
     }

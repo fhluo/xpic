@@ -25,4 +25,4 @@ tasks:
       - task: build
     cmds:
       - nu -c "mkdir bin; mv target/release/xpic.exe bin/xpic-cli.exe"
-      - nu -c "mv target/release/spotlight.exe bin/spotlight.exe"
+      - nu -c "mv target/release/xpic-app.exe bin/Xpic.exe"

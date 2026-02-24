@@ -80,17 +80,10 @@ impl RenderOnce for Gallery {
             match index {
                 Some(i) if i < images.len() => {
                     let image = &images[i];
-                    let copyright = xpic::Copyright::parse(&image.copyright);
 
                     menu.item(menu::copy(t!("copy-title"), &image.title))
-                        .when_none(&copyright, |this| {
-                            this.item(menu::copy(t!("copy-copyright"), &image.copyright))
-                        })
-                        .when_some(copyright, |this, copyright| {
-                            this.item(menu::copy(t!("copy-description"), copyright.description))
-                                .item(menu::copy(t!("copy-copyright"), copyright.copyright))
-                        })
                         .item(menu::copy_image(&image.id))
+                        .submenu(t!("copy"), window, cx, menu::copy_submenu(image))
                         .separator()
                         .submenu(
                             t!("download"),
@@ -98,6 +91,7 @@ impl RenderOnce for Gallery {
                             cx,
                             menu::download_submenu(&image.id),
                         )
+                        .separator()
                         .item(menu::set_wallpaper(&image.id))
                         .item(menu::set_lock_screen(&image.id))
                 }

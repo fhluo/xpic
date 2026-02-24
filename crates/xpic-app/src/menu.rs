@@ -3,9 +3,10 @@ use crate::image::fetch_cached;
 use crate::wallpaper;
 use crate::RUNTIME;
 use anyhow::anyhow;
-use gpui::{App, ClipboardItem, Context, ImageFormat, SharedString, Window};
+use gpui::{prelude::*, App, ClipboardItem, Context, ImageFormat, SharedString, Window};
 use gpui_component::menu::{PopupMenu, PopupMenuItem};
 use xpic::bing::{ThumbnailParams, UrlBuilder};
+use xpic::Copyright;
 
 pub fn copy(label: impl Into<SharedString>, text: impl Into<String>) -> PopupMenuItem {
     let text = text.into();
@@ -36,6 +37,27 @@ pub fn copy_image(id: impl Into<String>) -> PopupMenuItem {
         })
         .detach();
     })
+}
+
+pub fn copy_submenu(
+    image: &xpic::Image,
+) -> impl Fn(PopupMenu, &mut Window, &mut Context<PopupMenu>) -> PopupMenu + 'static {
+    let copyright_text = image.copyright.clone();
+    let copyright = Copyright::parse(&image.copyright);
+    let image_link = UrlBuilder::new(&image.id).build().ok();
+
+    move |menu, _, _| {
+        menu.when_none(&copyright, |menu| {
+            menu.item(copy(t!("copyright"), &copyright_text))
+        })
+        .when_some(copyright.clone(), |menu, copyright| {
+            menu.item(copy(t!("description"), copyright.description))
+                .item(copy(t!("copyright"), copyright.copyright))
+        })
+        .when_some(image_link.clone(), |menu, link| {
+            menu.item(copy(t!("image-link"), link))
+        })
+    }
 }
 
 struct ResolutionPreset {

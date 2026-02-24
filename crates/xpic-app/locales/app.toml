@@ -8,21 +8,29 @@ zh-CN = "搜索壁纸…"
 en = "No wallpapers found"
 zh-CN = "未找到壁纸"
 
+[copy]
+en = "Copy"
+zh-CN = "复制"
+
 [copy-title]
 en = "Copy Title"
 zh-CN = "复制标题"
 
-[copy-description]
-en = "Copy Description"
-zh-CN = "复制描述"
-
-[copy-copyright]
-en = "Copy Copyright"
-zh-CN = "复制版权信息"
-
 [copy-image]
 en = "Copy Image"
 zh-CN = "复制图片"
+
+[description]
+en = "Description"
+zh-CN = "描述"
+
+[copyright]
+en = "Copyright"
+zh-CN = "版权信息"
+
+[image-link]
+en = "Image Link"
+zh-CN = "图片链接"
 
 [download]
 en = "Download"

@@ -38,11 +38,28 @@ pub fn copy_image(id: impl Into<String>) -> PopupMenuItem {
     })
 }
 
-const RESOLUTIONS: &[(&str, Option<(u32, u32)>)] = &[
-    ("1920×1080", Some((1920, 1080))),
-    ("2560×1440", Some((2560, 1440))),
-    ("3840×2160", Some((3840, 2160))),
-    ("UHD", None),
+struct ResolutionPreset {
+    label: &'static str,
+    resolution: Option<(u32, u32)>,
+}
+
+const RESOLUTIONS: &[ResolutionPreset] = &[
+    ResolutionPreset {
+        label: "1920×1080",
+        resolution: Some((1920, 1080)),
+    },
+    ResolutionPreset {
+        label: "2560×1440",
+        resolution: Some((2560, 1440)),
+    },
+    ResolutionPreset {
+        label: "3840×2160",
+        resolution: Some((3840, 2160)),
+    },
+    ResolutionPreset {
+        label: "UHD",
+        resolution: None,
+    },
 ];
 
 pub fn download_submenu(
@@ -50,7 +67,7 @@ pub fn download_submenu(
 ) -> impl Fn(PopupMenu, &mut Window, &mut Context<PopupMenu>) -> PopupMenu + 'static {
     let id = id.into();
     move |mut menu, _, _| {
-        for &(label, resolution) in RESOLUTIONS {
+        for &ResolutionPreset { label, resolution } in RESOLUTIONS {
             let id = id.clone();
             menu = menu.item(PopupMenuItem::new(label).on_click(move |_, _, cx| {
                 let _ = download(&id, resolution, cx);

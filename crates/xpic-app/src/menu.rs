@@ -60,31 +60,34 @@ pub fn copy_submenu(
     }
 }
 
+pub fn save(id: impl Into<String>) -> PopupMenuItem {
+    let id = id.into();
+    PopupMenuItem::new(t!("save")).on_click(move |_, _, cx| {
+        let _ = download(&id, None, cx);
+    })
+}
+
 struct ResolutionPreset {
     label: &'static str,
-    resolution: Option<(u32, u32)>,
+    resolution: (u32, u32),
 }
 
 const RESOLUTIONS: &[ResolutionPreset] = &[
     ResolutionPreset {
         label: "1920×1080",
-        resolution: Some((1920, 1080)),
+        resolution: (1920, 1080),
     },
     ResolutionPreset {
         label: "2560×1440",
-        resolution: Some((2560, 1440)),
+        resolution: (2560, 1440),
     },
     ResolutionPreset {
         label: "3840×2160",
-        resolution: Some((3840, 2160)),
-    },
-    ResolutionPreset {
-        label: "UHD",
-        resolution: None,
+        resolution: (3840, 2160),
     },
 ];
 
-pub fn download_submenu(
+pub fn save_submenu(
     id: impl Into<String>,
 ) -> impl Fn(PopupMenu, &mut Window, &mut Context<PopupMenu>) -> PopupMenu + 'static {
     let id = id.into();
@@ -92,7 +95,7 @@ pub fn download_submenu(
         for &ResolutionPreset { label, resolution } in RESOLUTIONS {
             let id = id.clone();
             menu = menu.item(PopupMenuItem::new(label).on_click(move |_, _, cx| {
-                let _ = download(&id, resolution, cx);
+                let _ = download(&id, Some(resolution), cx);
             }));
         }
         menu

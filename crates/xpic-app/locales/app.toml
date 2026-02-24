@@ -32,9 +32,13 @@ zh-CN = "版权信息"
 en = "Image Link"
 zh-CN = "图片链接"
 
-[download]
-en = "Download"
-zh-CN = "下载"
+[save]
+en = "Save"
+zh-CN = "保存"
+
+[save-as]
+en = "Save As..."
+zh-CN = "保存为…"
 
 [set-as-wallpaper]
 en = "Set as Wallpaper"

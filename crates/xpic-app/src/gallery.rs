@@ -85,12 +85,8 @@ impl RenderOnce for Gallery {
                         .item(menu::copy_image(&image.id))
                         .submenu(t!("copy"), window, cx, menu::copy_submenu(image))
                         .separator()
-                        .submenu(
-                            t!("download"),
-                            window,
-                            cx,
-                            menu::download_submenu(&image.id),
-                        )
+                        .item(menu::save(&image.id))
+                        .submenu(t!("save-as"), window, cx, menu::save_submenu(&image.id))
                         .separator()
                         .item(menu::set_wallpaper(&image.id))
                         .item(menu::set_lock_screen(&image.id))

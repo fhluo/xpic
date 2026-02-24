@@ -5,7 +5,7 @@ use std::borrow::Cow;
 #[derive(RustEmbed)]
 #[folder = "assets"]
 #[include = "icons/**/*.svg"]
-#[include = "app-icon.svg"]
+#[include = "app-icon.png"]
 pub struct Assets;
 
 impl AssetSource for Assets {
@@ -33,7 +33,7 @@ pub enum Icon {
 impl Icon {
     fn path(&self) -> &'static str {
         match self {
-            Self::AppIcon => "app-icon.svg",
+            Self::AppIcon => "app-icon.png",
         }
     }
 }

@@ -113,7 +113,7 @@ impl XpicApp {
                 .spawn(async move {
                     let mut images: Vec<Image> = Vec::new();
 
-                    if let Ok(local) = data::load(&path).await {
+                    if let Ok(local) = data::load(&path, market).await {
                         images = local;
                     }
 

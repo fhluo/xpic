@@ -5,7 +5,7 @@ use std::borrow::Borrow;
 use std::path::Path;
 use std::sync::{Arc, LazyLock};
 use xpic::bing::{Market, QueryParams};
-use xpic::Image;
+use xpic::{Image, ID};
 
 macro_rules! data {
     ($($market:ident => $filename:literal),* $(,)?) => {
@@ -44,8 +44,11 @@ data! {
     ZH_CN => "zh-CN.json",
 }
 
-pub async fn load(path: impl AsRef<Path>) -> anyhow::Result<Vec<Image>> {
-    serde_json::from_slice(&tokio::fs::read(&path).await?).map_err(anyhow::Error::msg)
+pub async fn load(path: impl AsRef<Path>, market: Market) -> anyhow::Result<Vec<Image>> {
+    Ok(filter_by_market(
+        serde_json::from_slice(&tokio::fs::read(&path).await?)?,
+        market,
+    ))
 }
 
 /// Merges two image lists, deduplicating by `id`. Items from `new` take priority over `existing`.
@@ -95,8 +98,26 @@ pub fn is_stale(images: &[impl Borrow<Image>], max_age: Duration) -> bool {
         })
 }
 
+pub fn filter_by_market(mut images: Vec<Image>, market: Market) -> Vec<Image> {
+    images.retain_mut(|img| {
+        if img.id_parsed.is_none() {
+            img.id_parsed = ID::parse(&img.id);
+        }
+
+        img.id_parsed
+            .as_ref()
+            .and_then(|id| id.market)
+            .is_none_or(|m| m == market)
+    });
+
+    images
+}
+
 pub async fn fetch(market: Market) -> anyhow::Result<Vec<Image>> {
-    xpic::list_images().market(market).send().await
+    Ok(filter_by_market(
+        xpic::list_images().market(market).send().await?,
+        market,
+    ))
 }
 
 pub async fn fetch_remote(market: Market) -> anyhow::Result<Vec<Image>> {
@@ -105,9 +126,8 @@ pub async fn fetch_remote(market: Market) -> anyhow::Result<Vec<Image>> {
         market.code()
     );
 
-    Ok(reqwest::get(&url)
-        .await?
-        .error_for_status()?
-        .json::<Vec<Image>>()
-        .await?)
+    Ok(filter_by_market(
+        reqwest::get(&url).await?.error_for_status()?.json().await?,
+        market,
+    ))
 }

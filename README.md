@@ -2,10 +2,11 @@
 
 # Xpic
 
-Save wallpapers from Windows Spotlight and Bing
-
-![xpic](assets/screenshot.png)
-
+A desktop application for Bing wallpapers, built with [GPUI](https://www.gpui.rs/).
+<br><br>
 <a href="https://github.com/fhluo/xpic/actions/workflows/build.yaml">
 <img src="https://github.com/fhluo/xpic/actions/workflows/build.yaml/badge.svg" alt="build workflow"></a>
+
+![screenshot](assets/screenshot.png)
+
 </div>

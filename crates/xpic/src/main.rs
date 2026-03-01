@@ -212,10 +212,10 @@ async fn export_metadata(dir: impl AsRef<Path>) -> Result<(), anyhow::Error> {
         let images = list_images().market(market).send().await?;
 
         for image in images {
-            if let Some(id) = image.id_parsed.as_ref() {
-                if let Some(market) = id.market {
-                    market_images.entry(market).or_default().push(image);
-                }
+            if let Some(id) = image.id_parsed.as_ref()
+                && let Some(market) = id.market
+            {
+                market_images.entry(market).or_default().push(image);
             }
         }
     }

@@ -39,10 +39,12 @@ features = [
     "System_UserProfile",
     "Win32_Foundation",
     "Win32_Graphics_Dwm",
+    "Win32_Security",
     "Win32_System_Com",
     "Win32_System_Threading",
     "Win32_UI_Controls",
     "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
 ]
 
 [build-dependencies]

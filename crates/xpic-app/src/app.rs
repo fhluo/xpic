@@ -75,28 +75,32 @@ impl XpicApp {
         _: &mut Window,
         cx: &mut Context<Self>,
     ) {
-        if let Ok(market) = market_code.parse::<Market>()
-            && self.market != market
-        {
-            self.market = market;
-            cx.global_mut::<Config>().market = self.market;
-            locale::set_from_market(market);
+        let Ok(market) = market_code.parse::<Market>() else {
+            return;
+        };
 
-            if let Some(cached) = self.cache.get(&market) {
-                self.images = cached.clone();
+        if self.market == market {
+            return;
+        }
 
-                if data::is_stale(&self.images, Duration::hours(24)) {
-                    Self::load(market, cx);
-                }
-            } else {
-                self.images = data::to_arc(data::embedded(market));
+        self.market = market;
+        cx.global_mut::<Config>().market = self.market;
+        locale::set_from_market(market);
+
+        if let Some(cached) = self.cache.get(&market) {
+            self.images = cached.clone();
+
+            if data::is_stale(&self.images, Duration::hours(24)) {
                 Self::load(market, cx);
             }
-
-            self.filtered_images = self.images.clone();
-            self.search_query = String::new();
-            cx.notify();
+        } else {
+            self.images = data::to_arc(data::embedded(market));
+            Self::load(market, cx);
         }
+
+        self.filtered_images = self.images.clone();
+        self.search_query = String::new();
+        cx.notify();
     }
 
     fn on_refresh(&mut self, _: &Refresh, _: &mut Window, cx: &mut Context<Self>) {
@@ -143,16 +147,20 @@ impl XpicApp {
                 })
                 .await;
 
-            if let Ok(images) = loaded
-                && !images.is_empty()
-            {
-                this.update(cx, |this, cx| {
-                    this.images = data::merge(&this.images, &images);
-                    this.cache.insert(market, this.images.clone());
-                    this.filtered_images = this.search(&this.search_query);
-                    cx.notify();
-                })?;
+            let Ok(images) = loaded else {
+                return Ok(());
+            };
+
+            if images.is_empty() {
+                return Ok(());
             }
+
+            this.update(cx, |this, cx| {
+                this.images = data::merge(&this.images, &images);
+                this.cache.insert(market, this.images.clone());
+                this.filtered_images = this.search(&this.search_query);
+                cx.notify();
+            })?;
 
             Ok::<_, anyhow::Error>(())
         })

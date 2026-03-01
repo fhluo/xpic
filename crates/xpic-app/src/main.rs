@@ -6,6 +6,7 @@ extern crate rust_i18n;
 use crate::app::XpicApp;
 use crate::assets::Assets;
 use crate::config::Config;
+use crate::single_instance::ensure_single_instance;
 use crate::theme::{apply_mica_theme, enable_mica_backdrop, Theme};
 use gpui::{
     prelude::*, px, App, Bounds, Size, TitlebarOptions, WindowBackgroundAppearance,
@@ -27,6 +28,7 @@ mod locale;
 mod market_selector;
 mod menu;
 mod search_bar;
+mod single_instance;
 mod spinner;
 mod theme;
 mod theme_toggle;
@@ -41,6 +43,10 @@ pub static RUNTIME: LazyLock<tokio::runtime::Runtime> = LazyLock::new(|| {
 });
 
 fn main() -> anyhow::Result<()> {
+    if !ensure_single_instance() {
+        return Ok(());
+    }
+
     let app = gpui_platform::application().with_assets(Assets);
 
     app.run(move |cx| {

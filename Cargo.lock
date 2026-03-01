@@ -8614,6 +8614,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "confy",
+ "const_format",
  "dirs 6.0.0",
  "gpui",
  "gpui-component",

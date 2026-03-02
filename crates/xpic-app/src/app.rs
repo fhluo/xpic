@@ -113,7 +113,7 @@ impl XpicApp {
         let handle = RUNTIME.handle().clone();
 
         cx.spawn(async move |this, cx| {
-            let loaded = handle
+            let images = handle
                 .spawn(async move {
                     let mut images: Vec<Image> = Vec::new();
 
@@ -145,11 +145,7 @@ impl XpicApp {
 
                     data::into_arc(images)
                 })
-                .await;
-
-            let Ok(images) = loaded else {
-                return Ok(());
-            };
+                .await?;
 
             if images.is_empty() {
                 return Ok(());

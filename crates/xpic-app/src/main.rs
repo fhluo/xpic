@@ -14,6 +14,7 @@ use gpui::{
 };
 use gpui_component::Root;
 use std::sync::LazyLock;
+use tracing::info;
 
 i18n!("locales", fallback = "en");
 
@@ -25,6 +26,7 @@ mod data;
 mod gallery;
 mod image;
 mod locale;
+mod logging;
 mod market_selector;
 mod menu;
 mod search_bar;
@@ -43,6 +45,10 @@ pub static RUNTIME: LazyLock<tokio::runtime::Runtime> = LazyLock::new(|| {
 });
 
 fn main() -> anyhow::Result<()> {
+    let _guard = logging::init();
+
+    info!("Xpic v{}", env!("CARGO_PKG_VERSION"));
+
     if !ensure_single_instance() {
         return Ok(());
     }

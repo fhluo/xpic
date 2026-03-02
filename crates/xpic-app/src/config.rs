@@ -4,6 +4,7 @@ use gpui::{Bounds, Global, Pixels};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::path::PathBuf;
+use tracing::error;
 use xpic::bing::Market;
 
 const APP_NAME: &str = "Xpic";
@@ -43,7 +44,7 @@ impl Config {
 
     pub fn save(&self) {
         if let Err(err) = confy::store(APP_NAME, None, self) {
-            eprintln!("Failed to save config: {err}");
+            error!("failed to save config: {err}");
         }
     }
 

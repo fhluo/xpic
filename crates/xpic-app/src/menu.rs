@@ -6,6 +6,7 @@ use anyhow::anyhow;
 use gpui::{prelude::*, App, ClipboardItem, Context, ImageFormat, SharedString, Window};
 use gpui_component::menu::{PopupMenu, PopupMenuItem};
 use gpui_component::IconNamed;
+use tracing::{debug, error, info};
 use xpic::bing::{ThumbnailParams, UrlBuilder};
 use xpic::Copyright;
 
@@ -67,6 +68,7 @@ pub fn copy_image(id: impl Into<String>) -> PopupMenuItem {
             let url = UrlBuilder::new(&id).build().expect("URL should be valid");
             let cache_path = cx.global::<Config>().image_cache(&url);
             let handle = RUNTIME.handle().clone();
+            debug!("copying image to clipboard");
 
             cx.spawn(async move |cx| {
                 let bytes = handle
@@ -193,6 +195,7 @@ pub fn download(
 
         let data = fetch_cached(&url, &cache_path).await?;
         tokio::fs::write(&save_path, &data).await?;
+        info!(path = %save_path.display(), "image saved");
 
         Ok::<_, anyhow::Error>(())
     });
@@ -223,12 +226,14 @@ pub fn set_wallpaper(id: impl Into<String>) -> PopupMenuItem {
 
             RUNTIME.handle().spawn(async move {
                 if let Err(err) = fetch_cached(&url, &cache_path).await {
-                    eprintln!("failed to fetch image: {err}");
+                    error!("failed to fetch image: {err}");
                     return;
                 }
 
                 if let Err(err) = wallpaper::set_wallpaper(&cache_path) {
-                    eprintln!("failed to set wallpaper: {err}");
+                    error!("failed to set wallpaper: {err}");
+                } else {
+                    info!("wallpaper set");
                 }
             });
         })
@@ -245,12 +250,14 @@ pub fn set_lock_screen(id: impl Into<String>) -> PopupMenuItem {
 
             RUNTIME.handle().spawn(async move {
                 if let Err(err) = fetch_cached(&url, &cache_path).await {
-                    eprintln!("failed to fetch image: {err}");
+                    error!("failed to fetch image: {err}");
                     return;
                 }
 
                 if let Err(err) = wallpaper::set_lock_screen(&cache_path).await {
-                    eprintln!("failed to set lock screen: {err}");
+                    error!("failed to set lock screen: {err}");
+                } else {
+                    info!("lock screen set");
                 }
             });
         })

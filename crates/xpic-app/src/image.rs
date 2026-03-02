@@ -9,6 +9,7 @@ use photon_rs::PhotonImage;
 use std::hash::{Hash, Hasher};
 use std::path::Path;
 use std::sync::Arc;
+use tracing::debug;
 use xpic::bing::{ThumbnailParams, ThumbnailQuery, UrlBuilder};
 
 #[derive(Debug, Clone)]
@@ -130,9 +131,11 @@ pub async fn fetch_cached(
     let cache_path = cache_path.as_ref();
 
     if cache_path.exists() {
+        debug!(%url, "cache hit");
         return Ok(tokio::fs::read(cache_path).await?);
     }
 
+    debug!(%url, "cache miss, fetching");
     let data = reqwest::get(url).await?.error_for_status()?.bytes().await?;
 
     if let Some(dir) = cache_path.parent() {

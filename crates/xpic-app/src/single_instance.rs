@@ -4,6 +4,7 @@ use std::env;
 use std::ffi::OsString;
 use std::os::windows::ffi::OsStringExt;
 use std::path::PathBuf;
+use tracing::{debug, info, warn};
 use windows::{
     core::{BOOL, HSTRING, PWSTR},
     Win32::{
@@ -25,6 +26,7 @@ fn mutex_name() -> String {
     let Ok(path) = env::current_exe() else {
         return DEFAULT_MUTEX_NAME.to_string();
     };
+    debug!(path = %path.display(), "current executable");
 
     let hash = hex::encode(Sha256::digest(path.to_string_lossy().as_bytes()));
 
@@ -36,10 +38,12 @@ pub fn ensure_single_instance() -> bool {
 
     unsafe {
         if let Err(_) = CreateMutexW(None, false, &mutex_name) {
+            warn!("failed to create mutex, skipping single-instance check");
             return true;
         }
 
         if GetLastError() == ERROR_ALREADY_EXISTS {
+            info!("another instance is already running, activating it");
             activate_existing_instance();
             false
         } else {

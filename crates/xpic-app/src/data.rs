@@ -4,6 +4,7 @@ use serde::Serialize;
 use std::borrow::Borrow;
 use std::path::Path;
 use std::sync::{Arc, LazyLock};
+use tracing::{debug, info};
 use xpic::bing::{Market, QueryParams};
 use xpic::{Image, ID};
 
@@ -45,10 +46,13 @@ data! {
 }
 
 pub async fn load(path: impl AsRef<Path>, market: Market) -> anyhow::Result<Vec<Image>> {
-    Ok(filter_by_market(
-        serde_json::from_slice(&tokio::fs::read(&path).await?)?,
+    let images = filter_by_market(
+        serde_json::from_slice(&tokio::fs::read(path).await?)?,
         market,
-    ))
+    );
+    debug!(count = images.len(), "loaded from local cache");
+
+    Ok(images)
 }
 
 /// Merges two image lists, deduplicating by `id`. Items from `new` take priority over `existing`.
@@ -114,10 +118,12 @@ pub fn filter_by_market(mut images: Vec<Image>, market: Market) -> Vec<Image> {
 }
 
 pub async fn fetch(market: Market) -> anyhow::Result<Vec<Image>> {
-    Ok(filter_by_market(
-        xpic::list_images().market(market).send().await?,
-        market,
-    ))
+    debug!(market = market.code(), "fetching from Bing API");
+
+    let images = filter_by_market(xpic::list_images().market(market).send().await?, market);
+    info!(count = images.len(), "fetched from Bing API");
+
+    Ok(images)
 }
 
 pub async fn fetch_remote(market: Market) -> anyhow::Result<Vec<Image>> {
@@ -125,9 +131,13 @@ pub async fn fetch_remote(market: Market) -> anyhow::Result<Vec<Image>> {
         "https://raw.githubusercontent.com/fhluo/xpic/main/data/{}.json",
         market.code()
     );
+    debug!(%url, "fetching remote data");
 
-    Ok(filter_by_market(
+    let images = filter_by_market(
         reqwest::get(&url).await?.error_for_status()?.json().await?,
         market,
-    ))
+    );
+    info!(count = images.len(), "fetched from remote");
+
+    Ok(images)
 }

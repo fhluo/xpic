@@ -16,6 +16,7 @@ use gpui::{div, img, px, App, Context, Entity, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
 use gpui_component::scroll::ScrollableElement;
 use std::sync::Arc;
+use tracing::{debug, error, info};
 use xpic::bing::Market;
 use xpic::Image;
 
@@ -86,6 +87,7 @@ impl XpicApp {
         self.market = market;
         cx.global_mut::<Config>().market = self.market;
         locale::set_from_market(market);
+        info!(market = market.code(), "market changed");
 
         if let Some(cached) = self.cache.get(&market) {
             self.images = cached.clone();
@@ -109,6 +111,8 @@ impl XpicApp {
 
     /// Loads local data and fetch remote if stale.
     fn load(market: Market, cx: &mut Context<Self>) {
+        debug!(market = market.code(), "loading data");
+
         let path = cx.global::<Config>().data_path(market);
         let handle = RUNTIME.handle().clone();
 
@@ -140,7 +144,9 @@ impl XpicApp {
                     }
 
                     if merged {
-                        let _ = data::save(&path, &images).await;
+                        if let Err(err) = data::save(&path, &images).await {
+                            error!("failed to save data: {err}");
+                        }
                     }
 
                     data::into_arc(images)
@@ -152,6 +158,12 @@ impl XpicApp {
             }
 
             this.update(cx, |this, cx| {
+                info!(
+                    count = images.len(),
+                    market = market.code(),
+                    "images loaded",
+                );
+
                 this.images = data::merge(&this.images, &images);
                 this.cache.insert(market, this.images.clone());
                 this.filtered_images = this.search(&this.search_query);

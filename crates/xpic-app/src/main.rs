@@ -62,6 +62,7 @@ fn main() -> anyhow::Result<()> {
 
         let config = Config::load();
         locale::set_from_market(config.market);
+        info!(market = config.market.code(), "config loaded");
 
         cx.set_global(Theme::from(config.appearance));
         cx.set_global(config);
@@ -103,6 +104,7 @@ fn open_main_window(cx: &App) {
             },
         )?;
 
+        info!("main window opened");
         Ok::<_, anyhow::Error>(())
     })
     .detach();

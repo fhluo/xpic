@@ -12,7 +12,7 @@ use crate::RUNTIME;
 use ahash::AHashMap;
 use chrono::Duration;
 use gpui::prelude::*;
-use gpui::{div, img, px, App, Context, Entity, Render, Window};
+use gpui::{div, img, px, App, Context, Entity, FocusHandle, Focusable, Render, Window};
 use gpui_component::input::{InputEvent, InputState};
 use gpui_component::scroll::ScrollableElement;
 use std::sync::Arc;
@@ -21,6 +21,8 @@ use xpic::bing::Market;
 use xpic::Image;
 
 pub struct XpicApp {
+    focus_handle: FocusHandle,
+
     market: Market,
     cache: AHashMap<Market, Vec<Arc<Image>>>,
     images: Vec<Arc<Image>>,
@@ -28,6 +30,12 @@ pub struct XpicApp {
 
     search_input: Entity<InputState>,
     search_query: String,
+}
+
+impl Focusable for XpicApp {
+    fn focus_handle(&self, _: &App) -> FocusHandle {
+        self.focus_handle.clone()
+    }
 }
 
 impl XpicApp {
@@ -60,7 +68,15 @@ impl XpicApp {
             true
         });
 
+        let focus_handle = cx.focus_handle();
+        cx.focus_self(window);
+        cx.on_focus_lost(window, |_, window, cx| {
+            cx.focus_self(window);
+        })
+        .detach();
+
         XpicApp {
+            focus_handle,
             market,
             cache: AHashMap::new(),
             filtered_images: images.clone(),
@@ -241,6 +257,7 @@ impl Render for XpicApp {
         let theme = cx.global::<Theme>();
 
         div()
+            .track_focus(&self.focus_handle)
             .size_full()
             .flex()
             .flex_col()

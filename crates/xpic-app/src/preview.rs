@@ -1,7 +1,10 @@
 use crate::image::Image;
 use crate::theme::Theme;
 use gpui::prelude::*;
-use gpui::{div, img, Action, App, FocusHandle, Focusable, MouseButton, Size, Window};
+use gpui::{
+    div, img, Action, App, Context, DismissEvent, EventEmitter, FocusHandle, Focusable, Render,
+    Size, Window,
+};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -10,10 +13,6 @@ use xpic::bing::ThumbnailParams;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, Action)]
 pub struct OpenPreview(pub usize);
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, Action)]
-pub struct ClosePreview;
-
-#[derive(Clone, IntoElement)]
 pub struct Preview {
     focus_handle: FocusHandle,
     image: Arc<xpic::Image>,
@@ -25,21 +24,19 @@ impl Focusable for Preview {
     }
 }
 
-impl Preview {
-    pub fn new(image: Arc<xpic::Image>, focus_handle: FocusHandle) -> Self {
-        Self {
-            image,
-            focus_handle,
-        }
-    }
+impl EventEmitter<DismissEvent> for Preview {}
 
-    pub fn focus(&self, window: &mut Window, cx: &mut App) {
-        self.focus_handle.focus(window, cx);
+impl Preview {
+    pub fn new(image: Arc<xpic::Image>, cx: &mut Context<Self>) -> Self {
+        Self {
+            focus_handle: cx.focus_handle(),
+            image,
+        }
     }
 }
 
-impl RenderOnce for Preview {
-    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
+impl Render for Preview {
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.global::<Theme>();
         let Size { width, height } = window.viewport_size();
 
@@ -55,9 +52,9 @@ impl RenderOnce for Preview {
             .justify_center()
             .overflow_hidden()
             .occlude()
-            .on_click(|_, window, cx: &mut App| {
-                window.dispatch_action(Box::new(ClosePreview), cx);
-            })
+            .on_click(cx.listener(|_, _, _, cx| {
+                cx.emit(DismissEvent);
+            }))
             .child(
                 div()
                     .id("preview-content")

@@ -4,6 +4,7 @@ use crate::data;
 use crate::gallery::{Gallery, Refresh};
 use crate::locale;
 use crate::market_selector::{ChangeMarket, MarketSelector};
+use crate::preview::{OpenPreview, Preview};
 use crate::search_bar::SearchBar;
 use crate::theme::Theme;
 use crate::theme_toggle::ThemeToggle;
@@ -12,7 +13,9 @@ use crate::RUNTIME;
 use ahash::AHashMap;
 use chrono::Duration;
 use gpui::prelude::*;
-use gpui::{div, img, px, App, Context, Entity, FocusHandle, Focusable, Render, Window};
+use gpui::{
+    div, img, px, App, Context, DismissEvent, Entity, FocusHandle, Focusable, Render, Window,
+};
 use gpui_component::input::{InputEvent, InputState};
 use gpui_component::scroll::ScrollableElement;
 use std::sync::Arc;
@@ -30,6 +33,8 @@ pub struct XpicApp {
 
     search_input: Entity<InputState>,
     search_query: String,
+
+    preview: Option<Entity<Preview>>,
 }
 
 impl Focusable for XpicApp {
@@ -83,6 +88,7 @@ impl XpicApp {
             images,
             search_input,
             search_query: String::new(),
+            preview: None,
         }
     }
 
@@ -209,6 +215,34 @@ impl XpicApp {
             .collect()
     }
 
+    fn on_open_preview(
+        &mut self,
+        &OpenPreview(index): &OpenPreview,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        if index >= self.filtered_images.len() {
+            return;
+        }
+
+        let image = self.filtered_images[index].clone();
+        let entity = cx.new(|cx| Preview::new(image, cx));
+        entity.focus_handle(cx).focus(window, cx);
+
+        cx.subscribe(&entity, |this, _, _: &DismissEvent, cx| {
+            this.close_preview(cx);
+        })
+        .detach();
+
+        self.preview = Some(entity);
+        cx.notify();
+    }
+
+    fn close_preview(&mut self, cx: &mut Context<Self>) {
+        self.preview = None;
+        cx.notify();
+    }
+
     fn render_title_bar(&self, cx: &App) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
@@ -253,10 +287,11 @@ impl XpicApp {
 }
 
 impl Render for XpicApp {
-    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+    fn render(&mut self, _: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.global::<Theme>();
 
         div()
+            .id("xpic-app")
             .track_focus(&self.focus_handle)
             .size_full()
             .flex()
@@ -264,6 +299,7 @@ impl Render for XpicApp {
             .relative()
             .on_action(cx.listener(Self::on_change_market))
             .on_action(cx.listener(Self::on_refresh))
+            .on_action(cx.listener(Self::on_open_preview))
             .child(self.render_title_bar(cx))
             .child(div().flex_1().relative().overflow_hidden().child({
                 let is_empty = self.filtered_images.is_empty();
@@ -288,5 +324,6 @@ impl Render for XpicApp {
                     })
             }))
             .child(SearchBar::new(self.search_input.clone()))
+            .children(self.preview.clone())
     }
 }

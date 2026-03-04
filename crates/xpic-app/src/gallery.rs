@@ -1,5 +1,6 @@
 use crate::card::Card;
 use crate::menu;
+use crate::preview::OpenPreview;
 use crate::theme::Theme;
 use gpui::prelude::*;
 use gpui::{div, px, Action, App, SharedString, Window};
@@ -53,6 +54,9 @@ impl RenderOnce for Gallery {
                 Card::new(&image.id)
                     .title(Self::display_title(image))
                     .context_menu_index(i, context_menu_index.clone())
+                    .on_click(move |_, window, cx| {
+                        window.dispatch_action(Box::new(OpenPreview(i)), cx);
+                    })
                     .w(px(theme.card_width))
                     .width(theme.thumbnail_width)
                     .height(theme.thumbnail_height)

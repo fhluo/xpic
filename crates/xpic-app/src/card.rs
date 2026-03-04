@@ -111,6 +111,7 @@ impl RenderOnce for Card {
                     .refine_style(&img_area_style)
                     .child(
                         img(img_source)
+                            .id("card-img")
                             .refine_style(&img_style)
                             .with_loading(|| Loading.into_any_element()),
                     )

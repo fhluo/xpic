@@ -49,6 +49,7 @@ pub struct Theme {
     pub danger: Hsla,
     pub danger_active: Hsla,
     pub danger_fg: Hsla,
+    pub preview_backdrop: Hsla,
 }
 
 impl Global for Theme {}
@@ -106,6 +107,7 @@ impl Theme {
             danger: rgba(0xe81123ff).into(),
             danger_active: rgba(0xe81123cc).into(),
             danger_fg: gpui::white(),
+            preview_backdrop: hsla(0., 0., 0., 0.85),
         }
     }
 
@@ -134,6 +136,7 @@ impl Theme {
             danger: Hsla::from(rgba(0xe81123ff)),
             danger_active: Hsla::from(rgba(0xe81123cc)),
             danger_fg: gpui::white(),
+            preview_backdrop: hsla(0., 0., 0., 0.85),
         }
     }
 

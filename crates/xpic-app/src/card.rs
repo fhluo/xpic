@@ -2,7 +2,8 @@ use crate::image::Image;
 use crate::spinner::Spinner;
 use crate::theme::Theme;
 use gpui::{
-    div, img, prelude::*, App, ElementId, MouseButton, SharedString, StyleRefinement, Window,
+    div, img, prelude::*, App, ClickEvent, ElementId, MouseButton, SharedString, StyleRefinement,
+    Window,
 };
 use gpui_component::StyledExt;
 use std::cell::Cell;
@@ -18,6 +19,8 @@ pub struct Card {
     /// Shared context menu index tracker.
     context_menu_index: Option<(usize, Rc<Cell<Option<usize>>>)>,
     style: StyleRefinement,
+
+    on_click: Option<Rc<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static>>,
 }
 
 impl Styled for Card {
@@ -45,6 +48,7 @@ impl Card {
             title: None,
             image: Image::new(id),
             context_menu_index: None,
+            on_click: None,
             style: StyleRefinement::default(),
         }
     }
@@ -57,6 +61,15 @@ impl Card {
     /// Sets the shared context menu index tracker for this card.
     pub fn context_menu_index(mut self, idx: usize, shared: Rc<Cell<Option<usize>>>) -> Self {
         self.context_menu_index = Some((idx, shared));
+        self
+    }
+
+    pub fn on_click(
+        mut self,
+        handler: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static,
+    ) -> Self {
+        self.on_click = Some(Rc::new(handler));
+
         self
     }
 }
@@ -83,6 +96,11 @@ impl RenderOnce for Card {
             .when_some(self.context_menu_index, |this, (index, shared)| {
                 this.on_mouse_down(MouseButton::Right, move |_, _, _| {
                     shared.set(Some(index));
+                })
+            })
+            .when_some(self.on_click, |this, on_click| {
+                this.on_click(move |event, window, cx| {
+                    on_click(event, window, cx);
                 })
             })
             .child(

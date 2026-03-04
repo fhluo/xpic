@@ -29,6 +29,7 @@ mod locale;
 mod logging;
 mod market_selector;
 mod menu;
+mod preview;
 mod search_bar;
 mod single_instance;
 mod spinner;

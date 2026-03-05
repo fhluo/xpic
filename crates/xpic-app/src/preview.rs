@@ -1,4 +1,5 @@
 use crate::image::Image;
+use crate::spinner::Spinner;
 use crate::theme::Theme;
 use gpui::prelude::*;
 use gpui::{
@@ -8,6 +9,7 @@ use gpui::{
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use std::time::Duration;
 use xpic::bing::ThumbnailParams;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema, Action)]
@@ -33,12 +35,56 @@ impl Preview {
             image,
         }
     }
+
+    fn render_image(&self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
+        let Size { width, height } = window.viewport_size();
+
+        // Compute fixed display size for 16:9 aspect ratio.
+        let max_w = width * 0.8;
+        let max_h = height * 0.65;
+        let aspect = 16.0_f32 / 9.0;
+        let (w, h) = if max_w / max_h > aspect {
+            (max_h * aspect, max_h)
+        } else {
+            (max_w, max_w / aspect)
+        };
+
+        let thumbnail_source = Image::new(&self.image.id)
+            .width(theme.thumbnail_width)
+            .height(theme.thumbnail_height)
+            .no_padding()
+            .source();
+
+        let hd_source = Image::new(&self.image.id)
+            .width(1920)
+            .height(1080)
+            .no_padding()
+            .source();
+
+        div()
+            .relative()
+            .w(w)
+            .h(h)
+            .rounded_lg()
+            .overflow_hidden()
+            .occlude()
+            .child(img(thumbnail_source).size_full().rounded_lg())
+            .child(
+                img(hd_source)
+                    .id("preview-hd")
+                    .absolute()
+                    .inset_0()
+                    .size_full()
+                    .rounded_lg()
+                    .with_loading(|| Loading.into_any_element()),
+            )
+    }
 }
 
 impl Render for Preview {
     fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let theme = cx.global::<Theme>();
-        let Size { width, height } = window.viewport_size();
 
         div()
             .id("preview-backdrop")
@@ -62,17 +108,37 @@ impl Render for Preview {
                     .flex_col()
                     .flex_shrink_0()
                     .items_center()
-                    .child(
-                        img(Image::new(&self.image.id)
-                            .width(theme.thumbnail_width)
-                            .height(theme.thumbnail_height)
-                            .no_padding()
-                            .source())
-                        .occlude()
-                        .w(width * 0.8)
-                        .max_h(height * 0.65)
-                        .rounded_lg(),
-                    ),
+                    .child(self.render_image(window, cx)),
             )
+    }
+}
+
+#[derive(IntoElement)]
+struct Loading;
+
+impl RenderOnce for Loading {
+    fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
+
+        div().size_full().relative().child(
+            div()
+                .absolute()
+                .bottom_2()
+                .right_2()
+                .flex()
+                .items_center()
+                .gap_1()
+                .bg(theme.loading_bg)
+                .rounded_md()
+                .px_2()
+                .py_1()
+                .child(
+                    Spinner::new()
+                        .color(theme.loading_fg)
+                        .duration(Duration::from_millis(800))
+                        .size_4(),
+                )
+                .child(div().text_xs().text_color(theme.loading_fg).child("HD")),
+        )
     }
 }

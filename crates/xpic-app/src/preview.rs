@@ -3,8 +3,8 @@ use crate::spinner::Spinner;
 use crate::theme::Theme;
 use gpui::prelude::*;
 use gpui::{
-    div, img, Action, App, Context, DismissEvent, EventEmitter, FocusHandle, Focusable, Render,
-    Size, Window,
+    div, img, Action, App, Context, DismissEvent, EventEmitter, FocusHandle, Focusable,
+    FontWeight, Render, Size, Window,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -18,6 +18,7 @@ pub struct OpenPreview(pub usize);
 pub struct Preview {
     focus_handle: FocusHandle,
     image: Arc<xpic::Image>,
+    copyright: Option<xpic::Copyright>,
 }
 
 impl Focusable for Preview {
@@ -30,9 +31,15 @@ impl EventEmitter<DismissEvent> for Preview {}
 
 impl Preview {
     pub fn new(image: Arc<xpic::Image>, cx: &mut Context<Self>) -> Self {
+        let copyright = image
+            .copyright_parsed
+            .clone()
+            .or_else(|| xpic::Copyright::parse(&image.copyright));
+
         Self {
             focus_handle: cx.focus_handle(),
             image,
+            copyright,
         }
     }
 
@@ -80,6 +87,49 @@ impl Preview {
                     .with_loading(|| Loading.into_any_element()),
             )
     }
+
+    fn render_metadata(&self, cx: &mut Context<Self>) -> impl IntoElement {
+        let theme = cx.global::<Theme>();
+
+        div()
+            .flex()
+            .flex_col()
+            .items_center()
+            .gap_1()
+            .when(!self.image.title.is_empty(), |this| {
+                this.child(
+                    div()
+                        .occlude()
+                        .text_center()
+                        .text_base()
+                        .font_weight(FontWeight::MEDIUM)
+                        .text_color(theme.preview_title)
+                        .child(self.image.title.clone()),
+                )
+            })
+            .when_some(self.copyright.as_ref(), |this, copyright| {
+                this.when(!copyright.description.is_empty(), |this| {
+                    this.child(
+                        div()
+                            .occlude()
+                            .text_center()
+                            .text_sm()
+                            .text_color(theme.preview_description)
+                            .child(copyright.description.clone()),
+                    )
+                })
+                .when(!copyright.copyright.is_empty(), |this| {
+                    this.child(
+                        div()
+                            .occlude()
+                            .text_center()
+                            .text_xs()
+                            .text_color(theme.preview_attribution)
+                            .child(copyright.copyright.clone()),
+                    )
+                })
+            })
+    }
 }
 
 impl Render for Preview {
@@ -108,7 +158,9 @@ impl Render for Preview {
                     .flex_col()
                     .flex_shrink_0()
                     .items_center()
-                    .child(self.render_image(window, cx)),
+                    .gap_2()
+                    .child(self.render_image(window, cx))
+                    .child(self.render_metadata(cx)),
             )
     }
 }

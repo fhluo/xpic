@@ -52,6 +52,9 @@ pub struct Theme {
     pub preview_backdrop: Hsla,
     pub loading_bg: Hsla,
     pub loading_fg: Hsla,
+    pub preview_title: Hsla,
+    pub preview_description: Hsla,
+    pub preview_attribution: Hsla,
 }
 
 impl Global for Theme {}
@@ -112,6 +115,9 @@ impl Theme {
             preview_backdrop: hsla(0., 0., 0., 0.85),
             loading_bg: hsla(0., 0., 0., 0.5),
             loading_fg: hsla(0., 0., 1., 0.8),
+            preview_title: hsla(0., 0., 1., 1.0),
+            preview_description: hsla(0., 0., 0.7, 1.0),
+            preview_attribution: hsla(0., 0., 0.5, 1.0),
         }
     }
 
@@ -143,6 +149,9 @@ impl Theme {
             preview_backdrop: hsla(0., 0., 0., 0.85),
             loading_bg: hsla(0., 0., 0., 0.5),
             loading_fg: hsla(0., 0., 1., 0.8),
+            preview_title: hsla(0., 0., 1., 1.0),
+            preview_description: hsla(0., 0., 0.7, 1.0),
+            preview_attribution: hsla(0., 0., 0.5, 1.0),
         }
     }
 

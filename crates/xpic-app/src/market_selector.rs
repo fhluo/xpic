@@ -1,10 +1,8 @@
 use crate::data::AVAILABLE_MARKETS;
-use crate::theme::Theme;
+use crate::fluent_icon_button::FluentIconButton;
 use gpui::prelude::*;
-use gpui::{div, px, Action, App, Corner, Window};
-use gpui_component::button::{Button, ButtonCustomVariant, ButtonVariants};
+use gpui::{Action, App, Corner, Window};
 use gpui_component::menu::{DropdownMenu, PopupMenuItem};
-use gpui_component::Sizable;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use xpic::bing::Market;
@@ -42,25 +40,10 @@ impl MarketSelector {
 }
 
 impl RenderOnce for MarketSelector {
-    fn render(self, _: &mut Window, cx: &mut App) -> impl IntoElement {
-        let theme = cx.global::<Theme>();
-
-        let style = ButtonCustomVariant::new(cx)
-            .foreground(theme.foreground)
-            .hover(theme.hover_bg)
-            .active(theme.active_bg);
-
-        Button::new("market-selector")
-            .compact()
-            .custom(style)
-            .with_size(px(26.0))
-            .child(
-                div()
-                    .font_family(Theme::icons_font())
-                    .text_size(px(14.0))
-                    .child("\u{E774}"),
-            )
-            .dropdown_menu_with_anchor(Corner::TopRight, move |menu, _, _| {
+    fn render(self, _: &mut Window, _cx: &mut App) -> impl IntoElement {
+        FluentIconButton::new("market-selector", "\u{E774}").dropdown_menu_with_anchor(
+            Corner::TopRight,
+            move |menu, _, _| {
                 let mut menu = menu;
 
                 for &market in AVAILABLE_MARKETS {
@@ -72,6 +55,7 @@ impl RenderOnce for MarketSelector {
                 }
 
                 menu
-            })
+            },
+        )
     }
 }

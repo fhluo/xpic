@@ -23,6 +23,7 @@ mod assets;
 mod card;
 mod config;
 mod data;
+mod fluent_icon_button;
 mod gallery;
 mod image;
 mod locale;

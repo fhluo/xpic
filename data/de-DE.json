@@ -1,5 +1,18 @@
 [
   {
+    "url": "https://www.bing.com/th?id=OHR.SpringIceland_DE-DE6750493768_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260309",
+    "full_start_date": "202603092300",
+    "end_date": "20260310",
+    "id": "OHR.SpringIceland_DE-DE6750493768_UHD.jpg",
+    "copyright": "Geothermisches Becken Bláhver in Hveravellir, Island (© Juan Maria Coy Vergara/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Blahver+Quelle+Island&form=hpcapt&filters=HpDate%3a%2220260309_2300%22",
+    "title": "Wärme unter Eis",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260309_SpringIceland%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "8fe87f1a8e9226e8ad25c0415927c836"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.NappingSeal_DE-DE4413060426_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20260308",
     "full_start_date": "202603082300",
@@ -23,7 +36,33 @@
     "title": "Ein Platz mit Geschichte",
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260307_StuttgartSchlossplatz%22&FORM=HPQUIZ",
     "wallpaper": true,
+    "hash": "50403d875b3ce10ee17f05f31ef83d74"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.StuttgartSchlossplatz_DE-DE6255862063_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260307",
+    "full_start_date": "202603072300",
+    "end_date": "20260308",
+    "id": "OHR.StuttgartSchlossplatz_DE-DE6255862063_UHD.jpg",
+    "copyright": "Neues Schloss am Schlossplatz in Stuttgart, Baden‑Württemberg (© Jorg Greuel/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Baden-W%C3%BCrttemberg+Landtagswahl+2026&form=hpcapt&filters=HpDate%3a%2220260307_2300%22",
+    "title": "Ein Platz mit Geschichte",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260307_StuttgartSchlossplatz%22&FORM=HPQUIZ",
+    "wallpaper": true,
     "hash": "5db286f5df96c5cd524ad8f834b3a819"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.PacificRimNP_DE-DE6585110286_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260306",
+    "full_start_date": "202603062300",
+    "end_date": "20260307",
+    "id": "OHR.PacificRimNP_DE-DE6585110286_UHD.jpg",
+    "copyright": "Pacific Rim National Park Reserve, Vancouver Island, Kanada (© EmilyNorton/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Pacific+Rim+National+Park+Reserve+Kanada&form=hpcapt&filters=HpDate%3a%2220260306_2300%22",
+    "title": "Zwischen Wald und Wellen",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260306_PacificRimNP%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "14388af3118c025a19a09905d1bf4df7"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.PacificRimNP_DE-DE6585110286_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",

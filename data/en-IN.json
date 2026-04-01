@@ -1,5 +1,18 @@
 [
   {
+    "url": "https://www.bing.com/th?id=OHR.WildflowerValley_EN-IN5256127708_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260401",
+    "full_start_date": "202604011830",
+    "end_date": "20260402",
+    "id": "OHR.WildflowerValley_EN-IN5256127708_UHD.jpg",
+    "copyright": "Wildflower bloom, Central Valley, California, United States (© Jeff Lewis/Tandem Stills + Motion)",
+    "copyright_link": "https://www.bing.com/search?q=Central+Valley+California&form=hpcapt&filters=HpDate%3a%2220260401_1830%22",
+    "title": "Patterns of spring",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260401_WildflowerValley%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "9030257e484640b916f7465e44d22bb5"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.SanchiMP_EN-IN5100905412_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20260331",
     "full_start_date": "202603311830",
@@ -23,7 +36,33 @@
     "title": "Underground paradise",
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260330_ParadiseCave%22&FORM=HPQUIZ",
     "wallpaper": true,
+    "hash": "b49aa4024928fa7c48906440bcf8bb17"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.ParadiseCave_EN-IN4544625926_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260330",
+    "full_start_date": "202603301830",
+    "end_date": "20260331",
+    "id": "OHR.ParadiseCave_EN-IN4544625926_UHD.jpg",
+    "copyright": "Paradise Cave, Phong Nha-Ke Bang National Park, Vietnam (© Pakawat Thongcharoen/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Paradise+Cave+Vietnam&form=hpcapt&filters=HpDate%3a%2220260330_1830%22",
+    "title": "Underground paradise",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260330_ParadiseCave%22&FORM=HPQUIZ",
+    "wallpaper": true,
     "hash": "f71105343cad71bb576a1ef7ee91d761"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.IndiaCranes_EN-IN2980482639_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260329",
+    "full_start_date": "202603291830",
+    "end_date": "20260330",
+    "id": "OHR.IndiaCranes_EN-IN2980482639_UHD.jpg",
+    "copyright": "Demoiselle cranes, India (© Axel Gomille/Nature Picture Library)",
+    "copyright_link": "https://www.bing.com/search?q=Demoiselle+cranes&form=hpcapt&filters=HpDate%3a%2220260329_1830%22",
+    "title": "Elegance in motion",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260329_IndiaCranes%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "443909ce9e545a7c891bedfc69c64bf8"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.IndiaCranes_EN-IN2980482639_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",

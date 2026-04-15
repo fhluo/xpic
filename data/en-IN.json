@@ -1,5 +1,18 @@
 [
   {
+    "url": "https://www.bing.com/th?id=OHR.SkagitTulips_EN-IN3934438603_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260415",
+    "full_start_date": "202604151830",
+    "end_date": "20260416",
+    "id": "OHR.SkagitTulips_EN-IN3934438603_UHD.jpg",
+    "copyright": "Skagit Valley Tulip Fields, Washington, United States (© Alan Majchrowicz/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Skagit+Valley+Washington&form=hpcapt&filters=HpDate%3a%2220260415_1830%22",
+    "title": "Petal parade",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260415_SkagitTulips%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "91a3bb3ad432efe42f58ed330c0e2feb"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.VanGoghFields_EN-IN6304322280_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20260414",
     "full_start_date": "202604141830",
@@ -11,6 +24,19 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260414_VanGoghFields%22&FORM=HPQUIZ",
     "wallpaper": false,
     "hash": "b3f15b5da8fdfbf2775ff371527633d9"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.VanGoghFields_EN-IN6304322280_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260414",
+    "full_start_date": "202604141830",
+    "end_date": "20260415",
+    "id": "OHR.VanGoghFields_EN-IN6304322280_UHD.jpg",
+    "copyright": "The Carrières des Lumières exhibit of Vincent van Gogh, Les Baux-de-Provence, France (© Patrick Aventurier/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=World+Art+Day&form=hpcapt&filters=HpDate%3a%2220260414_1830%22",
+    "title": "Stepping inside the living canvas",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260414_VanGoghFields%22&FORM=HPQUIZ",
+    "wallpaper": false,
+    "hash": "d5c3a81b6ded25dec3ed1a110d81917b"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.AmbedkarJayanti2026_EN-IN3641683791_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",

@@ -1,7 +1,7 @@
 use crate::data::AVAILABLE_MARKETS;
 use crate::fluent_icon_button::FluentIconButton;
 use gpui::prelude::*;
-use gpui::{Action, App, Corner, Window};
+use gpui::{Action, Anchor, App, Window};
 use gpui_component::menu::{DropdownMenu, PopupMenuItem};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -42,7 +42,7 @@ impl MarketSelector {
 impl RenderOnce for MarketSelector {
     fn render(self, _: &mut Window, _cx: &mut App) -> impl IntoElement {
         FluentIconButton::new("market-selector", "\u{E774}").dropdown_menu_with_anchor(
-            Corner::TopRight,
+            Anchor::TopRight,
             move |menu, _, _| {
                 let mut menu = menu;
 

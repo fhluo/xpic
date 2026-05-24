@@ -20,10 +20,10 @@ dirs = "6.0"
 sha2 = "0.11"
 hex = "0.4"
 reqwest = "0.13"
-tokio = { version = "1.50", features = ["full"] }
-rust-i18n = "3.1"
+tokio = { version = "1.52", features = ["full"] }
+rust-i18n = "4.0"
 sys-locale = "0.3"
-icu_locale = { version = "2.1", features = ["compiled_data", "serde"] }
+icu_locale = { version = "2.2", features = ["compiled_data", "serde"] }
 image = "0.25"
 chrono = "0.4"
 photon-rs = "0.3"

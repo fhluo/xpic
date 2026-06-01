@@ -1,5 +1,18 @@
 [
   {
+    "url": "https://www.bing.com/th?id=OHR.Qinghai_ZH-CN9899656327_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260601",
+    "full_start_date": "202606011600",
+    "end_date": "20260602",
+    "id": "OHR.Qinghai_ZH-CN9899656327_UHD.jpg",
+    "copyright": "穿越西台吉乃尔湖的公路，青海省，中国 (© Kaicheng Xu/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E4%B8%AD%E5%9B%BD%E6%9F%B4%E8%BE%BE%E6%9C%A8%E7%9B%86%E5%9C%B0&form=hpcapt&mkt=zh-cn",
+    "title": "穿行于蓝色之间",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260601_Qinghai%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "517ab01bc515a94d6619be1259b11e38"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.OlivaPalermo_ZH-CN9639920195_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20260531",
     "full_start_date": "202605311600",
@@ -11,6 +24,19 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260531_OlivaPalermo%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "9ae869ef5e3d1057eaeed6490cf25f90"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.OlivaPalermo_ZH-CN9639920195_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260531",
+    "full_start_date": "202605311600",
+    "end_date": "20260601",
+    "id": "OHR.OlivaPalermo_ZH-CN9639920195_UHD.jpg",
+    "copyright": "巴勒莫暮色下的天际线，西西里岛，意大利 (© Sean Pavone/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E6%84%8F%E5%A4%A7%E5%88%A9%E5%B7%B4%E5%8B%92%E8%8E%AB&form=hpcapt&mkt=zh-cn",
+    "title": "历史的况味",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260531_OlivaPalermo%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "d23ea742e3427e4422abe109603cbefd"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.EvergladesWetlands_ZH-CN9515366484_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
@@ -26,6 +52,19 @@
     "hash": "06f088a56b466cc4283bfb60a471b92c"
   },
   {
+    "url": "https://www.bing.com/th?id=OHR.EvergladesWetlands_ZH-CN9515366484_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260530",
+    "full_start_date": "202605301600",
+    "end_date": "20260531",
+    "id": "OHR.EvergladesWetlands_ZH-CN9515366484_UHD.jpg",
+    "copyright": "大沼泽地国家公园航拍景观，佛罗里达州，美国 (© Tetra Images/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E5%A4%A7%E6%B2%BC%E6%B3%BD%E5%9C%B0%E5%9B%BD%E5%AE%B6%E5%85%AC%E5%9B%AD&form=hpcapt&mkt=zh-cn",
+    "title": "顺流而行",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260530_EvergladesWetlands%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "abc96c43df2c5c9a5810c13e8649cd19"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.EquusQuagga_ZH-CN9323988132_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20260529",
     "full_start_date": "202605291600",
@@ -37,6 +76,32 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260529_EquusQuagga%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "508063bdf4c8527beafee8a5fdcb19b1"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.EquusQuagga_ZH-CN9323988132_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260529",
+    "full_start_date": "202605291600",
+    "end_date": "20260530",
+    "id": "OHR.EquusQuagga_ZH-CN9323988132_UHD.jpg",
+    "copyright": "平原斑马幼崽，埃托沙国家公园，纳米比亚 (© Sharon Heald/Nature Picture Library)",
+    "copyright_link": "https://www.bing.com/search?q=%E5%B9%B3%E5%8E%9F%E6%96%91%E9%A9%AC&form=hpcapt&mkt=zh-cn",
+    "title": "读懂黑白之间",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260529_EquusQuagga%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "b311249c6973567092551f96bda5875c"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.SummitEverest_ZH-CN9252833251_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260528",
+    "full_start_date": "202605281600",
+    "end_date": "20260529",
+    "id": "OHR.SummitEverest_ZH-CN9252833251_UHD.jpg",
+    "copyright": "珠穆朗玛峰峰顶，萨加玛塔国家公园，尼泊尔 (© fotoVoyager/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E4%BA%BA%E7%B1%BB%E9%A6%96%E6%AC%A1%E5%BE%81%E6%9C%8D%E4%B8%96%E7%95%8C%E6%9C%80%E9%AB%98%E5%B3%B0&form=hpcapt&mkt=zh-cn",
+    "title": "巅峰历史时刻",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260528_SummitEverest%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "aee8f80386b5df929f86098d9aa5b6bd"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.SummitEverest_ZH-CN9252833251_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",

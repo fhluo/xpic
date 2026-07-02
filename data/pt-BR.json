@@ -1,5 +1,31 @@
 [
   {
+    "url": "https://www.bing.com/th?id=OHR.TempleEsna_PT-BR4377934596_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260702",
+    "full_start_date": "202607020300",
+    "end_date": "20260703",
+    "id": "OHR.TempleEsna_PT-BR4377934596_UHD.jpg",
+    "copyright": "Teto do Templo de Esna, Egito (© Nick Brundle Photography/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Templo+Esna+Egito&form=hpcapt&mkt=pt-br",
+    "title": "O cosmos segundo Esna",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260702_TempleEsna%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "d7932425c94fc2d367ec9a4eeac4c66e"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.DungeonPark_PT-BR3960378944_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260701",
+    "full_start_date": "202607010300",
+    "end_date": "20260702",
+    "id": "OHR.DungeonPark_PT-BR3960378944_UHD.jpg",
+    "copyright": "Dungeon Provincial Park, Terra Nova e Labrador, Canadá (© Kaitlyn McLachlan/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Dia+do+Canada&form=hpcapt&mkt=pt-br",
+    "title": "A costa que o Atlântico moldou",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260701_DungeonPark%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "4dc61c770093d5ab46b3e9a37d28f315"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.DungeonPark_PT-BR3960378944_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20260701",
     "full_start_date": "202607010300",
@@ -24,6 +50,19 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260630_MasaiGiraffe%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "474684fc37455510fc7f7d2032a2c2bb"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.MasaiGiraffe_PT-BR8199198867_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260630",
+    "full_start_date": "202606300300",
+    "end_date": "20260701",
+    "id": "OHR.MasaiGiraffe_PT-BR8199198867_UHD.jpg",
+    "copyright": "Girafas ao pôr do sol na Reserva Nacional Masai Mara, Quênia (© danm/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Reserva+Nacional+Masai+Mara+Quenia&form=hpcapt&mkt=pt-br",
+    "title": "O entardecer das gigantes",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260630_MasaiGiraffe%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "8871d54cf9c202109513bfdebf758e9f"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.BoraBoraLagoon_PT-BR8111630763_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",

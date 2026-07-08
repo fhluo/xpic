@@ -1,5 +1,31 @@
 [
   {
+    "url": "https://www.bing.com/th?id=OHR.SapaVietnam_ZH-CN2178893672_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260708",
+    "full_start_date": "202607081600",
+    "end_date": "20260709",
+    "id": "OHR.SapaVietnam_ZH-CN2178893672_UHD.jpg",
+    "copyright": "在沙巴的水稻田，老街，越南 (© Anujak Jaimook/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E8%B6%8A%E5%8D%97%E8%80%81%E8%A1%97&form=hpcapt&mkt=zh-cn",
+    "title": "步步传承",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260708_SapaVietnam%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "9842a3d030dca94cc6b0839e5df38e05"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.LakeAtitlan_ZH-CN1920221893_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260707",
+    "full_start_date": "202607071600",
+    "end_date": "20260708",
+    "id": "OHR.LakeAtitlan_ZH-CN1920221893_UHD.jpg",
+    "copyright": "阿蒂特兰湖的日出，危地马拉 (© shayes17/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E5%8D%B1%E5%9C%B0%E9%A9%AC%E6%8B%89+%E9%98%BF%E8%92%82%E7%89%B9%E5%85%B0%E6%B9%96&form=hpcapt&mkt=zh-cn",
+    "title": "远古火山的回响",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260707_LakeAtitlan%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "5c901e06e3314ab65ca47c5b824b1785"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.LakeAtitlan_ZH-CN1920221893_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20260707",
     "full_start_date": "202607071600",
@@ -23,7 +49,33 @@
     "title": "林冠华彩",
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260706_MountainToucanOrchids%22&FORM=HPQUIZ",
     "wallpaper": true,
+    "hash": "0bb953afe9cbeb5e063e288a1df5bc83"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.MountainToucanOrchids_ZH-CN1400221431_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260706",
+    "full_start_date": "202607061600",
+    "end_date": "20260707",
+    "id": "OHR.MountainToucanOrchids_ZH-CN1400221431_UHD.jpg",
+    "copyright": "板嘴山巨嘴鸟与兰花，厄瓜多尔 (© Murray Cooper/Minden Pictures)",
+    "copyright_link": "https://www.bing.com/search?q=%E6%9D%BF%E5%98%B4%E5%B1%B1%E5%B7%A8%E5%98%B4%E9%B8%9F&form=hpcapt&mkt=zh-cn",
+    "title": "林冠华彩",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260706_MountainToucanOrchids%22&FORM=HPQUIZ",
+    "wallpaper": true,
     "hash": "5dec9fd9a34fe28d450ef19ba8f0c2ee"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.SyracuseItaly_ZH-CN1001695972_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260705",
+    "full_start_date": "202607051600",
+    "end_date": "20260706",
+    "id": "OHR.SyracuseItaly_ZH-CN1001695972_UHD.jpg",
+    "copyright": "锡拉库萨的日落，西西里岛，意大利 (© Balate Dorin/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E9%94%A1%E6%8B%89%E5%BA%93%E8%90%A8+%E8%A5%BF%E8%A5%BF%E9%87%8C%E5%B2%9B&form=hpcapt&mkt=zh-cn",
+    "title": "百代镌刻之城",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260705_SyracuseItaly%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "4da168568cdb31d64ae524bae29c322f"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.SyracuseItaly_ZH-CN1001695972_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
@@ -52,6 +104,19 @@
     "hash": "490c9611f01ef2aaa93c8291872d30a4"
   },
   {
+    "url": "https://www.bing.com/th?id=OHR.LavenderRows_ZH-CN0676810895_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260704",
+    "full_start_date": "202607041600",
+    "end_date": "20260705",
+    "id": "OHR.LavenderRows_ZH-CN0676810895_UHD.jpg",
+    "copyright": "瓦朗索勒高原的薰衣草行，普罗旺斯，法国 (© Robert Harding/Shutterstock)",
+    "copyright_link": "https://www.bing.com/search?q=%E8%96%B0%E8%A1%A3%E8%8D%89%E5%B1%9E&form=hpcapt&mkt=zh-cn",
+    "title": "紫色花海",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260704_LavenderRows%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "72971a893aa1df7a14f892bf01d70310"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.KaysersbergVillage_ZH-CN0445080679_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20260703",
     "full_start_date": "202607031600",
@@ -63,6 +128,19 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260703_KaysersbergVillage%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "4504349c6e8fa14cfd46f887e438f6b0"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.KaysersbergVillage_ZH-CN0445080679_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20260703",
+    "full_start_date": "202607031600",
+    "end_date": "20260704",
+    "id": "OHR.KaysersbergVillage_ZH-CN0445080679_UHD.jpg",
+    "copyright": "凯泽斯堡，阿尔萨斯，法国 (© Federica Gentile/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=%E5%87%AF%E6%B3%BD%E6%96%AF%E5%A0%A1&form=hpcapt&mkt=zh-cn",
+    "title": "此行，不虚绕道",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20260703_KaysersbergVillage%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "cca4f8bdd697c8c73f192c41572ba74e"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.FirefliesJapan_ZH-CN0071253415_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",

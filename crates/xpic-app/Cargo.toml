@@ -5,11 +5,11 @@ edition = "2024"
 
 [dependencies]
 xpic = { path = "../xpic" }
-gpui = { git = "https://github.com/zed-industries/zed", rev = "1d217ee39d381ac101b7cf49d3d22451ac1093fe", features = ["windows-manifest"] }
-gpui_platform = { git = "https://github.com/zed-industries/zed", rev = "1d217ee39d381ac101b7cf49d3d22451ac1093fe" }
+gpui = { git = "https://github.com/zed-industries/zed", features = ["windows-manifest"] }
+gpui_platform = { git = "https://github.com/zed-industries/zed" }
 gpui-component = { git = "https://github.com/longbridge/gpui-component" }
 gpui-component-assets = { git = "https://github.com/longbridge/gpui-component" }
-rust-embed = "8.11"
+rust-embed = "8.12"
 raw-window-handle = "0.6"
 anyhow = "1.0"
 serde = { version = "1.0", features = ["derive"] }

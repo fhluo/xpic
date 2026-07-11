@@ -56,4 +56,4 @@ winresource = "0.1"
 [package.metadata.winresource]
 FileDescription = "Xpic"
 ProductName = "Xpic"
-LegalCopyright = "Copyright © 2026 fhluo"
+LegalCopyright = "Copyright © 2024-2026 fhluo"

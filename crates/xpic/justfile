@@ -1,0 +1,13 @@
+set shell := ["nu", "-c"]
+
+default:
+  @just --list
+
+run *args:
+  cargo run {{args}}
+
+build *args:
+  cargo build {{args}}
+
+install:
+  cargo install --path .

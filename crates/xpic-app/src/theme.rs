@@ -1,13 +1,13 @@
-use gpui::{hsla, px, rgba, size, App, Global, Hsla, Pixels, Size, Window, WindowAppearance};
+use gpui::{App, Global, Hsla, Pixels, Size, Window, WindowAppearance, hsla, px, rgba, size};
 use gpui_component::theme::{Theme as ComponentTheme, ThemeMode};
 use raw_window_handle::{HasWindowHandle, RawWindowHandle};
 use serde::{Deserialize, Serialize};
-use windows::core::BOOL;
 use windows::Win32::Foundation::HWND;
 use windows::Win32::Graphics::Dwm::{
-    DwmExtendFrameIntoClientArea, DwmSetWindowAttribute, DWMWA_USE_IMMERSIVE_DARK_MODE,
+    DWMWA_USE_IMMERSIVE_DARK_MODE, DwmExtendFrameIntoClientArea, DwmSetWindowAttribute,
 };
 use windows::Win32::UI::Controls::MARGINS;
+use windows::core::BOOL;
 
 #[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Appearance {
@@ -222,6 +222,14 @@ fn sync_component_theme(mode: Appearance, cx: &mut App) {
             theme.colors.border = hsla(0., 0., 0., 0.08);
         }
     }
+
+    // Components paint from tokens; keep them in sync so the transparent
+    // root background keeps the Mica backdrop visible.
+    theme.tokens.background = theme.colors.background.into();
+    theme.tokens.secondary = theme.colors.secondary.into();
+    theme.tokens.muted = theme.colors.muted.into();
+    theme.tokens.popover = theme.colors.popover.into();
+    theme.tokens.border = theme.colors.border.into();
 }
 
 pub fn enable_mica_backdrop(window: &mut Window) {

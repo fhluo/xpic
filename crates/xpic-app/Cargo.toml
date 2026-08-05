@@ -21,7 +21,8 @@ sha2 = "0.11"
 hex = "0.4"
 reqwest = "0.13"
 tokio = { version = "1.52", features = ["full"] }
-rust-i18n = "4.2"
+fluent-templates = "0.15"
+arc-swap = "1.9"
 sys-locale = "0.3"
 icu_locale = { version = "2.2", features = ["compiled_data", "serde"] }
 image = "0.25"

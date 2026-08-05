@@ -1,22 +1,23 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-#[macro_use]
-extern crate rust_i18n;
-
 use crate::app::XpicApp;
 use crate::assets::Assets;
 use crate::config::Config;
 use crate::single_instance::ensure_single_instance;
-use crate::theme::{apply_mica_theme, enable_mica_backdrop, Theme};
+use crate::theme::{Theme, apply_mica_theme, enable_mica_backdrop};
 use gpui::{
-    prelude::*, px, App, Bounds, Size, TitlebarOptions, WindowBackgroundAppearance,
-    WindowBounds, WindowOptions,
+    App, Bounds, Size, TitlebarOptions, WindowBackgroundAppearance, WindowBounds, WindowOptions,
+    prelude::*, px,
 };
 use gpui_component::Root;
 use std::sync::LazyLock;
 use tracing::info;
 
-i18n!("locales", fallback = "en");
+macro_rules! t {
+    ($key:expr) => {
+        crate::locale::lookup($key)
+    };
+}
 
 mod app;
 mod assets;

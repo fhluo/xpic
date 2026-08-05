@@ -1,0 +1,14 @@
+search-placeholder = Search wallpapers...
+no-wallpapers-found = No wallpapers found
+copy = Copy
+copy-title = Copy Title
+copy-image = Copy Image
+description = Description
+copyright = Copyright
+image-link = Image Link
+save = Save
+save-as = Save As...
+set-as-wallpaper = Set as Wallpaper
+set-as-lock-screen = Set as Lock Screen
+refresh = Refresh
+open-in-browser = Open in Browser

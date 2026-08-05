@@ -1,0 +1,14 @@
+search-placeholder = 搜索壁纸…
+no-wallpapers-found = 未找到壁纸
+copy = 复制
+copy-title = 复制标题
+copy-image = 复制图片
+description = 描述
+copyright = 版权信息
+image-link = 图片链接
+save = 保存
+save-as = 保存为…
+set-as-wallpaper = 设为壁纸
+set-as-lock-screen = 设为锁屏
+refresh = 刷新
+open-in-browser = 在浏览器中打开

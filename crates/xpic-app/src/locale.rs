@@ -1,7 +1,20 @@
 use crate::data;
+use arc_swap::ArcSwap;
+use fluent_templates::{LanguageIdentifier, Loader, langid, static_loader};
 use icu_locale::fallback::{LocaleFallbackConfig, LocaleFallbackPriority};
-use icu_locale::{locale, DataLocale, Locale, LocaleFallbacker};
+use icu_locale::{DataLocale, Locale, LocaleFallbacker, locale};
+use std::sync::{Arc, LazyLock};
 use xpic::bing::Market;
+
+static_loader! {
+    pub static LOCALES = {
+        locales: "./locales",
+        fallback_language: "en",
+    };
+}
+
+static CURRENT_LOCALE: LazyLock<ArcSwap<LanguageIdentifier>> =
+    LazyLock::new(|| ArcSwap::from_pointee(langid!("en")));
 
 fn system_locale() -> Locale {
     sys_locale::get_locale()
@@ -64,7 +77,43 @@ pub fn from_market(market: Market) -> &'static str {
     }
 }
 
+/// Looks up a message in the currently selected UI locale.
+pub fn lookup(key: &str) -> String {
+    let locale = CURRENT_LOCALE.load_full();
+    LOCALES.lookup(&locale, key)
+}
+
+/// Sets the UI locale from a language identifier string.
+pub fn set_locale(lang: &str) {
+    let locale = lang
+        .parse::<LanguageIdentifier>()
+        .unwrap_or_else(|_| langid!("en"));
+    CURRENT_LOCALE.store(Arc::new(locale));
+}
+
 /// Sets the locale from a market selection.
 pub fn set_from_market(market: Market) {
-    rust_i18n::set_locale(from_market(market));
+    set_locale(from_market(market));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn supported_locales() {
+        set_locale("en");
+        assert_eq!(lookup("search-placeholder"), "Search wallpapers...");
+        assert_eq!(lookup("save-as"), "Save As...");
+
+        set_locale("zh-CN");
+        assert_eq!(lookup("search-placeholder"), "搜索壁纸…");
+        assert_eq!(lookup("save-as"), "保存为…");
+    }
+
+    #[test]
+    fn unsupported_locale_fallback() {
+        set_locale("fr");
+        assert_eq!(lookup("no-wallpapers-found"), "No wallpapers found");
+    }
 }

@@ -3,6 +3,7 @@ mod cli 'crates/xpic/justfile'
 mod spotlight 'crates/spotlight/justfile'
 
 set shell := ["nu", "-c"]
+set script-interpreter := ["nu"]
 set default-list := true
 
 build *args: (cli::build args) (spotlight::build args) (app::build args)
@@ -15,8 +16,8 @@ release: (build "--release")
 [group: 'package']
 [working-directory: 'build']
 [windows]
+[script]
 iscc:
-    #!nu
     let inno = (
       ["C:\\Program Files\\Inno Setup 7", $"($env.LOCALAPPDATA)\\Programs\\Inno Setup 7"]
       | where {|p| $p | path exists }

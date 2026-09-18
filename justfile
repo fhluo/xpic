@@ -4,6 +4,7 @@ mod spotlight 'crates/spotlight/justfile'
 
 set shell := ["nu", "-c"]
 set script-interpreter := ["nu"]
+set indentation := "  "
 set default-list := true
 
 build *args: (cli::build args) (spotlight::build args) (app::build args)

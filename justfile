@@ -3,9 +3,7 @@ mod cli 'crates/xpic/justfile'
 mod spotlight 'crates/spotlight/justfile'
 
 set shell := ["nu", "-c"]
-
-default:
-  @just --list
+set default-list := true
 
 build *args: (cli::build args) (spotlight::build args) (app::build args)
 

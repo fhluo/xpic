@@ -1,8 +1,6 @@
 set shell := ["nu", "-c"]
+set default-list := true
 set fallback
-
-default:
-  @just --list
 
 run *args:
   cargo run {{args}}

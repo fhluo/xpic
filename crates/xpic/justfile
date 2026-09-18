@@ -1,4 +1,5 @@
 set shell := ["nu", "-c"]
+set fallback
 
 default:
   @just --list

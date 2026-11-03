@@ -1,5 +1,18 @@
 [
   {
+    "url": "https://www.bing.com/th?id=OHR.AlpineBraies_ES-ES0997130535_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20261102",
+    "full_start_date": "202611022300",
+    "end_date": "20261103",
+    "id": "OHR.AlpineBraies_ES-ES0997130535_UHD.jpg",
+    "copyright": "Lago Braies, Parque Natural Fanes‑Sennes‑Braies, Los Dolomitas, Italia (© leonid_tit/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=Lago+Braies+Dolomitas&form=hpcapt&filters=HpDate%3a%2220261102_2300%22",
+    "title": "Paz entre las cumbres",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20261102_AlpineBraies%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "6a51531a0e9bbc0832f8c3a7f5228bf3"
+  },
+  {
     "url": "https://www.bing.com/th?id=OHR.HudsonBear_ES-ES0469501883_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
     "start_date": "20261101",
     "full_start_date": "202611012300",
@@ -115,6 +128,19 @@
     "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20261026_PondCypress%22&FORM=HPQUIZ",
     "wallpaper": true,
     "hash": "496544b522ae7391aae634e5a6e25e22"
+  },
+  {
+    "url": "https://www.bing.com/th?id=OHR.PondCypress_ES-ES5888685254_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
+    "start_date": "20261026",
+    "full_start_date": "202610262300",
+    "end_date": "20261027",
+    "id": "OHR.PondCypress_ES-ES5888685254_UHD.jpg",
+    "copyright": "Bosque de cipreses de estanque, Georgia, EE. UU. (© Chris Moore/Getty Images)",
+    "copyright_link": "https://www.bing.com/search?q=cipres+estanque&form=hpcapt&filters=HpDate%3a%2220261026_2300%22",
+    "title": "Reflejos dorados",
+    "quiz_link": "https://www.bing.com/search?q=Bing+homepage+quiz&filters=WQOskey:%22HPQuiz_20261026_PondCypress%22&FORM=HPQUIZ",
+    "wallpaper": true,
+    "hash": "d3e6a7b04c1997d67eff7d7a39fc3344"
   },
   {
     "url": "https://www.bing.com/th?id=OHR.SitovoWaterfall_ES-ES1073935690_UHD.jpg&rf=LaDigue_UHD.jpg&pid=hp&w=1920&h=1080&rs=1&c=4",
